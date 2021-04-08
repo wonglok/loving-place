@@ -104,14 +104,16 @@ export const GameControl = () => {
         let myself = await ready(() => {
           return scene.getObjectByName("myself");
         });
-        return myself.getObjectByName("mixamorigHead");
+        return myself.getObjectByName("mixamorigHips");
       }),
-    ]).then(([group]) => {
+    ]).then(([group, lookAt]) => {
       //
       onLoop(() => {
-        mapContrtols.target.x = group.position.x;
-        mapContrtols.target.y = group.position.y;
-        mapContrtols.target.z = group.position.z;
+        // mapContrtols.target.x = lookAt.position.x;
+        // mapContrtols.target.y = lookAt.position.y;
+        // mapContrtols.target.z = lookAt.position.z;
+
+        lookAt.getWorldPosition(mapContrtols.target);
 
         mapContrtols.object.position.x = mapContrtols.target.x;
         mapContrtols.object.position.y = mapContrtols.target.y + zoom.current.y;
