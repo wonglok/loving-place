@@ -17,7 +17,7 @@ export function MetalManModel() {
   const stayIdle = useLoader(FBXLoader, "/avatar-actions/idle.fbx");
   const runningAction = useLoader(FBXLoader, "/avatar-actions/running.fbx");
 
-  const { nodes, materials } = useLoader(GLTFLoader, "/avatar/metalman.glb");
+  const { nodes } = useLoader(GLTFLoader, "/avatar/metalman.glb");
 
   const internalLoop = useRef([]);
   const onLoop = (v) => internalLoop.current.push(v);
@@ -30,7 +30,7 @@ export function MetalManModel() {
       actions.current.runningAction ||
       mixer.current.clipAction(runningAction.animations[0], me.current);
 
-    if (Me.status.value === "ready") {
+    if (subStatus.value === "ready") {
       actions.current.stayIdle.reset();
       actions.current.stayIdle.repetitions = Infinity;
       actions.current.stayIdle.play();
@@ -48,13 +48,7 @@ export function MetalManModel() {
       actions.current.stayIdle.play();
     }
 
-    return () => {
-      // if (mixer.current) {
-      //   try {
-      //     mixer.current.uncacheRoot(me.current);
-      //   } catch (e) {}
-      // }
-    };
+    return () => {};
   }, [subStatus.get()]);
 
   useFrame(({}, dt) => {
@@ -94,7 +88,7 @@ export function MetalManModel() {
         }
       }
     });
-  });
+  }, []);
 
   return (
     <>
@@ -106,8 +100,13 @@ export function MetalManModel() {
             castShadow
             geometry={nodes["metalman"].geometry}
             skeleton={nodes["metalman"].skeleton}
-            material={materials[""]}
-          ></skinnedMesh>
+          >
+            <meshStandardMaterial
+              skinning={true}
+              metalness={0.9}
+              roughness={0.1}
+            ></meshStandardMaterial>
+          </skinnedMesh>
         </group>
       </group>
     </>

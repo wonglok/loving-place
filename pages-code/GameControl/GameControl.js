@@ -23,26 +23,28 @@ export const GameControl = () => {
   useFrame(() => {
     loops.current.forEach((e) => e());
   });
-  const zoom = useRef(new Vector3(0, 150, 150));
+  const minLimit = 150;
+  const maxLimit = 340;
+  const zoom = useRef(new Vector3(0, minLimit, minLimit));
 
   useWheel(
     (state) => {
-      let deltaY = state.vxvy[1] * 1;
+      let deltaY = state.vxvy[1] * 3;
 
-      if (zoom.current.z > 150) {
+      if (zoom.current.z > minLimit) {
         zoom.current.y += deltaY;
         zoom.current.z += deltaY;
       } else {
-        zoom.current.y = 150;
-        zoom.current.z = 150;
+        zoom.current.y = minLimit;
+        zoom.current.z = minLimit;
       }
 
-      if (zoom.current.z < 340) {
+      if (zoom.current.z < maxLimit) {
         zoom.current.y += deltaY;
         zoom.current.z += deltaY;
       } else {
-        zoom.current.y = 340;
-        zoom.current.z = 340;
+        zoom.current.y = maxLimit;
+        zoom.current.z = maxLimit;
       }
     },
     { domTarget: gl.domElement, eventOptions: { passive: false } }
@@ -50,22 +52,22 @@ export const GameControl = () => {
 
   usePinch(
     (state) => {
-      let deltaY = state.vdva[0] * -1;
+      let deltaY = state.vdva[0] * -3;
 
-      if (zoom.current.z > 150) {
+      if (zoom.current.z > minLimit) {
         zoom.current.y += deltaY;
         zoom.current.z += deltaY;
       } else {
-        zoom.current.y = 150;
-        zoom.current.z = 150;
+        zoom.current.y = minLimit;
+        zoom.current.z = minLimit;
       }
 
-      if (zoom.current.z < 340) {
+      if (zoom.current.z < maxLimit) {
         zoom.current.y += deltaY;
         zoom.current.z += deltaY;
       } else {
-        zoom.current.y = 340;
-        zoom.current.z = 340;
+        zoom.current.y = maxLimit;
+        zoom.current.z = maxLimit;
       }
     },
     { domTarget: gl.domElement, eventOptions: { passive: false } }
@@ -82,7 +84,7 @@ export const GameControl = () => {
     let mapContrtols = new MapControls(camera, gl.domElement);
 
     mapContrtols.minDistance = 120;
-    mapContrtols.maxDistance = 340;
+    mapContrtols.maxDistance = maxLimit;
 
     mapContrtols.screenSpacePanning = false;
     mapContrtols.enablePan = false;

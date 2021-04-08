@@ -11,6 +11,7 @@
     "@hookstate/core": "^3.0.6",
     "@react-three/fiber": "^6.0.9",
     "@react-three/flex": "^0.5.2",
+    "animejs": "^3.2.1",
     "autoprefixer": "^10.2.5",
     "file-loader": "^6.2.0",
     "next": "10.0.5",
