@@ -8,8 +8,19 @@
     "start": "next start"
   },
   "dependencies": {
+    "@hookstate/core": "^3.0.6",
+    "@react-three/fiber": "^6.0.9",
+    "@react-three/flex": "^0.5.2",
+    "autoprefixer": "^10.2.5",
+    "file-loader": "^6.2.0",
     "next": "10.0.5",
+    "postcss": "^8.2.9",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "tailwindcss": "^2.1.1",
+    "three": "^0.127.0"
+  },
+  "devDependencies": {
+    "svg-inline-loader": "^0.8.2"
   }
 }
