@@ -1,7 +1,8 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Vector3 } from "three";
-import { Me } from "../AppState/AppState";
+// import { Me } from "../AppState/AppState";
+import { usePinch, useWheel } from "react-use-gesture";
 
 function ready(fn) {
   return new Promise((resolve) => {
@@ -22,32 +23,78 @@ export const GameControl = () => {
   useFrame(() => {
     loops.current.forEach((e) => e());
   });
-
   const zoom = useRef(new Vector3(0, 150, 150));
-  useEffect(() => {
-    let handler = ({ deltaY }) => {
+
+  useWheel(
+    (state) => {
+      let deltaY = state.vxvy[1] * 1;
+
       if (zoom.current.z > 150) {
-        zoom.current.y += deltaY * 0.1;
-        zoom.current.z += deltaY * 0.1;
+        zoom.current.y += deltaY;
+        zoom.current.z += deltaY;
       } else {
         zoom.current.y = 150;
         zoom.current.z = 150;
       }
 
       if (zoom.current.z < 340) {
-        zoom.current.y += deltaY * 0.1;
-        zoom.current.z += deltaY * 0.1;
+        zoom.current.y += deltaY;
+        zoom.current.z += deltaY;
       } else {
         zoom.current.y = 340;
         zoom.current.z = 340;
       }
-    };
+    },
+    { domTarget: gl.domElement, eventOptions: { passive: false } }
+  );
 
-    gl.domElement.addEventListener("wheel", handler);
-    return () => {
-      gl.domElement.removeEventListener("wheel", handler);
-    };
-  });
+  usePinch(
+    (state) => {
+      let deltaY = state.vdva[0] * -1;
+
+      if (zoom.current.z > 150) {
+        zoom.current.y += deltaY;
+        zoom.current.z += deltaY;
+      } else {
+        zoom.current.y = 150;
+        zoom.current.z = 150;
+      }
+
+      if (zoom.current.z < 340) {
+        zoom.current.y += deltaY;
+        zoom.current.z += deltaY;
+      } else {
+        zoom.current.y = 340;
+        zoom.current.z = 340;
+      }
+    },
+    { domTarget: gl.domElement, eventOptions: { passive: false } }
+  );
+
+  // useEffect(() => {
+  //   let handler = ({ deltaY }) => {
+  //     if (zoom.current.z > 150) {
+  //       zoom.current.y += deltaY * 0.1;
+  //       zoom.current.z += deltaY * 0.1;
+  //     } else {
+  //       zoom.current.y = 150;
+  //       zoom.current.z = 150;
+  //     }
+
+  //     if (zoom.current.z < 340) {
+  //       zoom.current.y += deltaY * 0.1;
+  //       zoom.current.z += deltaY * 0.1;
+  //     } else {
+  //       zoom.current.y = 340;
+  //       zoom.current.z = 340;
+  //     }
+  //   };
+
+  //   gl.domElement.addEventListener("wheel", handler);
+  //   return () => {
+  //     gl.domElement.removeEventListener("wheel", handler);
+  //   };
+  // });
 
   useEffect(() => {
     loops.current = [];

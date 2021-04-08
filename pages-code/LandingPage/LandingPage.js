@@ -10,7 +10,12 @@ export default function LandingPage() {
   const dpr = useState(1.1);
 
   useEffect(() => {
-    dpr.set(window.devicePixelRatio || 1.1);
+    let val = window.devicePixelRatio || 1.1;
+    if (val > 1.5) {
+      val = 1.5;
+    }
+
+    dpr.set(val);
   }, []);
 
   return (

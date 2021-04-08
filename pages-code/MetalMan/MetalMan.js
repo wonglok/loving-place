@@ -1,5 +1,5 @@
 import { useState } from "@hookstate/core";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
 import { AnimationMixer, MathUtils } from "three";
 import { Object3D, Vector3 } from "three";
