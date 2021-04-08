@@ -25,19 +25,20 @@ export function LineDrop() {
     mini.set("scene", scene);
     mini.set("camera", camera);
 
-    let floor = new TorusBufferGeometry(50, 10, 30, 200);
+    let floor = new TorusBufferGeometry(50, 10, 20, 60);
     floor.rotateX(-0.5 * Math.PI);
     floor.translate(0, 25, 0);
+
     new LineStuff(mini, {
       name: "floor",
       baseGeometry: floor,
-      scale: 8,
+      scale: 10,
       position: new Vector3(0.0, 0.0, 0.0),
     });
 
     mini.ready.floor.then((e) => {
       e.hide();
-      e.run({ delay: 0 });
+      e.run({ delay: 500 });
     });
 
     engine.current = mini;
@@ -52,3 +53,5 @@ export function LineDrop() {
 
   return <group ref={ref}></group>;
 }
+
+//

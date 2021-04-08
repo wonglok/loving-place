@@ -37,6 +37,8 @@ module.exports = /* glsl */ `
     vec4 mvPosition = modelViewMatrix * vec4(mix(outputPos0, outputPos1, progress), 1.0);
 
     gl_Position = projectionMatrix * mvPosition;
+
+    // gl_PointSize = 1.0;
   }
 `;
 

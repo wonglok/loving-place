@@ -12,8 +12,9 @@ export default function LandingPage() {
 
   useEffect(() => {
     let val = window.devicePixelRatio || 1.0;
-    if (val > 2) {
-      val = 2;
+
+    if (val > 1.75) {
+      val = 1.75;
     }
 
     dpr.set(val);
@@ -28,7 +29,6 @@ export default function LandingPage() {
     >
       <ambientLight color={"white"} intensity={1}></ambientLight>
       <MetalMan></MetalMan>
-
       <HDREnv></HDREnv>
       <GameControl></GameControl>
       <PlaceFloor></PlaceFloor>
