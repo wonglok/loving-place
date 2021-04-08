@@ -79,8 +79,8 @@ export function MetalManModel() {
     onLoop(() => {
       let diff = current.copy(Me.goingTo).sub(group.position);
 
-      if (diff.length() > 1.5) {
-        vel.copy(diff).normalize().multiplyScalar(2.5);
+      if (diff.length() > 2) {
+        vel.copy(diff).normalize().multiplyScalar(3.5);
         Me.velocity.copy(vel);
         Me.position.add(vel);
 
