@@ -1,5 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
+import { Vector3 } from "three";
 import { Me } from "../AppState/AppState";
 
 function ready(fn) {
@@ -22,6 +23,32 @@ export const GameControl = () => {
     loops.current.forEach((e) => e());
   });
 
+  const zoom = useRef(new Vector3(0, 150, 150));
+  useEffect(() => {
+    let handler = ({ deltaY }) => {
+      if (zoom.current.z > 150) {
+        zoom.current.y += deltaY * 0.1;
+        zoom.current.z += deltaY * 0.1;
+      } else {
+        zoom.current.y = 150;
+        zoom.current.z = 150;
+      }
+
+      if (zoom.current.z < 340) {
+        zoom.current.y += deltaY * 0.1;
+        zoom.current.z += deltaY * 0.1;
+      } else {
+        zoom.current.y = 340;
+        zoom.current.z = 340;
+      }
+    };
+
+    gl.domElement.addEventListener("wheel", handler);
+    return () => {
+      gl.domElement.removeEventListener("wheel", handler);
+    };
+  });
+
   useEffect(() => {
     loops.current = [];
     camera.far = 1000000;
@@ -36,8 +63,8 @@ export const GameControl = () => {
     // mapContrtols.object.position.y = 350;
     // mapContrtols.object.position.z = 350;
 
-    mapContrtols.minDistance = 100;
-    mapContrtols.maxDistance = 800;
+    mapContrtols.minDistance = 120;
+    mapContrtols.maxDistance = 340;
 
     mapContrtols.screenSpacePanning = false;
     mapContrtols.enablePan = false;
@@ -60,15 +87,19 @@ export const GameControl = () => {
         return myself.getObjectByName("mixamorigHead");
       }),
     ]).then(([group]) => {
+      //
       onLoop(() => {
-        // mapContrtols.object.position.x = 0 + group.position.x;
-        // mapContrtols.object.position.y = 150 + group.position.y;
-        // mapContrtols.object.position.z = 150 + group.position.z;
+        // mapContrtols.object.position.x = 0 + Me.position.x;
+        // mapContrtols.object.position.y = zoom.current.y + Me.position.y;
+        // mapContrtols.object.position.z = zoom.current.z + Me.position.z;
 
-        mapContrtols.object.position.add(Me.velocity);
         mapContrtols.target.x = group.position.x;
         mapContrtols.target.y = group.position.y;
         mapContrtols.target.z = group.position.z;
+
+        mapContrtols.object.position.x = mapContrtols.target.x;
+        mapContrtols.object.position.y = mapContrtols.target.y + zoom.current.y;
+        mapContrtols.object.position.z = mapContrtols.target.z + zoom.current.z;
       });
 
       // let headPoint = new Vector3();
@@ -85,12 +116,6 @@ export const GameControl = () => {
       mapContrtols.dispose();
     };
   }, []);
-
-  useEffect(() => {
-    camera.position.copy(Me.position);
-    camera.position.y += 150;
-    camera.position.z += 150;
-  });
 
   return <group></group>;
 };
