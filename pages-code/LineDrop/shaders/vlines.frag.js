@@ -1,6 +1,7 @@
 module.exports = /* glsl */ `
   varying vec2 vUv;
   uniform float progress;
+  uniform float opacity;
   varying vec3 vRand3;
 
   void main (void) {
@@ -10,7 +11,7 @@ module.exports = /* glsl */ `
       pow(vRand3.y, 1.0 - progress + 0.15),
       pow(vRand3.z, 1.0 - progress + 0.15)
     );
-    gl_FragColor = vec4(cDiffusion,  0.5 * (progress));
+    gl_FragColor = vec4(cDiffusion,  0.5 * (progress) * opacity);
   }
 
 `;

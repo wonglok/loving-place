@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@hookstate/core": "^3.0.6",
+    "@react-three/cannon": "^1.0.0",
     "@react-three/fiber": "^6.0.9",
     "@react-three/flex": "^0.5.2",
     "animejs": "^3.2.1",

@@ -78,7 +78,6 @@ export const GameControl = () => {
   );
 
   useEffect(() => {
-    loops.current = [];
     camera.far = 100000;
     camera.near = 0.1;
     camera.updateProjectionMatrix();
@@ -120,8 +119,10 @@ export const GameControl = () => {
         lookAt.getWorldPosition(mapContrtols.target);
 
         mapContrtols.object.position.x = mapContrtols.target.x;
-        mapContrtols.object.position.y = mapContrtols.target.y + zoom.current.y;
-        mapContrtols.object.position.z = mapContrtols.target.z + zoom.current.z;
+        mapContrtols.object.position.y =
+          mapContrtols.target.y + zoom.current.y * 1;
+        mapContrtols.object.position.z =
+          mapContrtols.target.z + zoom.current.z * 1;
 
         if (camera.needsUpdate) {
           camera.updateMatrixWorld();
@@ -130,6 +131,7 @@ export const GameControl = () => {
     });
 
     return () => {
+      loops.current = [];
       mapContrtols.dispose();
     };
   }, []);

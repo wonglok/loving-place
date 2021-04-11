@@ -1,39 +1,49 @@
 //
 
-export class ExecEnv {
+export class LovingAPI {
   // https://www.npmjs.com/package/js-tree-list
-  constructor({ logic, graph }) {
-    //
-    //
-    //
-    //
+  constructor({ mounter3D, loader, projectID }) {
+    console.log(projectID);
+    this.files = [];
+
+    function getFilesData(r, array) {
+      r.keys().forEach((key) => {
+        array.push({
+          filepath: key,
+          ...r(key),
+        });
+      });
+    }
+
+    getFilesData(loader, this.files);
+
+    console.log(this.files, mounter3D);
+
+    this.clean = () => {
+      console.log("clean");
+    };
   }
 }
 
 //
-//
+// Serverside is better because we can make a template market place
 //
 
 //
-//
+// drag the logic file to canvas
 //
 
 // logic file
-// export const name = 'root'
-// export const inputs = ['myinput1', 'hello', 'i']
-// export const output = ['myoutput2', 'love', 'thankyou']
-// export const logic = async function (core) {
-//
-// }
-//
-
-//
+// export const codename = 'root'
+// export const inputs = [{ name: 'system' }, { name: 'position' }]
+// export const outputs = [{ name: 'system' }, { name: 'position' }]
+// export const logic = async function (core) { }
 
 // core.i2
 // core.o2
 
-// core.i1.send({ a: 123 })
-// core.i1.receive(() => {})
+// core.i1.pulse({ a: 123 })
+// core.i1.stream(() => {})
 
 // i = inpiut
 // o = output
@@ -66,7 +76,7 @@ export class ExecEnv {
 
 // core.i1 = input port 1
 // core.o2 = output port 2
-// core.i1.receive(() => {
+// core.i1.stream(() => {
 // })
 // core.onLoop(() => {})
 // core.onClean(() => {})

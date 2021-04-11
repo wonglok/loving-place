@@ -30,7 +30,7 @@ module.exports = /* glsl */ `
 
     vec3 newOffsets = offsets + vec3(0.0, initHeight * myProgress, 0.0) * rand3 + vec3(0.0, rand3.y * initHeight * 3.0 * myProgress * rand3.y, 0.0);
 
-    vec3 outputPos0 = faceMePos + newOffsets + vec3(0.0, 0.0, 0.0);
+    vec3 outputPos0 = faceMePos + newOffsets;
 
     vec3 outputPos1 = vec3(position.x, position.y * unitSize / (initHeight), position.z) + offsets;
 
@@ -41,5 +41,3 @@ module.exports = /* glsl */ `
     // gl_PointSize = 1.0;
   }
 `;
-
-//

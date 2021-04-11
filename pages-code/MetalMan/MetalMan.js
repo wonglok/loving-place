@@ -13,10 +13,10 @@ export function MetalManModel() {
 
   const { FBXLoader } = require("three/examples/jsm/loaders/FBXLoader");
   const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader");
+  const { nodes } = useLoader(GLTFLoader, "/avatar/metalman.glb");
 
   const stayIdle = useLoader(FBXLoader, "/avatar-actions/idle.fbx");
   const runningAction = useLoader(FBXLoader, "/avatar-actions/running.fbx");
-  const { nodes } = useLoader(GLTFLoader, "/avatar/metalman.glb");
 
   const internalLoop = useRef([]);
   const onLoop = (v) => internalLoop.current.push(v);

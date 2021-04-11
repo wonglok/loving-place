@@ -69,11 +69,13 @@ export class LineStuff {
     });
 
     let progress = { value: 0 };
+    let opacity = { value: 1 };
     let iMat = new ShaderMaterial({
       uniforms: {
         unitSize: { value: unitSize },
         initHeight: { value: height },
         progress,
+        opacity,
       },
       transparent: true,
       side: FrontSide,
@@ -87,10 +89,10 @@ export class LineStuff {
     iMesh.position.copy(position);
     this.mesh = iMesh;
 
-    this.mini.onLoop(() => {
-      iMesh.position.y =
-        Math.sin(window.performance.now() * 0.001) * this.scale;
-    });
+    // this.mini.onLoop(() => {
+    //   iMesh.position.y =
+    //     Math.sin(window.performance.now() * 0.001) * this.scale;
+    // });
 
     this.mini.ready.scene.then((scene) => {
       scene.add(iMesh);
@@ -100,7 +102,7 @@ export class LineStuff {
     });
 
     let current = false;
-    let runner = ({ done = () => {}, delay = 0 }) => {
+    let run = ({ done = () => {}, delay = 0 }) => {
       progress.value = 0.0;
       current = anime({
         targets: [progress],
@@ -114,7 +116,23 @@ export class LineStuff {
       });
     };
 
-    this.run = runner;
+    let fadeOut = ({ done = () => {}, delay = 0 }) => {
+      progress.value = 1.0;
+      opacity.value = 1.0;
+      current = anime({
+        targets: [opacity, progress],
+        value: 0,
+        easing: "easeOutSine", //"easeOutQuad",
+        duration: 1000,
+        delay,
+        complete: () => {
+          done();
+        },
+      });
+    };
+
+    this.fadeOut = fadeOut;
+    this.run = run;
     this.hide = () => {
       if (current) {
         current.pause();

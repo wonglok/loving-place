@@ -194,6 +194,11 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/context-base/-/context-base-0.14.0.tgz#c67fc20a4d891447ca1a855d7d70fa79a3533001"
   integrity sha512-sDOAZcYwynHFTbLo6n8kIbLiVF3a3BLkrmehJUyEbT9F+Smbi47kLGS2gG2g0fjBLR/Lr1InPD7kXL7FaTqEkw==
 
+"@react-three/cannon@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@react-three/cannon/-/cannon-1.0.0.tgz#f5e653aafb4d39c7f6802f6b0582454ed0b7f180"
+  integrity sha512-uqMboNFzK3VS7VTnNwrI0eytwwJLD2T9j+UYZVcWQRk2u8ydas6fLKx4j30FQBrpUOkNqLdmwqn7IqnGKG8SSQ==
+
 "@react-three/fiber@^6.0.9":
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-6.0.9.tgz#12fc8315039b2d626bef666a3a22067038eaa174"

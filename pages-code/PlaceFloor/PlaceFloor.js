@@ -1,6 +1,5 @@
-import { useState } from "@hookstate/core";
-import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
 import { Me } from "../AppState/AppState";
 
 export function PlaceFloor() {
@@ -12,10 +11,16 @@ export function PlaceFloor() {
     if (destinationRef.current) {
       destinationRef.current.position.x = Me.goingTo.x;
       destinationRef.current.position.z = Me.goingTo.z;
-      destinationRef.current.position.y = Me.goingTo.y + 10;
-      destinationRef.current.rotation.x = Math.PI * -0.5;
-      destinationRef.current.rotation.z =
+      destinationRef.current.position.y =
+        Me.goingTo.y + 40 + Math.sin(window.performance.now() * 0.005) * 10;
+
+      // destinationRef.current.rotation.x = Math.PI;
+      destinationRef.current.scale.x = 0.75;
+      destinationRef.current.scale.z = 0.75;
+
+      destinationRef.current.rotation.y =
         window.performance.now() * 0.001 * 2.5;
+
       destinationRef.current.material.opacity =
         Me.status.value === "running" ? 1 : 0;
 
@@ -44,12 +49,14 @@ export function PlaceFloor() {
         rotation-x={-0.5 * Math.PI}
         onPointerDown={(event) => {
           isDownRef.current = true;
+
           Me.goingTo.x = event.point.x;
           Me.goingTo.y = event.point.y;
           Me.goingTo.z = event.point.z;
+
           Me.status.set("running");
         }}
-        onPointerUp={(event) => {
+        onPointerUp={() => {
           isDownRef.current = false;
           Me.status.set("running");
         }}
@@ -63,7 +70,11 @@ export function PlaceFloor() {
 
       <mesh ref={destinationRef}>
         {/* <torusBufferGeometry args={[8, 1.5, 12, 80]}></torusBufferGeometry> */}
-        <icosahedronBufferGeometry args={[10, 0]}></icosahedronBufferGeometry>
+        {/* <icosahedronBufferGeometry args={[10, 0]}></icosahedronBufferGeometry> */}
+        {/* <dodecahedronBufferGeometry
+            args={[30, 1]}
+          ></dodecahedronBufferGeometry> */}
+        <octahedronGeometry args={[2.5 * 12]}></octahedronGeometry>
         <meshStandardMaterial
           color="white"
           transparent={true}

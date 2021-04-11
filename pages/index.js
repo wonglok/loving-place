@@ -1,5 +1,4 @@
 import Head from "next/head";
-// import dynamic from "next/dynamic";
 import LandingPage from "../pages-code/LandingPage/LandingPage.js";
 
 // const DynamicComponent = dynamic(
@@ -12,7 +11,6 @@ import LandingPage from "../pages-code/LandingPage/LandingPage.js";
 //   },
 //   { ssr: false }
 // );
-
 export default function Home({ buildTimeCache }) {
   return (
     <>
