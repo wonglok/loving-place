@@ -13,7 +13,7 @@ import LandingPage from "../pages-code/LandingPage/LandingPage.js";
 //   { ssr: false }
 // );
 
-export default function Home() {
+export default function Home({ buildTimeCache }) {
   return (
     <>
       <Head>
@@ -21,8 +21,35 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LandingPage></LandingPage>
-
+      {/* <div>{JSON.stringify(buildTimeCache)}</div> */}
       {/* <DynamicComponent></DynamicComponent> */}
     </>
   );
 }
+
+export const getStaticProps = async () => {
+  return {
+    props: {
+      buildTimeCache: {
+        abc: 123,
+      },
+    },
+    notFound: false,
+  };
+
+  // const res = await fetch(``)
+  // const data = await res.json()
+  // if (!data) {
+  //   return {
+  //     redirect: {
+  //       destination: '/',
+  //       permanent: false,
+  //     },
+  //   }
+  // }
+  // return {
+  //   props: { data }, // will be passed to the page component as props
+  // }
+};
+
+//;

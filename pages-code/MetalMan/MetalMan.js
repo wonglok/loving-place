@@ -1,8 +1,8 @@
 import { useState } from "@hookstate/core";
-import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
-import { AnimationMixer, MathUtils } from "three";
-import { Object3D, Vector3 } from "three";
+import { AnimationMixer } from "three";
+import { Object3D } from "three";
 import { Me } from "../AppState/AppState";
 
 export function MetalManModel() {
@@ -16,7 +16,6 @@ export function MetalManModel() {
 
   const stayIdle = useLoader(FBXLoader, "/avatar-actions/idle.fbx");
   const runningAction = useLoader(FBXLoader, "/avatar-actions/running.fbx");
-
   const { nodes } = useLoader(GLTFLoader, "/avatar/metalman.glb");
 
   const internalLoop = useRef([]);
@@ -73,7 +72,7 @@ export function MetalManModel() {
     onLoop(() => {
       let diff = current.copy(Me.goingTo).sub(group.position);
 
-      if (diff.length() > 2) {
+      if (diff.length() > 2 && Me.status.value === "running") {
         vel.copy(diff).normalize().multiplyScalar(3.5);
         Me.velocity.copy(vel);
         Me.position.add(vel);

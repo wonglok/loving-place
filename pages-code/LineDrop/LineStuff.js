@@ -1,16 +1,9 @@
 import {
   BoxBufferGeometry,
-  //
-  // InstancedMesh,
-  // PlaneBufferGeometry,
-  // CylinderBufferGeometry,
   FrontSide,
   InstancedBufferAttribute,
   InstancedBufferGeometry,
-  LineSegments,
   Mesh,
-  PlaneBufferGeometry,
-  Points,
   ShaderMaterial,
   SphereBufferGeometry,
   Vector3,
@@ -43,7 +36,7 @@ export class LineStuff {
   async setup({ name, position, delay, baseGeometry }) {
     let onScene = (cb) => this.mini.get("scene").then((e) => cb(e));
     let unitSize = 0.075 * this.scale;
-    let height = 6 * this.scale;
+    let height = 2 * this.scale;
     let pGeo = new BoxBufferGeometry(unitSize, height, unitSize, 1, 1, 1);
     // pGeo = new PlaneBufferGeometry(unitSize, height);
 
@@ -99,7 +92,7 @@ export class LineStuff {
         Math.sin(window.performance.now() * 0.001) * this.scale;
     });
 
-    onScene((scene) => {
+    this.mini.ready.scene.then((scene) => {
       scene.add(iMesh);
       this.mini.onClean(() => {
         scene.remove(iMesh);

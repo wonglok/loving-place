@@ -23,9 +23,9 @@ export const GameControl = () => {
   useFrame(() => {
     loops.current.forEach((e) => e());
   });
-  const minLimit = 150;
-  const maxLimit = 340;
-  const zoom = useRef(new Vector3(0, minLimit, minLimit));
+  const minLimit = 50;
+  const maxLimit = 500;
+  const zoom = useRef(new Vector3(0, 125, 125));
 
   useWheel(
     (state) => {
@@ -46,6 +46,8 @@ export const GameControl = () => {
         zoom.current.y = maxLimit;
         zoom.current.z = maxLimit;
       }
+
+      camera.needsUpdate = true;
     },
     { domTarget: gl.domElement, eventOptions: { passive: false } }
   );
@@ -69,6 +71,8 @@ export const GameControl = () => {
         zoom.current.y = maxLimit;
         zoom.current.z = maxLimit;
       }
+
+      camera.needsUpdate = true;
     },
     { domTarget: gl.domElement, eventOptions: { passive: false } }
   );
@@ -83,7 +87,7 @@ export const GameControl = () => {
       .MapControls;
     let mapContrtols = new MapControls(camera, gl.domElement);
 
-    mapContrtols.minDistance = 120;
+    mapContrtols.minDistance = minLimit;
     mapContrtols.maxDistance = maxLimit;
 
     mapContrtols.screenSpacePanning = false;
@@ -118,6 +122,10 @@ export const GameControl = () => {
         mapContrtols.object.position.x = mapContrtols.target.x;
         mapContrtols.object.position.y = mapContrtols.target.y + zoom.current.y;
         mapContrtols.object.position.z = mapContrtols.target.z + zoom.current.z;
+
+        if (camera.needsUpdate) {
+          camera.updateMatrixWorld();
+        }
       });
     });
 

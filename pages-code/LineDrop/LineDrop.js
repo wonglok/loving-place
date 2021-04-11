@@ -1,11 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
-import {
-  CircleBufferGeometry,
-  PlaneBufferGeometry,
-  TorusBufferGeometry,
-  Vector3,
-} from "three";
+import { TorusBufferGeometry, Vector3 } from "three";
 import { LineStuff } from "./LineStuff";
 import { Mini } from "./Mini";
 
@@ -53,5 +48,9 @@ export function LineDrop() {
 
   return <group ref={ref}></group>;
 }
+
+//
+
+//
 
 //

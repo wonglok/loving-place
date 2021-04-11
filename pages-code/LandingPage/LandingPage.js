@@ -1,11 +1,13 @@
 import { useState } from "@hookstate/core";
 import { Canvas } from "@react-three/fiber";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { GameControl } from "../GameControl/GameControl";
 import { HDREnv } from "../HDREnv/HDREnv";
 import { LineDrop } from "../LineDrop/LineDrop";
 import { MetalMan } from "../MetalMan/MetalMan";
 import { PlaceFloor } from "../PlaceFloor/PlaceFloor";
+
+import * as RT from "../api/realtime";
 
 export default function LandingPage() {
   const dpr = useState(1.0);
@@ -18,6 +20,18 @@ export default function LandingPage() {
     }
 
     dpr.set(val);
+
+    // fetch("https://prod-rest.realtime.effectnode.com/")
+    //   .then((e) => e.json())
+    //   .then(console.log);
+
+    try {
+      fetch("http://localhost:3333/")
+        .then((e) => e.json())
+        .then(console.log, console.log);
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   return (
@@ -36,5 +50,24 @@ export default function LandingPage() {
     </Canvas>
   );
 }
+
+//
+
+//
+
+// export async function getStaticProps(context) {
+//   return {
+//     props: {}, // will be passed to the page component as props
+//   };
+// }
+
+//
+
+//
+
+//
+
+//
+//
 
 //

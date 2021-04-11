@@ -209,16 +209,16 @@ if (process.env.NODE_ENV === "test") {
   mode = "staging";
 }
 
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 
 // deubg
 // mode = "staging";
 
-export const config = envs[mode];
+export const EnvConfig = envs[mode];
 
 const testRunBell = () => {
   let bell = new LambdaClient({
-    url: config.ws,
+    url: EnvConfig.ws,
   });
 
   let userID = "wonglok831";
@@ -277,7 +277,7 @@ export const parseToJSON = (e) => {
 export const register = async ({ username, password, email }) => {
   let res = await axios({
     method: "POST",
-    baseURL: config.rest,
+    baseURL: EnvConfig.rest,
     url: "/auth?action=register",
     data: {
       username,
@@ -303,7 +303,7 @@ export const register = async ({ username, password, email }) => {
 export const login = async ({ identity, password }) => {
   let res = await axios({
     method: "POST",
-    baseURL: config.rest,
+    baseURL: EnvConfig.rest,
     url: "/auth?action=login",
     data: {
       identity,
@@ -328,7 +328,7 @@ export const login = async ({ identity, password }) => {
 export const taken = async ({ identity }) => {
   let res = await axios({
     method: "POST",
-    baseURL: config.rest,
+    baseURL: EnvConfig.rest,
     url: "/auth?action=taken",
     data: {
       identity,
@@ -349,39 +349,39 @@ export const taken = async ({ identity }) => {
   return res;
 };
 
-// export const testAuth = async () => {
-//   try {
-//     await taken({
-//       identity: "tester4@gmail.com",
-//     }).then(
-//       async () => {
-//         let { jwt, user } = await register({
-//           username: "tester",
-//           password: "testerabc+++",
-//           email: "tester4@gmail.com",
-//         });
+export const testAuth = async () => {
+  try {
+    await taken({
+      identity: "tester4@gmail.com",
+    }).then(
+      async () => {
+        let { jwt, user } = await register({
+          username: "tester",
+          password: "testerabc+++",
+          email: "tester4@gmail.com",
+        });
 
-//         console.log(jwt, user);
+        console.log(jwt, user);
 
-//         return { jwt, user };
-//       },
-//       async () => {
-//         let { jwt, user } = await login({
-//           identity: "tester",
-//           password: "testerabc+++",
-//         });
+        return { jwt, user };
+      },
+      async () => {
+        let { jwt, user } = await login({
+          identity: "tester",
+          password: "testerabc+++",
+        });
 
-//         console.log(jwt, user);
+        console.log(jwt, user);
 
-//         return { jwt, user };
-//       }
-//     );
-//   } catch (e) {
-//     console.error(e.message);
-//   }
-// };
+        return { jwt, user };
+      }
+    );
+  } catch (e) {
+    console.error(e.message);
+  }
+};
+
 // testAuth();
-
 // if (window) {
 //   testAuth();
 // }
