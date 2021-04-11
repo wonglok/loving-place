@@ -27,6 +27,8 @@ export function PlaceFloor() {
 
       if (isDownCountRef.current >= 2) {
         isDownRef.current = false;
+        destinationRef.current.material.opacity = 0;
+        Me.status.set("ready");
       }
 
       if (isDownRef.current && Me.status.value === "ready") {
