@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { Me } from "../AppState/AppState";
 
 export function PlaceFloor() {
+  const isDownCountRef = useRef(0);
   const isDownRef = useRef(false);
   const destinationRef = useRef(false);
   const floorRef = useRef(false);
@@ -15,14 +16,18 @@ export function PlaceFloor() {
         Me.goingTo.y + 40 + Math.sin(window.performance.now() * 0.005) * 10;
 
       // destinationRef.current.rotation.x = Math.PI;
-      destinationRef.current.scale.x = 0.75;
-      destinationRef.current.scale.z = 0.75;
+      destinationRef.current.scale.x = 0.8;
+      destinationRef.current.scale.z = 0.8;
 
       destinationRef.current.rotation.y =
         window.performance.now() * 0.001 * 2.5;
 
       destinationRef.current.material.opacity =
         Me.status.value === "running" ? 1 : 0;
+
+      if (isDownCountRef.current >= 2) {
+        isDownRef.current = false;
+      }
 
       if (isDownRef.current && Me.status.value === "ready") {
         Me.status.set("running");
@@ -48,6 +53,7 @@ export function PlaceFloor() {
         ref={floorRef}
         rotation-x={-0.5 * Math.PI}
         onPointerDown={(event) => {
+          isDownCountRef.current++;
           isDownRef.current = true;
 
           Me.goingTo.x = event.point.x;
@@ -57,6 +63,8 @@ export function PlaceFloor() {
           Me.status.set("running");
         }}
         onPointerUp={() => {
+          isDownCountRef.current--;
+
           isDownRef.current = false;
           Me.status.set("running");
         }}

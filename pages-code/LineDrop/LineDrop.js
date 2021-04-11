@@ -1,6 +1,6 @@
 import { useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
-import { PlaneBufferGeometry, Vector3 } from "three";
+import { TorusBufferGeometry, Vector3 } from "three";
 import { LineStuff } from "./LineStuff";
 import { Mini } from "./Mini";
 
@@ -22,8 +22,8 @@ export function LineDropInternal() {
     mini.set("scene", scene);
     mini.set("camera", camera);
 
-    // let floor = new TorusBufferGeometry(50, 10, 20, 60);
-    let floor = new PlaneBufferGeometry(500, 500, 100, 100);
+    let floor = new TorusBufferGeometry(50, 10, 20, 60);
+    // let floor = new PlaneBufferGeometry(500, 500, 100, 100);
     floor.rotateX(-0.5 * Math.PI);
     floor.translate(0, 25, 0);
 
