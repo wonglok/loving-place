@@ -3,7 +3,8 @@
 export class LovingAPI {
   // https://www.npmjs.com/package/js-tree-list
   constructor({ mounter3D, loader, projectID }) {
-    console.log(projectID);
+    this.mounter3D = mounter3D;
+    this.projectID = projectID;
     this.files = [];
 
     function getFilesData(r, array) {
@@ -17,8 +18,6 @@ export class LovingAPI {
 
     getFilesData(loader, this.files);
 
-    console.log(this.files, mounter3D);
-
     this.clean = () => {
       console.log("clean");
     };
@@ -26,7 +25,7 @@ export class LovingAPI {
 }
 
 //
-// Serverside is better because we can make a template market place
+// Serverside storge for json is better because we can make a template market place
 //
 
 //
@@ -89,4 +88,13 @@ export class LovingAPI {
 
 // https://github.com/mrdoob/three.js/blob/master/examples/misc_boxselection.html
 // https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_drag.html
+
+//
+
+// video driven result
+// video left action right
+
+// instead of getting a invisible cloak of social recognition.
+// get an aromor of God
+
 //

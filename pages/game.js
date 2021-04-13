@@ -18,8 +18,7 @@ export default function Home({ buildTimeCache }) {
         <title>Loving.Place</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>Home Page</div>
-      {/* <LandingPage></LandingPage> */}
+      <LandingPage></LandingPage>
       {/* <div>{JSON.stringify(buildTimeCache)}</div> */}
       {/* <DynamicComponent></DynamicComponent> */}
     </>

@@ -40,7 +40,7 @@ export function LineDropInternal() {
 
     mini.ready.floor.then((e) => {
       e.hide();
-      e.run({ delay: 0 });
+      e.run({ delay: 500 });
 
       setTimeout(() => {
         e.fadeOut({
@@ -97,9 +97,3 @@ export function LineDrop() {
     </Suspense>
   );
 }
-
-//
-
-//
-
-//

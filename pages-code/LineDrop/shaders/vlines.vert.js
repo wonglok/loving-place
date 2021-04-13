@@ -28,7 +28,9 @@ module.exports = /* glsl */ `
 
     faceMePos *= faceMePos;
 
-    vec3 newOffsets = offsets + vec3(0.0, initHeight * myProgress, 0.0) * rand3 + vec3(0.0, rand3.y * initHeight * 3.0 * myProgress * rand3.y, 0.0);
+    vec3 newOffsets = offsets
+                      + vec3(0.0, initHeight * myProgress, 0.0) * rand3
+                      + vec3(0.0, rand3.y * initHeight * 3.0 * myProgress, 0.0);
 
     vec3 outputPos0 = faceMePos + newOffsets;
 

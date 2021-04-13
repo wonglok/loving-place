@@ -101,13 +101,19 @@ export const GameControl = () => {
 
     Promise.all([
       ready(async () => {
-        return scene.getObjectByName("myself");
+        try {
+          return scene.getObjectByName("myself");
+        } catch (e) {}
       }),
       ready(async () => {
         let myself = await ready(() => {
-          return scene.getObjectByName("myself");
+          try {
+            return scene.getObjectByName("myself");
+          } catch (e) {}
         });
-        return myself.getObjectByName("mixamorigHips");
+        try {
+          return myself.getObjectByName("mixamorigHips");
+        } catch (e) {}
       }),
     ]).then(([group, lookAt]) => {
       //

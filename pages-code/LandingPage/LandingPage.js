@@ -1,12 +1,12 @@
 import { useState } from "@hookstate/core";
 import { Canvas } from "@react-three/fiber";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { GameControl } from "../GameControl/GameControl";
 import { HDREnv } from "../HDREnv/HDREnv";
 import { LineDrop } from "../LineDrop/LineDrop";
 import { MetalMan } from "../MetalMan/MetalMan";
 import { PlaceFloor } from "../PlaceFloor/PlaceFloor";
-import { Physics } from "@react-three/cannon";
+// import { Physics } from "@react-three/cannon";
 import WashingMachine from "../WashingMachine/WashingMachine";
 // import * as RT from "../api/realtime";
 
@@ -42,13 +42,9 @@ export default function LandingPage() {
       antialias={true}
       camera={{ position: [0, 150, 150] }}
     >
-      <Physics>
-        <PlaceFloor></PlaceFloor>
-        <MetalMan></MetalMan>
-        <GameControl></GameControl>
-      </Physics>
-
-      <WashingMachine></WashingMachine>
+      <PlaceFloor></PlaceFloor>
+      <MetalMan></MetalMan>
+      <GameControl></GameControl>
 
       <ambientLight color={"white"} intensity={1}></ambientLight>
       <HDREnv></HDREnv>

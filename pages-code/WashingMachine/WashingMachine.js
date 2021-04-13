@@ -19,10 +19,10 @@ export default function WashingMachine() {
 
   return (
     <group ref={ref}>
-      <mesh>
+      {/* <mesh>
         <boxBufferGeometry args={[2, 2, 2]}></boxBufferGeometry>
         <meshStandardMaterial color={"white"}></meshStandardMaterial>
-      </mesh>
+      </mesh> */}
     </group>
   );
 }

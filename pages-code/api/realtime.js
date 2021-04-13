@@ -1,3 +1,4 @@
+import { createState } from "@hookstate/core";
 import axios from "axios";
 
 let isFunction = function (obj) {
@@ -380,6 +381,66 @@ export const testAuth = async () => {
     console.error(e.message);
   }
 };
+
+export const AuthState = {
+  jwt: createState(false),
+  user: createState(false),
+  isLoggedIn: () => {
+    return new Promise((resolve) => {
+      let tt = setInterval(() => {
+        let ans = AuthState.ready;
+        if (ans) {
+          resolve(!!AuthState.jwt.value);
+          clearInterval(tt);
+        }
+      });
+    });
+  },
+  flush: () => {
+    localStorage.setItem(
+      window.location.origin + "-AuthState.jwt.value",
+      JSON.stringify(AuthState.jwt.value)
+    );
+    localStorage.setItem(
+      window.location.origin + "-AuthState.user.value",
+      JSON.stringify(AuthState.user.value)
+    );
+  },
+  clean: () => {
+    AuthState.jwt.set(false);
+    AuthState.user.set(false);
+    localStorage.removeItem(window.location.origin + "-AuthState.jwt.value");
+    localStorage.removeItem(window.location.origin + "-AuthState.user.value");
+  },
+  hydrate: () => {
+    let strJwt = localStorage.getItem(
+      window.location.origin + "-AuthState.jwt.value"
+    );
+    try {
+      strJwt = JSON.parse(strJwt);
+      AuthState.jwt.set(strJwt);
+    } catch (e) {
+      localStorage.removeItem(window.location.origin + "-AuthState.jwt.value");
+    }
+
+    let strUser = localStorage.getItem(
+      window.location.origin + "-AuthState.user.value"
+    );
+    try {
+      strUser = JSON.parse(strUser);
+      AuthState.user.set(strUser);
+    } catch (e) {
+      localStorage.removeItem(window.location.origin + "-AuthState.user.value");
+    }
+
+    AuthState.ready = true;
+  },
+  ready: false,
+};
+
+if (typeof window !== "undefined") {
+  AuthState.hydrate();
+}
 
 // testAuth();
 // if (window) {

@@ -58,18 +58,19 @@ export function MetalManModel() {
     internalLoop.current.forEach((e) => e());
   });
 
-  useFrame(() => {
-    me.current.position.copy(Me.position);
-  });
-
   useEffect(() => {
     internalLoop.current = [];
+
     let group = me.current;
     let current = group.position.clone();
     let vel = group.position.clone();
     let tempLooker = new Object3D();
 
     onLoop(() => {
+      //
+
+      me.current.position.copy(Me.position);
+
       let diff = current.copy(Me.goingTo).sub(group.position);
 
       if (diff.length() > 2 && Me.status.value === "running") {
@@ -87,11 +88,13 @@ export function MetalManModel() {
         }
       }
     });
+
+    //
   }, []);
 
   return (
     <>
-      <group name={"myself"} ref={me}>
+      <group name={"myself"} ref={me} dispose={null}>
         <group rotation={[0, 0, 0]} position-y={1} scale={0.5}>
           <primitive object={nodes["mixamorigHips"]} />
           <skinnedMesh
@@ -116,9 +119,7 @@ export function MetalMan() {
   return (
     <>
       <Suspense fallback={null}>
-        <group>
-          <MetalManModel></MetalManModel>
-        </group>
+        <MetalManModel></MetalManModel>
       </Suspense>
     </>
   );

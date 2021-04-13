@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import * as RT from "../api/realtime";
+import { useState as useHookState } from "@hookstate/core";
 export function StackedLayout({ children, title = "Dashboard" }) {
-  let [session, loading] = [false, false];
+  let user = useHookState(RT.AuthState.user);
+  let name = useHookState("");
   let [openNav, setOpenNav] = useState(false);
   let [openProfile, setOpenProfile] = useState(false);
+  let { router } = useRouter();
 
   let tabs = [
     {
@@ -12,8 +17,14 @@ export function StackedLayout({ children, title = "Dashboard" }) {
     },
   ];
 
-  // let profile = [
-  // ]
+  let onSignOut = () => {
+    RT.AuthState.clean();
+    router.push("/login");
+  };
+
+  useEffect(() => {
+    name.set(user.value?.username || "");
+  }, [user.value?.username]);
 
   return (
     <>
@@ -121,14 +132,16 @@ export function StackedLayout({ children, title = "Dashboard" }) {
                           href="#"
                           className="block px-4 py-2 text-sm bg-gray-600 text-white border-b rounded-t-md border-gray-100"
                         >
-                          {session?.user?.name || ""}
+                          {name.get() || ""}
                         </span>
 
                         <a
                           href="#"
                           onClick={(ev) => {
                             ev.preventDefault();
-                            signOut({ callbackUrl: "/", redirect: true });
+                            // signOut({ callbackUrl: "/", redirect: true });
+
+                            onSignOut();
                           }}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-b-md"
                           role="menuitem"
@@ -267,7 +280,7 @@ export function StackedLayout({ children, title = "Dashboard" }) {
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">
-                      {session?.user?.name || "User"}
+                      {name.get() || "User"}
                     </div>
                     <div className="text-sm font-medium leading-none text-gray-400">
                       Welcome Back!
