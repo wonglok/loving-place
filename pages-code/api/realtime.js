@@ -189,8 +189,12 @@ export class LambdaClient extends EventEmitter {
 
 let envs = {
   development: {
-    rest: `http://localhost:3333`,
-    ws: `ws://localhost:3333`,
+    rest: `http://${
+      typeof window === "undefined" ? "localhost" : window.location.hostname
+    }:3333`,
+    ws: `ws://${
+      typeof window === "undefined" ? "localhost" : window.location.hostname
+    }:3333`,
   },
   production: {
     rest: `https://awbah4vhil.execute-api.us-west-2.amazonaws.com`,

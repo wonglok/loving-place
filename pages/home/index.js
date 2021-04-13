@@ -124,7 +124,7 @@ function TableHeader() {
 
         <th
           scope="col"
-          className=" px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          className="w-96 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
         >
           Rename
         </th>
@@ -193,7 +193,8 @@ function TableRecord({ project }) {
           </span>
         )}
       </td>
-      <td className="px-6 py-4 whitespace-wrap">
+
+      <td className="px-6 py-4 whitespace-nowrap max-w-xs overflow-x-auto">
         <div className="text-base text-gray-900">{row.value.displayName}</div>
         <div className="text-xs text-gray-500">{row.value.slug}</div>
       </td>
@@ -215,7 +216,7 @@ function TableRecord({ project }) {
                 updateObject({ object: row.value });
               }
             }}
-            className="p-2 px-4 bg-gray-100 rounded-lg mr-3 text-sm placeholder-gray-400"
+            className="p-2 px-4 w-52 bg-gray-100 rounded-lg mr-3 text-sm placeholder-gray-400"
             placeholder="My New Project Title"
           ></input>
 
@@ -256,14 +257,16 @@ function TableRecord({ project }) {
 function ProjectTable() {
   let projects = useState(ProjectsState);
   return (
-    <table className={"min-w-full divide-y divide-gray-200"}>
-      <TableHeader></TableHeader>
-      <tbody>
-        {projects.value.map((e) => {
-          return <TableRecord project={e} key={e._id}></TableRecord>;
-        })}
-      </tbody>
-    </table>
+    <div className={"w-full overflow-x-scroll"}>
+      <table className={"divide-y divide-gray-200 "}>
+        <TableHeader></TableHeader>
+        <tbody>
+          {projects.value.map((e) => {
+            return <TableRecord project={e} key={e._id}></TableRecord>;
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
