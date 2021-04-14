@@ -225,6 +225,7 @@ function TableHeader() {
 }
 
 function TableRecord({ project }) {
+  let router = useRouter();
   let loadingStatus = useState("ready");
   let row = useState(JSON.parse(JSON.stringify(project)));
 
@@ -263,8 +264,9 @@ function TableRecord({ project }) {
     });
   };
 
-  let onEdit = () => {
+  let onEdit = ({ object }) => {
     console.log("on edit");
+    router.push(`/project-editor/${object._id}`);
   };
   let onPreview = () => {
     console.log("on preview");
@@ -470,6 +472,7 @@ function ProjectsInTable() {
         >
           {pageAt.get()}
         </button>
+
         <button
           className={
             "p-2 px-4 border hover:shadow-inner hover:bg-gray-50 border-gray-400 text-white rounded-lg mr-3"
@@ -480,7 +483,6 @@ function ProjectsInTable() {
               if (ProjectsState.get().length === 0) {
                 ans = at;
               }
-
               return ans;
             });
           }}
