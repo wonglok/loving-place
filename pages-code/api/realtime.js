@@ -354,37 +354,37 @@ export const taken = async ({ identity }) => {
   return res;
 };
 
-export const testAuth = async () => {
-  try {
-    await taken({
-      identity: "tester4@gmail.com",
-    }).then(
-      async () => {
-        let { jwt, user } = await register({
-          username: "tester",
-          password: "testerabc+++",
-          email: "tester4@gmail.com",
-        });
+// export const testAuth = async () => {
+//   try {
+//     await taken({
+//       identity: "tester4@gmail.com",
+//     }).then(
+//       async () => {
+//         let { jwt, user } = await register({
+//           username: "tester",
+//           password: "testerabc+++",
+//           email: "tester4@gmail.com",
+//         });
 
-        console.log(jwt, user);
+//         console.log(jwt, user);
 
-        return { jwt, user };
-      },
-      async () => {
-        let { jwt, user } = await login({
-          identity: "tester",
-          password: "testerabc+++",
-        });
+//         return { jwt, user };
+//       },
+//       async () => {
+//         let { jwt, user } = await login({
+//           identity: "tester",
+//           password: "testerabc+++",
+//         });
 
-        console.log(jwt, user);
+//         console.log(jwt, user);
 
-        return { jwt, user };
-      }
-    );
-  } catch (e) {
-    console.error(e.message);
-  }
-};
+//         return { jwt, user };
+//       }
+//     );
+//   } catch (e) {
+//     console.error(e.message);
+//   }
+// };
 
 export const AuthState = {
   jwt: createState(false),

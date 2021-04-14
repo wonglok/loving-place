@@ -81,8 +81,34 @@ export const updateMine = async ({ object }) => {
   return res;
 };
 
+export const removeMine = async ({ object }) => {
+  let res = await axios({
+    method: "POST",
+    baseURL: EnvConfig.rest,
+    url: "/project?" + "action=remove-mine",
+    data: {
+      _id: object._id,
+    },
+    headers: {
+      "x-token": AuthState.jwt.value,
+      "access-control-allow-origin": window.location.origin,
+    },
+    withCredentials: true,
+  }).then(
+    (res) => res.data,
+    (e) => {
+      return Promise.reject({
+        message: e?.response?.data?.msg || "server error",
+      });
+    }
+  );
+
+  return res;
+};
+
 export const Project = {
   create,
   listMine,
   updateMine,
+  removeMine,
 };

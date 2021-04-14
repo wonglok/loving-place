@@ -7,6 +7,54 @@ import { Project } from "../../pages-code/api/Project";
 import { StackedLayout } from "../../pages-code/Layouts/StackedLayout";
 
 const ProjectsState = createState([]);
+const PopupRemove = createState(false);
+
+function PopupUI({ popState, children }) {
+  const pop = useState(popState);
+  return pop.value ? (
+    <>
+      <div
+        onClick={() => {
+          popState.set(false);
+        }}
+        className="fixed cursor-not-allowed z-10 top-0 left-0 flex items-center justify-center w-screen h-screen bg-gray-700 bg-opacity-75"
+      >
+        <div
+          className="bg-white p-5 cursor-default"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <div>{children}</div>
+        </div>
+      </div>
+
+      <div
+        className="fixed z-10 top-0 right-0 p-3 cursor-pointer"
+        onClick={() => {
+          popState.set(false);
+        }}
+      >
+        <svg
+          className="cursor-pointer"
+          width="24"
+          height="24"
+          xmlns="http://www.w3.org/2000/svg"
+          fillRule="evenodd"
+          clipRule="evenodd"
+          onClick={() => {
+            popState.set(false);
+          }}
+        >
+          <path
+            fill="white"
+            d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm0 10.293l5.293-5.293.707.707-5.293 5.293 5.293 5.293-.707.707-5.293-5.293-5.293 5.293-.707-.707 5.293-5.293-5.293-5.293.707-.707 5.293 5.293z"
+          />
+        </svg>
+      </div>
+    </>
+  ) : null;
+}
 
 export default function HomePagee() {
   const router = useRouter();
@@ -36,6 +84,42 @@ export default function HomePagee() {
   }
 }
 
+function RemoveItemPopup() {
+  const config = useState(PopupRemove);
+
+  return (
+    <PopupUI popState={config}>
+      <h1 className=" text-2xl font-bold mb-6">Do you want to remove item?</h1>
+      <div className="px-4 bg-gray-200 py-4 whitespace-nowrap max-w-xs overflow-x-auto">
+        <div className="text-base text-gray-900">
+          {config.value?.object?.displayName}
+        </div>
+        <div className="text-xs text-gray-500">
+          {config.value?.object?.slug}
+        </div>
+      </div>
+      <div>
+        <button
+          className="p-2 px-4 m-3 text-sm text-grey-600 bg-grey-100 border-grey-600 border rounded-lg mr-3"
+          onClick={() => {
+            config.value.cancel();
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          className="p-2 px-4 m-3 text-sm text-red-600 bg-red-100 border-red-600 border rounded-lg mr-3"
+          onClick={() => {
+            config.value.confirm();
+          }}
+        >
+          Remove
+        </button>
+      </div>
+    </PopupUI>
+  );
+}
+
 export function HomePageInternal() {
   const router = useRouter();
 
@@ -53,6 +137,7 @@ export function HomePageInternal() {
       <div className="">
         <CreateProject></CreateProject>
         <ProjectsInTable></ProjectsInTable>
+        <RemoveItemPopup></RemoveItemPopup>
       </div>
     </StackedLayout>
   );
@@ -156,6 +241,35 @@ function TableRecord({ project }) {
     return;
   };
 
+  let onRemove = async ({ object }) => {
+    PopupRemove.set(() => {
+      return {
+        object,
+        cancel: () => {
+          PopupRemove.set(false);
+        },
+        confirm: async () => {
+          try {
+            await Project.removeMine({ object });
+            ProjectsState.set((p) => {
+              let idx = p.findIndex((e) => e._id === object._id);
+              p.splice(idx, 1);
+              return p;
+            });
+          } catch (e) {}
+          PopupRemove.set(false);
+        },
+      };
+    });
+  };
+
+  let onEdit = () => {
+    console.log("on edit");
+  };
+  let onPreview = () => {
+    console.log("on preview");
+  };
+
   //
   // projects
   //
@@ -196,7 +310,7 @@ function TableRecord({ project }) {
 
       <td className="px-6 py-4 whitespace-nowrap max-w-xs overflow-x-auto">
         <div className="text-base text-gray-900">{row.value.displayName}</div>
-        <div className="text-xs text-gray-500">{row.value.slug}</div>
+        <div className="text-xs text-gray-500">@{row.value.slug}</div>
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap">
@@ -233,19 +347,26 @@ function TableRecord({ project }) {
       <td className="px-6 py-4 whitespace-wrap flex items-center">
         <button
           className="p-2 px-4 text-sm text-yellow-600 border-yellow-600 border rounded-lg mr-3"
-          onClick={() => {}}
+          onClick={() => {
+            onPreview({ object: row.vaue });
+          }}
         >
           Preview
         </button>
         <button
           className="p-2 px-4 text-sm text-blue-600 bg-blue-100 border-blue-600 border rounded-lg mr-3"
-          onClick={() => {}}
+          onClick={() => {
+            //
+            onEdit({ object: row.value });
+          }}
         >
           Edit
         </button>
         <button
           className="p-2 px-4 text-sm text-red-600 bg-red-100 border-red-600 border rounded-lg mr-3"
-          onClick={() => {}}
+          onClick={() => {
+            onRemove({ object: row.value });
+          }}
         >
           Remove
         </button>
@@ -354,7 +475,14 @@ function ProjectsInTable() {
             "p-2 px-4 border hover:shadow-inner hover:bg-gray-50 border-gray-400 text-white rounded-lg mr-3"
           }
           onClick={() => {
-            pageAt.set((at) => at + 1);
+            pageAt.set((at) => {
+              let ans = at + 1;
+              if (ProjectsState.get().length === 0) {
+                ans = at;
+              }
+
+              return ans;
+            });
           }}
         >
           <svg

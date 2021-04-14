@@ -22,12 +22,14 @@ export function MetalManModel() {
   const onLoop = (v) => internalLoop.current.push(v);
 
   useEffect(() => {
-    actions.current.stayIdle =
-      actions.current.stayIdle ||
-      mixer.current.clipAction(stayIdle.animations[0], me.current);
-    actions.current.runningAction =
-      actions.current.runningAction ||
-      mixer.current.clipAction(runningAction.animations[0], me.current);
+    actions.current.stayIdle = mixer.current.clipAction(
+      stayIdle.animations[0],
+      me.current
+    );
+    actions.current.runningAction = mixer.current.clipAction(
+      runningAction.animations[0],
+      me.current
+    );
 
     if (subStatus.value === "ready") {
       actions.current.stayIdle.reset();
@@ -47,7 +49,16 @@ export function MetalManModel() {
       actions.current.stayIdle.play();
     }
 
-    return () => {};
+    return () => {
+      mixer.current.stopAllAction();
+      if (mixer.current && stayIdle?.animations[0]) {
+        mixer.current.uncacheClip(stayIdle.animations[0], me.current);
+      }
+
+      if (mixer.current && runningAction?.animations[0]) {
+        mixer.current.uncacheClip(runningAction.animations[0], me.current);
+      }
+    };
   }, [subStatus.get()]);
 
   useFrame(({}, dt) => {
