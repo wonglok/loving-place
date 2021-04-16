@@ -1,4 +1,5 @@
 import { createState } from "@hookstate/core";
+import { useEffect } from "react";
 
 export const getID = function () {
   return (
@@ -97,3 +98,17 @@ export const loadAsyncDemoData = () => {
     timers.forEach(clearTimeout);
   };
 };
+
+export function useLoop(loopFnc) {
+  useEffect(() => {
+    let rAFID = 0;
+    let h = () => {
+      rAFID = requestAnimationFrame(h);
+      loopFnc();
+    };
+    rAFID = requestAnimationFrame(h);
+    return () => {
+      cancelAnimationFrame(rAFID);
+    };
+  });
+}

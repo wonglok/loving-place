@@ -15,6 +15,7 @@ import {
   Rect,
   // Rect,
 } from "react-konva";
+import KonvaJS from "konva";
 
 import {
   HandState,
@@ -24,7 +25,10 @@ import {
   getID,
   resetCursor,
   addNode,
+  useLoop,
 } from "./NodeState";
+
+KonvaJS.pixelRatio = 1.0;
 
 const Edge = ({ layer, id, name1, name2 }) => {
   const hand = useState(HandState);
@@ -150,6 +154,16 @@ export function EffectNode({
   let inputs = basenode.inputs.get();
   let outputs = basenode.outputs.get();
 
+  let latest = { x: 0, y: 0, didChange: false };
+  useLoop(() => {
+    if (latest.didChange) {
+      basenode.merge({
+        x: Math.floor(latest.x),
+        y: Math.floor(latest.y),
+      });
+    }
+  });
+
   return (
     <Group>
       {/* <Circle
@@ -207,19 +221,15 @@ export function EffectNode({
         fill="blue"
         draggable={true}
         onDragMove={(e) => {
-          let pt = e.target.position();
-
-          basenode.merge({
-            x: Math.floor(pt.x),
-            y: Math.floor(pt.y),
-          });
+          latest = e.target.position();
+          latest.didChange = true;
         }}
         onDragEnd={() => {
           onEndDrag({
             node: basenode.get(),
           });
         }}
-        onClick={(ev) => {
+        onClick={() => {
           basenode.set((node) => {
             node.isHorizontal = !node.isHorizontal;
             return node;
@@ -261,7 +271,7 @@ export function EffectNode({
               height={ioRadius}
               fill="lime"
             />
-            {showText.get() ? (
+            {/* {showText.get() ? (
               <Text
                 onMouseOver={() => {
                   document.body.style.cursor = "pointer";
@@ -283,7 +293,7 @@ export function EffectNode({
                 y={pos.y - ioRadius * 0.2}
                 text={i}
               ></Text>
-            ) : null}
+            ) : null} */}
           </Group>
         );
       })}
@@ -321,7 +331,7 @@ export function EffectNode({
               height={ioRadius}
               fill="cyan"
             ></Circle>
-            {showText.get() ? (
+            {/* {showText.get() ? (
               <Text
                 onMouseOver={() => {
                   document.body.style.cursor = "pointer";
@@ -344,7 +354,7 @@ export function EffectNode({
                 y={pos.y - ioRadius * 0.2}
                 text={i}
               ></Text>
-            ) : null}
+            ) : null} */}
           </Group>
         );
       })}
