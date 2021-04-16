@@ -17,10 +17,10 @@ function PopupUI({ popState, children }) {
         onClick={() => {
           popState.set(false);
         }}
-        className="fixed cursor-not-allowed z-10 top-0 left-0 flex items-center justify-center w-screen h-screen bg-gray-700 bg-opacity-75"
+        className="fixed cursor-not-allowed z-10 top-0 left-0 flex items-center justify-center w-screen h-screen bg-gray-700 bg-opacity-50 backdrop-filter backdrop-blur-lg"
       >
         <div
-          className="bg-white p-5 cursor-default"
+          className="bg-white p-5 cursor-default rounded-lg"
           onClick={(e) => {
             e.stopPropagation();
           }}
