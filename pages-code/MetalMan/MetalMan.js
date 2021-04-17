@@ -1,15 +1,16 @@
 import { useState } from "@hookstate/core";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
-import { AnimationMixer } from "three";
+import { AnimationMixer, Group, SkinnedMesh } from "three";
 import { Object3D } from "three";
 import { Me } from "../AppState/AppState";
 
 export function MetalManModel() {
-  let me = useRef(null);
+  let me = useRef(new Group());
   let subStatus = useState(Me.status);
   let mixer = useRef(new AnimationMixer());
-  let actions = useRef({});
+  let ActionsMap = useRef({});
+  let { scene } = useThree();
 
   const { FBXLoader } = require("three/examples/jsm/loaders/FBXLoader");
   const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader");
@@ -22,31 +23,31 @@ export function MetalManModel() {
   const onLoop = (v) => internalLoop.current.push(v);
 
   useEffect(() => {
-    actions.current.stayIdle = mixer.current.clipAction(
+    ActionsMap.current.stayIdle = mixer.current.clipAction(
       stayIdle.animations[0],
       me.current
     );
-    actions.current.runningAction = mixer.current.clipAction(
+    ActionsMap.current.runningAction = mixer.current.clipAction(
       runningAction.animations[0],
       me.current
     );
 
     if (subStatus.value === "ready") {
-      actions.current.stayIdle.reset();
-      actions.current.stayIdle.repetitions = Infinity;
-      actions.current.stayIdle.play();
+      ActionsMap.current.stayIdle.reset();
+      ActionsMap.current.stayIdle.repetitions = Infinity;
+      ActionsMap.current.stayIdle.play();
 
-      actions.current.runningAction.reset();
-      actions.current.runningAction.fadeOut(0.2);
-      actions.current.runningAction.play();
+      ActionsMap.current.runningAction.reset();
+      ActionsMap.current.runningAction.fadeOut(0.2);
+      ActionsMap.current.runningAction.play();
     } else {
-      actions.current.runningAction.reset();
-      actions.current.runningAction.repetitions = Infinity;
-      actions.current.runningAction.play();
+      ActionsMap.current.runningAction.reset();
+      ActionsMap.current.runningAction.repetitions = Infinity;
+      ActionsMap.current.runningAction.play();
 
-      actions.current.stayIdle.reset();
-      actions.current.stayIdle.fadeOut(0.2);
-      actions.current.stayIdle.play();
+      ActionsMap.current.stayIdle.reset();
+      ActionsMap.current.stayIdle.fadeOut(0.2);
+      ActionsMap.current.stayIdle.play();
     }
 
     return () => {
@@ -59,20 +60,24 @@ export function MetalManModel() {
         mixer.current.uncacheClip(runningAction.animations[0], me.current);
       }
     };
-  }, [subStatus.get()]);
-
-  useFrame(({}, dt) => {
-    mixer.current.update(dt);
-  });
-
-  useFrame(() => {
-    internalLoop.current.forEach((e) => e());
   });
 
   useEffect(() => {
     internalLoop.current = [];
-
     let group = me.current;
+    scene.add(group);
+    group.name = "myself";
+    let subgroup = new Group();
+    group.add(subgroup);
+    subgroup.position.y = 1;
+    subgroup.scale.set(0.5, 0.5, 0.5);
+    subgroup.add(nodes["mixamorigHips"]);
+    subgroup.add(nodes["metalman"]);
+
+    nodes["metalman"].material.skinning = true;
+    nodes["metalman"].material.metalness = 0.9;
+    nodes["metalman"].material.roughness = 0.1;
+
     let current = group.position.clone();
     let vel = group.position.clone();
     let tempLooker = new Object3D();
@@ -103,27 +108,14 @@ export function MetalManModel() {
     //
   }, []);
 
-  return (
-    <>
-      <group name={"myself"} ref={me} dispose={null}>
-        <group rotation={[0, 0, 0]} position-y={1} scale={0.5}>
-          <primitive object={nodes["mixamorigHips"]} />
-          <skinnedMesh
-            receiveShadow
-            castShadow
-            geometry={nodes["metalman"].geometry}
-            skeleton={nodes["metalman"].skeleton}
-          >
-            <meshStandardMaterial
-              skinning={true}
-              metalness={0.9}
-              roughness={0.1}
-            ></meshStandardMaterial>
-          </skinnedMesh>
-        </group>
-      </group>
-    </>
-  );
+  useFrame(() => {
+    internalLoop.current.forEach((e) => e());
+  });
+  useFrame(({}, dt) => {
+    mixer.current.update(dt);
+  });
+
+  return <group></group>;
 }
 
 export function MetalMan() {

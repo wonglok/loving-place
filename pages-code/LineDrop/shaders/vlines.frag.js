@@ -11,7 +11,7 @@ module.exports = /* glsl */ `
       pow(vRand3.y, 1.0 - progress + 0.15),
       pow(vRand3.z, 1.0 - progress + 0.15)
     );
-    gl_FragColor = vec4(cDiffusion,  0.5 * (progress) * opacity);
+    gl_FragColor = vec4(cDiffusion,  1.0 * (progress) * opacity);
   }
 
 `;

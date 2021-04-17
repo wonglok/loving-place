@@ -70,6 +70,7 @@ export class LineStuff {
 
     let progress = { value: 0 };
     let opacity = { value: 1 };
+
     let iMat = new ShaderMaterial({
       uniforms: {
         unitSize: { value: unitSize },

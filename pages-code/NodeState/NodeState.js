@@ -10,7 +10,7 @@ export const getID = function () {
 };
 
 export const HandState = createState({
-  birthPlace: { x: 0, y: 0 },
+  birthPlace: { x: 0, y: 0, z: 0 },
   mode: "ready",
   isDown: false,
   mouse: { x: 0, y: 0 },
@@ -20,7 +20,7 @@ export const HandState = createState({
 
 export const resetCursor = () => {
   HandState.merge({
-    birthPlace: { x: 0, y: 0 },
+    birthPlace: { x: 0, y: 0, z: 0 },
     mode: "ready",
     isDown: false,
     mouse: { x: 0, y: 0 },
@@ -30,28 +30,31 @@ export const resetCursor = () => {
 };
 
 export const Nodes = createState([]);
-
 export const Connections = createState([]);
+export const OverlayState = createState("closed");
+export const ToolbarState = createState("closed");
 
 export const addNode = ({
   at = {
     x: Math.floor(HandState.birthPlace.x.get()),
     y: Math.floor(HandState.birthPlace.y.get()),
+    z: Math.floor(HandState.birthPlace.z.get()),
   },
 }) => {
-  let temp = {
+  //
+  let newNode = {
     _id: getID(),
+    //
     x: at.x,
     y: at.y,
+    z: at.z,
 
     inputs: [
-      //
       { _id: getID(), type: "input" },
       { _id: getID(), type: "input" },
       { _id: getID(), type: "input" },
     ],
     outputs: [
-      //
       { _id: getID(), type: "output" },
       { _id: getID(), type: "output" },
       { _id: getID(), type: "output" },
@@ -59,37 +62,19 @@ export const addNode = ({
   };
 
   //
-  Nodes.merge([temp]);
+  Nodes.merge([newNode]);
 
-  return temp;
+  return newNode;
 };
 
 export const loadAsyncDemoData = () => {
   Nodes.set([]);
   let timers = [];
+
   for (let i = 0; i < 5; i++) {
     let timer = setTimeout(() => {
-      let data = {
-        _id: getID(),
-        x: 100 + i * 100,
-        y: 100,
-
-        inputs: [
-          //
-          { _id: getID(), type: "input" },
-          { _id: getID(), type: "input" },
-          { _id: getID(), type: "input" },
-        ],
-        outputs: [
-          //
-          { _id: getID(), type: "output" },
-          { _id: getID(), type: "output" },
-          { _id: getID(), type: "output" },
-        ],
-      };
-      Nodes.merge([data]);
+      addNode({});
     }, 500 * i);
-
     timers.push(timer);
   }
 

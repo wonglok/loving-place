@@ -26,9 +26,10 @@ import {
   resetCursor,
   addNode,
   useLoop,
-} from "./NodeState";
+} from "./NodeState/NodeState";
 
-KonvaJS.pixelRatio = 1.0;
+KonvaJS.pixelRatio =
+  typeof window !== "undefined" && window.devicePixelRatio > 1 ? 1.5 : 1.0;
 
 const Edge = ({ layer, id, name1, name2 }) => {
   const hand = useState(HandState);
@@ -70,6 +71,7 @@ const Edge = ({ layer, id, name1, name2 }) => {
   return (
     <>
       <Shape
+        id={id}
         sceneFunc={(context, shape) => {
           context.beginPath();
           context.moveTo(node1.x, node1.y);
