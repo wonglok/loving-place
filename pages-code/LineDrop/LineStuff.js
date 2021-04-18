@@ -9,6 +9,7 @@ import {
   Vector3,
 } from "three";
 import anime from "animejs/lib/anime";
+import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph.js";
 // import { resample } from "@thi.ng/geom-resample";
 
 export class LineStuff {
@@ -85,6 +86,7 @@ export class LineStuff {
     });
 
     let iMesh = new Mesh(iGeo, iMat);
+    iMesh.layers.enable(BLOOM_SCENE);
     iMesh.frustumCulled = true;
 
     iMesh.position.copy(position);

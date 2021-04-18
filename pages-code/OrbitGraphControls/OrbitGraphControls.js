@@ -23,19 +23,19 @@ export const OrbitGraphControls = () => {
   useFrame(() => {
     loops.current.forEach((e) => e());
   });
-  const worldScale = 0.3;
+  const worldScale = 0.4;
   const minLimit = 500 * worldScale;
   const maxLimit = 1500 * worldScale;
   const ratio = 1;
   const zoom = useRef(
-    new Vector3(0, 1250 * worldScale, 1250 * worldScale * ratio)
+    new Vector3(0, 1000 * worldScale, 1000 * worldScale * ratio)
   );
 
   useWheel(
     (state) => {
       let deltaY = state.vxvy[1] * 3;
 
-      if (zoom.current.z > minLimit * ratio) {
+      if (zoom.current.z >= minLimit * ratio) {
         zoom.current.y += deltaY;
         zoom.current.z += deltaY * ratio;
       } else {
@@ -43,7 +43,7 @@ export const OrbitGraphControls = () => {
         zoom.current.z = minLimit * ratio;
       }
 
-      if (zoom.current.z < maxLimit * ratio) {
+      if (zoom.current.z <= maxLimit * ratio) {
         zoom.current.y += deltaY;
         zoom.current.z += deltaY * ratio;
       } else {
@@ -58,6 +58,10 @@ export const OrbitGraphControls = () => {
 
   usePinch(
     (state) => {
+      if (zoom.current.length() / maxLimit <= 0.9) {
+        state.event.preventDefault();
+      }
+
       let deltaY = state.vdva[0] * -3;
 
       if (zoom.current.z > minLimit * ratio) {
@@ -84,6 +88,8 @@ export const OrbitGraphControls = () => {
   useEffect(() => {
     camera.far = 100000;
     camera.near = 0.2;
+    camera.fov = 90;
+    camera.focus = 1;
     camera.updateProjectionMatrix();
 
     const {
@@ -101,17 +107,24 @@ export const OrbitGraphControls = () => {
     mapContrtols.enableDamping = true;
     mapContrtols.enableRotate = false;
 
+    //
     onLoop(() => {
       mapContrtols.object.position.x = mapContrtols.target.x;
-      mapContrtols.object.position.y = mapContrtols.target.y + zoom.current.y;
 
-      let posZ = Math.pow(
-        zoom.current.z,
-        (zoom.current.length() / maxLimit) * 0.7
-      );
-      mapContrtols.object.position.z = mapContrtols.target.z + posZ;
+      // let posZ = Math.pow(
+      //   zoom.current.length() - zoom.current.z,
+      //   zoom.current.length() / maxLimit
+      // );
+      // let posY = Math.pow(
+      //   zoom.current.length() - zoom.current.y,
+      //   zoom.current.length() / maxLimit
+      // );
+      mapContrtols.object.position.y =
+        mapContrtols.target.y + zoom.current.y * 1.0; // + posY * 20.0;
 
-      //
+      mapContrtols.object.position.z =
+        mapContrtols.target.z + zoom.current.z * 0.5; // + 0.0 * posZ;
+
       mapContrtols.update();
     });
 

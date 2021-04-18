@@ -222,6 +222,14 @@
   dependencies:
     yoga-layout-prebuilt "^1.9.6"
 
+"@react-three/postprocessing@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@react-three/postprocessing/-/postprocessing-2.0.3.tgz#7e0f019612cc15b559d39998f6fe74badb96cda1"
+  integrity sha512-ZsePbNi/u6ahU6AvcGFcT17E/QSR+Tpn4p0BQRF2hXZ4hD8+cE4j8y5t1+6mvxoQu3X8jncUODVn8RLepnEITw==
+  dependencies:
+    postprocessing "^6.21.2"
+    react-merge-refs "^1.1.0"
+
 "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.6":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
@@ -1396,6 +1404,13 @@ des.js@^1.0.0:
   dependencies:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
+
+detect-gpu@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/detect-gpu/-/detect-gpu-3.0.0.tgz#d1ced721581c27fec29e24aee8c3eadf45450b5a"
+  integrity sha512-D/uxvKWDqhy7XoHHdC7By1Bzxuv0t8OwccsiW1DbRPsqOr0rTAjxdO//bSck6QS54jc9QHbaQoRczAy5KbCOCQ==
+  dependencies:
+    webgl-constants "^1.1.1"
 
 detect-libc@^1.0.3:
   version "1.0.3"
@@ -3259,6 +3274,11 @@ postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.9:
     nanoid "^3.1.22"
     source-map "^0.6.1"
 
+postprocessing@^6.21.2:
+  version "6.21.3"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.21.3.tgz#6f9cd28a3d285a737d63fed8868d75668ab05886"
+  integrity sha512-EC7JTfU9+P4c5usQpemmfWUqYRguoCrgpdNuTc+j5rT//C2dOXuCI3JKYgEzBMMRm8f1QMYAEpKu+YZ4TddOpA==
+
 prebuild-install@^6.0.0:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-6.1.1.tgz#6754fa6c0d55eced7f9e14408ff9e4cba6f097b4"
@@ -4502,6 +4522,11 @@ watchpack@^1.7.4:
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
+
+webgl-constants@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/webgl-constants/-/webgl-constants-1.1.1.tgz#f9633ee87fea56647a60b9ce735cbdfb891c6855"
+  integrity sha512-LkBXKjU5r9vAW7Gcu3T5u+5cvSvh5WwINdr0C+9jpzVB41cjQAP5ePArDtk/WHYdVj0GefCgM73BA7FlIiNtdg==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"

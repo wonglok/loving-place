@@ -1,6 +1,7 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
-import { OctahedronBufferGeometry } from "three";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Color, OctahedronBufferGeometry } from "three";
+import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph";
 // import { ShaderCubeChrome } from "../ShaderCubeChrome/ShaderCubeChrome";
 //
 function Floating({ height = 10, wavyness = 10, rotationY = 1, children }) {
@@ -18,7 +19,7 @@ function Floating({ height = 10, wavyness = 10, rotationY = 1, children }) {
   return <group ref={ref}>{children}</group>;
 }
 
-function Orbiting({ offsetRotationY = 0, children }) {
+function Orbiting({ orbitRadius = 30, offsetRotationY = 0, children }) {
   let ref = useRef();
 
   useFrame(({}, dt) => {
@@ -29,101 +30,65 @@ function Orbiting({ offsetRotationY = 0, children }) {
     }
   });
 
-  return <group ref={ref}>{children}</group>;
+  return (
+    <group ref={ref}>
+      <group position-x={orbitRadius}>{children}</group>
+    </group>
+  );
 }
 
-let Cache = {};
-// const useChroma = () => {
-//   const { gl } = useThree();
-//   Cache.chroma =
-//     Cache.chroma || new ShaderCubeChrome({ renderer: gl, res: 128 });
-//   let time = 0;
-//   useFrame((state, dt) => {
-//     time += dt;
-//     Cache.chroma.compute({ time });
-//   });
-
-//   return Cache.chroma;
-// };
-
-const useGlassBall = ({ radius = 35 }) => {
-  Cache.octahedron =
-    Cache.octahedron || new OctahedronBufferGeometry(radius, 1);
-  return Cache.octahedron;
-};
-
-const useCrystalBall = ({ radius = 35 }) => {
-  if (!Cache.crystal) {
-    Cache.crystal = new OctahedronBufferGeometry(radius * 0.2, 0);
-    Cache.crystal.scale(1, 2.0, 1);
-  }
-  return Cache.crystal;
-};
-
-export function OneBall() {
-  const radius = 30;
-  const airGap = 25;
-
-  // const chroma = useChroma();
-  const mainGeo = useGlassBall({ radius });
-  const crystalGeo = useCrystalBall({ radius });
-
-  const limeMat = useMemo(() => {
-    return (
-      <meshStandardMaterial
-        color={"lime"}
-        transparent={true}
-        // envMap={chroma.out.envMap}
-        metalness={1.0}
-        roughness={0.25}
-        flatShading={true}
-      ></meshStandardMaterial>
-    );
+export function CrystalInternal({ color = "#00ffff" }) {
+  const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader");
+  const { nodes } = useLoader(GLTFLoader, "/crystal/crystal2.glb");
+  const crystalCloned = useMemo(() => {
+    let cloned = nodes["Crystal_Rock4"].clone();
+    cloned.material = cloned.material.clone();
+    cloned.material.emissive = new Color(color);
+    cloned.material.metalness = 0.0;
+    cloned.material.emissiveIntensity = 10;
+    cloned.layers.enable(BLOOM_SCENE);
+    return cloned;
   }, []);
 
-  return (
-    <group>
-      <Floating height={airGap + radius} rotationY={-2} wavyness={radius * 0.5}>
-        <mesh
-          //
-          onPointerEnter={() => {
-            document.body.style.cursor = "pointer";
-          }}
-          //
-          onPointerLeave={() => {
-            document.body.style.cursor = "";
-          }}
-          //
-          scale-y={1.0}
-          geometry={mainGeo}
-        >
-          <meshStandardMaterial
-            color={"cyan"}
-            transparent={true}
-            // envMap={chroma.out.envMap}
-            flatShading={true}
-            metalness={1.0}
-            roughness={0.25}
-          ></meshStandardMaterial>
-        </mesh>
+  return <primitive object={crystalCloned}></primitive>;
+}
 
-        <Orbiting offsetRotationY={((Math.PI * 2) / 3) * 1}>
-          <mesh geometry={crystalGeo} position-x={radius + radius * 0.3}>
-            {limeMat}
-          </mesh>
-        </Orbiting>
-        <Orbiting offsetRotationY={((Math.PI * 2) / 3) * 2}>
-          <mesh geometry={crystalGeo} position-x={radius + radius * 0.3}>
-            {limeMat}
-          </mesh>
-        </Orbiting>
-        <Orbiting offsetRotationY={((Math.PI * 2) / 3) * 3.0}>
-          <mesh geometry={crystalGeo} position-x={radius + radius * 0.3}>
-            {limeMat}
-          </mesh>
-        </Orbiting>
+export function Crystal() {
+  const radius = 10;
+
+  return (
+    <Suspense fallback={null}>
+      <Floating height={radius} rotationY={-2} wavyness={radius * 0.5}>
+        <group scale={3}>
+          <CrystalInternal color="cyan"></CrystalInternal>
+        </group>
       </Floating>
-    </group>
+
+      <Orbiting
+        orbitRadius={radius + radius * 2.5}
+        offsetRotationY={((Math.PI * 2) / 3) * 1}
+      >
+        <Floating height={radius} rotationY={5} wavyness={radius}>
+          <CrystalInternal color={"lime"}></CrystalInternal>
+        </Floating>
+      </Orbiting>
+      <Orbiting
+        orbitRadius={radius + radius * 2.5}
+        offsetRotationY={((Math.PI * 2) / 3) * 2}
+      >
+        <Floating height={radius} rotationY={5} wavyness={radius}>
+          <CrystalInternal color={"lime"}></CrystalInternal>
+        </Floating>
+      </Orbiting>
+      <Orbiting
+        orbitRadius={radius + radius * 2.5}
+        offsetRotationY={((Math.PI * 2) / 3) * 3}
+      >
+        <Floating height={radius} rotationY={5} wavyness={radius}>
+          <CrystalInternal color={"lime"}></CrystalInternal>
+        </Floating>
+      </Orbiting>
+    </Suspense>
   );
 }
 
@@ -134,16 +99,16 @@ export function BallsArena() {
   return (
     <group>
       <group position-x={0}>
-        <OneBall></OneBall>
+        <Crystal></Crystal>
       </group>
       <group position-x={120}>
-        <OneBall></OneBall>
+        <Crystal></Crystal>
       </group>
       <group position-x={240}>
-        <OneBall></OneBall>
+        <Crystal></Crystal>
       </group>
       <group position-x={360}>
-        <OneBall></OneBall>
+        <Crystal></Crystal>
       </group>
     </group>
   );

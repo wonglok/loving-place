@@ -13,7 +13,7 @@ export function EletricFloor() {
   const shader = useRef(null);
 
   //
-  const url = "/texture/checker.png";
+  const url = "/texture/curl.jpg";
   useEffect(() => {
     new TextureLoader().load(url, (texture) => {
       texture.wrapS = RepeatWrapping;
@@ -88,7 +88,8 @@ export function EletricFloor() {
               uniform sampler2D tex;
 
               void main (void) {
-                vec4 texColor = texture2D(tex, vUv * 500.0);
+                vec4 texColor = texture2D(tex, vUv * 40.0);
+                gl_FragColor = texColor;
 
                 // float thickness = 0.01;
                 // float bands = 1.0 / 100.0;
@@ -101,14 +102,14 @@ export function EletricFloor() {
                 //   gl_FragColor = vec4(texColor.r * 0.8, texColor.r * 0.8, texColor.r * 0.8, texColor.r);
                 // }
 
-                float avg = (texColor.r + texColor.g + texColor.b) / 3.0;
-                float satuation = avg;
-                gl_FragColor = vec4(
-                  pow(texColor.r, satuation),
-                  pow(texColor.g, satuation),
-                  pow(texColor.b, satuation),
-                  1.0
-                );
+                // float avg = (texColor.r + texColor.g + texColor.b) / 3.0;
+                // float satuation = avg;
+                // gl_FragColor = vec4(
+                //   pow(texColor.r, satuation),
+                //   pow(texColor.g, satuation),
+                //   pow(texColor.b, satuation),
+                //   1.0
+                // );
               }
             `
           }
