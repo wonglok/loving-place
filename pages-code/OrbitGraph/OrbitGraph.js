@@ -9,21 +9,12 @@ import { OrbitGraphControls } from "../OrbitGraphControls/OrbitGraphControls";
 import { EletricFloor } from "../EletricFloor/EletricFloor";
 import { OverlayState, ToolbarState } from "../NodeState/NodeState";
 import { BallsArena } from "../BallsArena/BallsArena";
-import {
-  Camera,
-  Layers,
-  Mesh,
-  MeshBasicMaterial,
-  PlaneBufferGeometry,
-  Scene,
-  ShaderMaterial,
-  Vector2,
-  Vector3,
-  WebGLRenderTarget,
-} from "three";
+import { Layers, MeshBasicMaterial, ShaderMaterial, Vector2 } from "three";
 import { sRGBEncoding } from "three";
-import { getGPUTier } from "detect-gpu";
+export const ENTIRE_SCENE = 0;
+export const BLOOM_SCENE = 1;
 
+// import { getGPUTier } from "detect-gpu";
 // import { Physics } from "@react-three/cannon";
 // import WashingMachine from "../WashingMachine/WashingMachine";
 // import * as RT from "../api/realtime";
@@ -35,14 +26,12 @@ import { getGPUTier } from "detect-gpu";
 //   Noise,
 //   Vignette,
 // } from "@react-three/postprocessing";
-export const ENTIRE_SCENE = 0;
-export const BLOOM_SCENE = 1;
 
 export function PostProcessing() {
   let { gl, size, scene, camera } = useThree();
   //
   let {
-    baseRTT,
+    // baseRTT,
     //
     bloomComposer,
     finalComposer,
@@ -51,9 +40,9 @@ export function PostProcessing() {
       EffectComposer,
     } = require("three/examples/jsm/postprocessing/EffectComposer");
 
-    let baseRTT = new WebGLRenderTarget(size.width, size.height, {
-      encoding: sRGBEncoding,
-    });
+    // let baseRTT = new WebGLRenderTarget(size.width, size.height, {
+    //   encoding: sRGBEncoding,
+    // });
 
     let bloomComposer = new EffectComposer(gl);
     bloomComposer.renderToScreen = false;
@@ -97,7 +86,7 @@ export function PostProcessing() {
     const finalPass = new ShaderPass(
       new ShaderMaterial({
         uniforms: {
-          baseTexture: { value: baseRTT.texture },
+          baseTexture: { value: null },
           bloomTexture: {
             value: bloomComposer.renderTarget2.texture,
           },
@@ -130,6 +119,8 @@ export function PostProcessing() {
       }),
       "baseTexture"
     );
+    //
+
     finalPass.needsSwap = true;
     finalComposer.addPass(finalPass);
 
@@ -140,19 +131,20 @@ export function PostProcessing() {
         bloomComposer.setSize(sizeV2.x, sizeV2.y);
         finalComposer.setSize(sizeV2.x, sizeV2.y);
 
-        baseRTT && baseRTT.setSize(sizeV2.x, sizeV2.y);
+        const dpr = gl.getPixelRatio();
+        if (dpr >= 1.75) {
+          dpr = 1.75;
+        }
 
-        bloomComposer.setPixelRatio(gl.getPixelRatio());
-        finalComposer.setPixelRatio(gl.getPixelRatio());
-        //
+        bloomComposer.setPixelRatio(dpr * 0.5);
+        finalComposer.setPixelRatio(dpr);
       },
       false
     );
+
     window.dispatchEvent(new CustomEvent("resize"));
 
     return {
-      baseRTT,
-
       bloomComposer,
       finalComposer,
     };
@@ -185,15 +177,11 @@ export function PostProcessing() {
   }
 
   useFrame(({}, dt) => {
-    gl.setRenderTarget(baseRTT);
-    gl.render(scene, camera);
-    gl.setRenderTarget(null);
-
+    //
     scene.traverse(darkenNonBloomed);
     bloomComposer.render(dt);
     scene.traverse(restoreMaterial);
-
-    // bloomTexture.value = bloomComposer.renderTarget2.texture;
+    //
     finalComposer.render(dt);
   }, 1);
 
@@ -208,12 +196,11 @@ export function OrbitGraph() {
   useEffect(async () => {
     let val = window.devicePixelRatio || 1.0;
 
-    if (val >= 1.75) {
-      val = 1.75;
+    if (val >= 1.5) {
+      val = 1.5;
     }
 
     dpr.set(val);
-
     // setTimeout(async () => {
     //   const gpuTier = await getGPUTier();
     //   alert(JSON.stringify(gpuTier));
@@ -222,7 +209,6 @@ export function OrbitGraph() {
 
   return (
     <div className={"h-full w-full relative"}>
-      {/*  */}
       <Canvas
         className={"h-full w-full absolute top-0 left-0"}
         dpr={dpr.get()}
@@ -239,11 +225,9 @@ export function OrbitGraph() {
         <BallsArena></BallsArena>
       </Canvas>
 
-      {/*  */}
       {overlay.get() === "open" && (
         <div className={"h-full w-full absolute top-0 left-0"}>123</div>
       )}
-      {/*  */}
       {toolbar.get() === "open" && (
         <div className={"h-full top-0 right-0"}>123</div>
       )}

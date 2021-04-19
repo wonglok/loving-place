@@ -1,31 +1,34 @@
-import { useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useLoader, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useRef } from "react";
 import { sRGBEncoding } from "three";
 import { RepeatWrapping, TextureLoader, Vector2 } from "three";
 import { HandState } from "../NodeState/NodeState";
 
-//
-
 export function EletricFloor() {
-  //
+  return (
+    <Suspense fallback={null}>
+      <EletricFloorInternal></EletricFloorInternal>
+    </Suspense>
+  );
+}
+
+export function EletricFloorInternal() {
+  const url = "/texture/curl.jpg";
+  const texture = useLoader(TextureLoader, url);
+
   const size = new Vector2();
   const { gl } = useThree();
   const shader = useRef(null);
 
-  //
-  const url = "/texture/curl.jpg";
   useEffect(() => {
-    new TextureLoader().load(url, (texture) => {
-      texture.wrapS = RepeatWrapping;
-      texture.wrapT = RepeatWrapping;
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
 
-      texture.needsUpdate = true;
-      texture.encoding = sRGBEncoding;
-      texture.updateMatrix();
+    texture.needsUpdate = true;
+    texture.encoding = sRGBEncoding;
+    texture.updateMatrix();
 
-      shader.current.uniforms.tex.value = texture;
-      shader.current.needsUpdate = true;
-    });
+    shader.current.needsUpdate = true;
 
     gl.getSize(size);
   }, [url]);
@@ -62,7 +65,7 @@ export function EletricFloor() {
               value: size,
             },
             tex: {
-              value: null,
+              value: texture,
             },
           }}
           transparent={true}
@@ -88,7 +91,7 @@ export function EletricFloor() {
               uniform sampler2D tex;
 
               void main (void) {
-                vec4 texColor = texture2D(tex, vUv * 40.0);
+                vec4 texColor = texture2D(tex, vUv * 45.0);
                 gl_FragColor = texColor;
 
                 // float thickness = 0.01;
