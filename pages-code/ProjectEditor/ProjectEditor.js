@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Project } from "../../pages-code/api/Project";
 import { AuthState } from "../api/realtime";
-// import { Konva } from "./Konva";
+import { Konva } from "./Konva";
 import { OrbitGraph } from "../OrbitGraph/OrbitGraph";
 
 export const ProjectState = createState(null);
@@ -27,8 +27,8 @@ export const ProjectEditorProtected = ({ project }) => {
 
   return (
     <div className={"h-full w-full bg-gray-100"}>
-      <OrbitGraph project={proj}></OrbitGraph>
-      {/* <Konva project={proj.value}></Konva> */}
+      {/* <OrbitGraph project={proj}></OrbitGraph> */}
+      <Konva project={proj.value}></Konva>
       {/* <div>{JSON.stringify(proj.value)}</div> */}
     </div>
   );

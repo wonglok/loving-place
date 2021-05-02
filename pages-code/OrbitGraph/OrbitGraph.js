@@ -11,8 +11,6 @@ import { OverlayState, ToolbarState } from "../NodeState/NodeState";
 import { BallsArena } from "../BallsArena/BallsArena";
 import { Layers, MeshBasicMaterial, ShaderMaterial, Vector2 } from "three";
 import { sRGBEncoding } from "three";
-export const ENTIRE_SCENE = 0;
-export const BLOOM_SCENE = 1;
 
 // import { getGPUTier } from "detect-gpu";
 // import { Physics } from "@react-three/cannon";
@@ -27,6 +25,8 @@ export const BLOOM_SCENE = 1;
 //   Vignette,
 // } from "@react-three/postprocessing";
 
+export const ENTIRE_SCENE = 0;
+export const BLOOM_SCENE = 1;
 export function PostProcessing() {
   let { gl, size, scene, camera } = useThree();
   //

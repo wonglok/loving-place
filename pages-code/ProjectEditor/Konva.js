@@ -11,8 +11,8 @@ import {
   // Path,
   // Ellipse,
   // Arrow,
-  Text,
-  Rect,
+  // Text,
+  // Rect,
   // Rect,
 } from "react-konva";
 import KonvaJS from "konva";
@@ -26,7 +26,7 @@ import {
   resetCursor,
   addNode,
   useLoop,
-} from "./NodeState/NodeState";
+} from "../NodeState/NodeState";
 
 KonvaJS.pixelRatio =
   typeof window !== "undefined" && window.devicePixelRatio > 1 ? 1.5 : 1.0;

@@ -43,10 +43,12 @@ export default function LandingPage() {
       antialias={true}
       camera={{ position: [0, 150, 150] }}
     >
+      {/*  */}
       <PlaceFloor></PlaceFloor>
       <MetalMan></MetalMan>
       <GameControl></GameControl>
 
+      {/*  */}
       <group position-z={-100}>
         <BallsArena></BallsArena>
       </group>

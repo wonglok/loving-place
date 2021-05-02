@@ -1,6 +1,7 @@
 import { useFrame, useGraph, useLoader } from "@react-three/fiber";
 import { Suspense, useMemo, useRef } from "react";
-import { Color, MeshStandardMaterial } from "three";
+import { Color, DoubleSide, MeshStandardMaterial } from "three";
+import { HandState } from "../NodeState/NodeState";
 import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph";
 // import { ShaderCubeChrome } from "../ShaderCubeChrome/ShaderCubeChrome";
 //
@@ -62,7 +63,12 @@ let url = [
 
 export function ShardLargeOne({ color = "#00ffff" }) {
   const { OBJLoader } = require("three/examples/jsm/loaders/OBJLoader");
-  const obj = useLoader(OBJLoader, "/crystal/shard5.obj");
+  const arr = [
+    "/crystal/shard3.obj",
+    "/crystal/shard4.obj",
+    "/crystal/shard5.obj",
+  ];
+  const obj = useLoader(OBJLoader, arr[Math.floor(arr.length * Math.random())]);
   const { nodes } = useGraph(obj);
   const time = useRef({ value: 0 });
   const crystalCloned = useMemo(() => {
@@ -158,8 +164,37 @@ export function ShardLargeOne({ color = "#00ffff" }) {
   });
 
   return (
-    <group scale={[6, 7, 6]}>
-      <primitive object={crystalCloned}></primitive>
+    <group scale={[7, 8, 7]}>
+      {/* <primitive
+        object={crystalCloned}
+      ></primitive> */}
+
+      <mesh
+        onPointerDown={() => {
+          HandState.movedAmount.set(0);
+          HandState.isDown.set(true);
+        }}
+        onPointerUp={() => {
+          HandState.isDown.set(false);
+          if (HandState.movedAmount.get() < 10) {
+            // this is click
+          }
+        }}
+        onPointerLeave={() => {
+          document.body.style.cursor = "";
+          HandState.isDown.set(false);
+        }}
+        onPointerCancel={() => {
+          document.body.style.cursor = "";
+          HandState.isDown.set(false);
+        }}
+        onPointerMove={() => {
+          document.body.style.cursor = "move";
+          HandState.movedAmount.set((m) => m + 1);
+        }}
+        geometry={crystalCloned.geometry}
+        material={crystalCloned.material}
+      ></mesh>
     </group>
   );
 }
@@ -361,6 +396,44 @@ export function Crystal({ color = "cyan" }) {
           </group>
         </Floating>
       </Orbiting>
+
+      <mesh
+      // onPointerDown={() => {
+      //   HandState.movedAmount.set(0);
+      //   HandState.isDown.set(true);
+      // }}
+      // onPointerUp={() => {
+      //   HandState.isDown.set(false);
+      //   if (HandState.movedAmount.get() < 10) {
+      //     // this is click
+      //   }
+      // }}
+      // onPointerLeave={() => {
+      //   document.body.style.cursor = "";
+      //   HandState.isDown.set(false);
+      // }}
+      // onPointerMove={() => {
+      //   document.body.style.cursor = "move";
+      //   HandState.movedAmount.set((m) => m + 1);
+      // }}
+      >
+        <boxBufferGeometry
+          args={[radius * 9, radius * 21, radius * 9]}
+        ></boxBufferGeometry>
+        <meshBasicMaterial
+          opacity={0.5}
+          color={"gray"}
+          transparent={true}
+          side={DoubleSide}
+          onBeforeCompile={(node) => {
+            node.fragmentShader = `
+              void main(void) {
+                discard;
+              }
+            `;
+          }}
+        ></meshBasicMaterial>
+      </mesh>
     </Suspense>
   );
 }

@@ -1,16 +1,15 @@
 import Head from "next/head";
-import LandingPage from "../pages-code/LandingPage/LandingPage.js";
+import dynamic from "next/dynamic";
+// import LandingPage from "../pages-code/LandingPage/LandingPage.js";
+// import { SortaFun } from "../pages-code/SortaFun/SortaFun.js";
 
-// const DynamicComponent = dynamic(
-//   () => {
-//     return (
-//       import("../pages-code/LandingPage/LandingPage.js")
-//         //
-//         .then((e) => e.default)
-//     );
-//   },
-//   { ssr: false }
-// );
+const SortaFun = dynamic(
+  () => import("../pages-code/SortaFun/SortaFun.js").then((e) => e.SortaFun),
+  {
+    ssr: false,
+  }
+);
+
 export default function Home({ buildTimeCache }) {
   return (
     <>
@@ -18,7 +17,14 @@ export default function Home({ buildTimeCache }) {
         <title>Loving.Place</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>Home Page</div>
+
+      <img
+        src="/texture/procedralvfx.png"
+        className="w-full lg:w-10/12 lg:mx-auto"
+      />
+
+      {/* <SortaFun></SortaFun> */}
+      {/* <div>Landing Page</div> */}
       {/* <LandingPage></LandingPage> */}
       {/* <div>{JSON.stringify(buildTimeCache)}</div> */}
       {/* <DynamicComponent></DynamicComponent> */}
@@ -52,3 +58,9 @@ export const getStaticProps = async () => {
 };
 
 //;
+
+/*
+
+//
+
+*/

@@ -4,6 +4,7 @@ import {
   InstancedBufferAttribute,
   InstancedBufferGeometry,
   Mesh,
+  MultiplyBlending,
   ShaderMaterial,
   SphereBufferGeometry,
   Vector3,
@@ -35,7 +36,7 @@ export class LineStuff {
 
   //
   async setup({ name, position, delay, baseGeometry }) {
-    let onScene = (cb) => this.mini.get("scene").then((e) => cb(e));
+    // let onScene = (cb) => this.mini.get("scene").then((e) => cb(e));
     let unitSize = 0.075 * this.scale;
     let height = 2 * this.scale;
     let pGeo = new BoxBufferGeometry(unitSize, height, unitSize, 1, 1, 1);
