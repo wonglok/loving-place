@@ -3,12 +3,12 @@ import dynamic from "next/dynamic";
 // import LandingPage from "../pages-code/LandingPage/LandingPage.js";
 // import { SortaFun } from "../pages-code/SortaFun/SortaFun.js";
 
-const SortaFun = dynamic(
-  () => import("../pages-code/SortaFun/SortaFun.js").then((e) => e.SortaFun),
-  {
-    ssr: false,
-  }
-);
+// const SortaFun = dynamic(
+//   () => import("../pages-code/SortaFun/SortaFun.js").then((e) => e.SortaFun),
+//   {
+//     ssr: false,
+//   }
+// );
 
 export default function Home({ buildTimeCache }) {
   return (
