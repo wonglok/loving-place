@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState as useStateReact } from "react";
 import { createState } from "@hookstate/core";
 import axios from "axios";
 
@@ -49,7 +50,7 @@ class EventEmitter {
 }
 
 export class LambdaClient extends EventEmitter {
-  constructor({ url, token }) {
+  constructor({ url }) {
     super();
     this.url = url;
     this.autoReconnectInterval = 5 * 1000;
@@ -59,6 +60,7 @@ export class LambdaClient extends EventEmitter {
   get ready() {
     return this.ws.readyState === WebSocket.OPEN;
   }
+
   close() {
     try {
       this.ws.__disposed = true;
@@ -68,6 +70,11 @@ export class LambdaClient extends EventEmitter {
       console.log(e);
     }
   }
+
+  dispose() {
+    this.close();
+  }
+
   open() {
     this.ws = new WebSocket(this.url);
     this.ws.__disposed = false;
@@ -222,7 +229,7 @@ if (process.env.NODE_ENV === "test") {
 export const EnvConfig = envs[mode];
 
 const testRunBell = () => {
-  let bell = new LambdaClient({
+  let client = new LambdaClient({
     url: EnvConfig.ws,
   });
 
@@ -230,12 +237,12 @@ const testRunBell = () => {
 
   let joinRoomThen = async ({ roomID = "boradcast-public-room" }) => {
     return new Promise((resolve) => {
-      bell.on("room-joined", (e) => {
+      client.on("room-joined", (e) => {
         console.log("room joined", e);
         resolve({ roomID, userID });
       });
 
-      bell.send({
+      client.send({
         action: "join-room",
         roomID,
         userID,
@@ -246,11 +253,11 @@ const testRunBell = () => {
   let birthdayRoom = "birthday-party-room";
 
   joinRoomThen({ roomID: birthdayRoom }).then((e) => {
-    bell.on("hello", (data) => {
+    client.on("hello", (data) => {
       console.log("respone-of-hello", data);
     });
 
-    bell.send({
+    client.send({
       action: "hello",
       roomID: birthdayRoom,
       data: {
@@ -260,7 +267,7 @@ const testRunBell = () => {
     });
   });
 
-  console.log(bell);
+  console.log(client);
 };
 
 export const checkError = (json) => {
@@ -389,11 +396,12 @@ export const taken = async ({ identity }) => {
 export const AuthState = {
   jwt: createState(false),
   user: createState(false),
-  isLoggedIn: () => {
-    return new Promise((resolve) => {
+  isLoggedInResolveBoolean: () => {
+    return new Promise((resolve, reject) => {
       let tt = setInterval(() => {
         let ans = AuthState.ready;
         if (ans) {
+          let hasAns = AuthState.jwt.value;
           resolve(!!AuthState.jwt.value);
           clearInterval(tt);
         }
@@ -450,3 +458,32 @@ if (typeof window !== "undefined") {
 // if (window) {
 //   testAuth();
 // }
+
+export function LoggedInContent({ children }) {
+  const [resolveAuth, setResolve] = useStateReact(null);
+  useEffect(() => {
+    AuthState.isLoggedInResolveBoolean().then((loggedIn) => {
+      setResolve(loggedIn);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (resolveAuth === false) {
+      setTimeout(() => {
+        window.location.assign("/login");
+      });
+    }
+  });
+
+  if (resolveAuth === null) {
+    return <div>Loading</div>;
+  }
+  if (resolveAuth === true) {
+    return children;
+  }
+  if (resolveAuth === false) {
+    return (
+      <div>Needs Login, Redirecting you to login Page in 1 second....</div>
+    );
+  }
+}

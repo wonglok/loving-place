@@ -73,7 +73,9 @@ export const loadAsyncDemoData = () => {
 
   for (let i = 0; i < 5; i++) {
     let timer = setTimeout(() => {
-      addNode({});
+      addNode({
+        at: { x: 0, y: i * 100, z: 0 },
+      });
     }, 500 * i);
     timers.push(timer);
   }

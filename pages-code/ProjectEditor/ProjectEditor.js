@@ -40,7 +40,7 @@ export default function HomePagee() {
   const loggedin = useState(null);
 
   useEffect(async () => {
-    AuthState.isLoggedIn().then((value) => {
+    AuthState.isLoggedInResolveBoolean().then((value) => {
       loggedin.set(value);
 
       if (value === false) {

@@ -232,13 +232,13 @@ export function EffectNode({
           });
         }}
         onClick={() => {
-          basenode.set((node) => {
-            node.isHorizontal = !node.isHorizontal;
-            return node;
-          });
+          // basenode.set((node) => {
+          //   node.isHorizontal = !node.isHorizontal;
+          //   return node;
+          // });
           nodes.set((s) => s);
         }}
-        fill={"grey"}
+        stroke={"grey"}
       />
 
       {inputs.map((p, i) => {
@@ -333,6 +333,7 @@ export function EffectNode({
               height={ioRadius}
               fill="cyan"
             ></Circle>
+
             {/* {showText.get() ? (
               <Text
                 onMouseOver={() => {

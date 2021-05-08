@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { ProjectEditorRoot } from "../../pages-code/ProjectEditor/ProjectEditor";
 
 // const SnapshotsState = createState([]);

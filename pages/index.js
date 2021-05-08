@@ -1,9 +1,9 @@
 import Head from "next/head";
-import dynamic from "next/dynamic";
 import Link from "next/link";
+
+// import dynamic from "next/dynamic";
 // import LandingPage from "../pages-code/LandingPage/LandingPage.js";
 // import { SortaFun } from "../pages-code/SortaFun/SortaFun.js";
-
 // const SortaFun = dynamic(
 //   () => import("../pages-code/SortaFun/SortaFun.js").then((e) => e.SortaFun),
 //   {
@@ -21,10 +21,15 @@ export default function Home({ buildTimeCache }) {
 
       <div className="w-full lg:w-10/12 lg:mx-auto">
         <a className="p-3 m-3" href={"/"}>
-          EffectNode
+          Effect Node
         </a>
+
         <Link href="/login">
           <button className={"p-3 m-3"}>Go Login</button>
+        </Link>
+
+        <Link href="/node">
+          <button className={"p-3 m-3"}>Node</button>
         </Link>
       </div>
 
@@ -46,7 +51,7 @@ export const getStaticProps = async () => {
   return {
     props: {
       buildTimeCache: {
-        abc: 123,
+        abcdefg: 123,
       },
     },
     notFound: false,
