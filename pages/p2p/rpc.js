@@ -114,11 +114,19 @@ function EachPeer({ peer }) {
     p2p.on("close", () => {
       setAPI(false);
       delete apis[myself.connectionID];
+      socket.send({
+        action: "heartbeat",
+        roomID: Internal.roomID,
+      });
     });
 
     p2p.on("error", () => {
       setAPI(false);
       delete apis[myself.connectionID];
+      socket.send({
+        action: "heartbeat",
+        roomID: Internal.roomID,
+      });
     });
 
     return () => {
