@@ -146,18 +146,20 @@ function EachPeer({ peer }) {
         <div className={"text-red-500 inline-block"}>offline</div>
       )}
       {p2pAPI ? (
-        <button
-          className={"p-3"}
-          onClick={() => {
-            p2pAPI.send(
-              `connected! myself: ${myConnID} peer: ${
-                peer.connectionID
-              } ${Math.random()}`
-            );
-          }}
-        >
-          Send
-        </button>
+        <div className="inline-block">
+          <button
+            className={"p-3"}
+            onClick={() => {
+              p2pAPI.send(
+                `connected! myself: ${myConnID} peer: ${
+                  peer.connectionID
+                } ${Math.random()}`
+              );
+            }}
+          >
+            Send
+          </button>
+        </div>
       ) : (
         <div></div>
       )}
