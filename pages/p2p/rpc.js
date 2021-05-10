@@ -10,16 +10,25 @@ let Internal = {
   clients: [],
   peers: {},
   apis: {},
+  flags: {
+    needsReload: false,
+  },
 };
 
 export const RPCContext = createContext(Internal);
 
 function EachPeer({ peer }) {
-  let { socket, myConnID, peers, apis, clients, roomID, userID } = useContext(
-    RPCContext
-  );
+  let {
+    flags,
+    socket,
+    myConnID,
+    peers,
+    apis,
+    clients,
+    roomID,
+    userID,
+  } = useContext(RPCContext);
   let [p2pAPI, setAPI] = useState(false);
-  let [, setReload] = useState(0);
   useEffect(() => {
     let myself = clients.find((e) => e.connectionID === myConnID);
     if (!myself) {
@@ -112,16 +121,28 @@ function EachPeer({ peer }) {
     });
 
     p2p.on("close", () => {
+      flags.needsReload = true;
+      // socket.send({
+      //   action: "heartbeat",
+      //   roomID: Internal.roomID,
+      // });
       delete apis[myself.connectionID];
       setAPI(false);
     });
 
     p2p.on("error", () => {
+      flags.needsReload = true;
+      // socket.send({
+      //   action: "heartbeat",
+      //   roomID: Internal.roomID,
+      // });
       delete apis[myself.connectionID];
       setAPI(false);
     });
 
     return () => {
+      flags.needsReload = true;
+
       delete apis[myself.connectionID];
       p2p.removeAllListeners("error");
       p2p.removeAllListeners("close");
@@ -131,13 +152,6 @@ function EachPeer({ peer }) {
       p2p.destroy();
     };
   }, []);
-
-  useEffect(() => {
-    socket.send({
-      action: "heartbeat",
-      roomID: Internal.roomID,
-    });
-  }, [p2pAPI]);
 
   return (
     <div>
@@ -170,9 +184,25 @@ function EachPeer({ peer }) {
 }
 
 function RPCApp() {
-  let { socket, myConnID } = useContext(RPCContext);
+  let { socket, myConnID, flags } = useContext(RPCContext);
 
-  console.log(myConnID);
+  useEffect(() => {
+    flags.needsReload = true;
+    let ttt = setInterval(() => {
+      if (flags.needsReload) {
+        flags.needsReload = false;
+        socket.send({
+          action: "heartbeat",
+          roomID: Internal.roomID,
+        });
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(ttt);
+    };
+  }, []);
+
   let [, setReload] = useState(0);
   useEffect(() => {
     socket.on("latest-clients", (e) => {
