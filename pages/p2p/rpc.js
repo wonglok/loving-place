@@ -22,6 +22,12 @@ function EachPeer({ peer }) {
   let [, setReload] = useState(0);
   useEffect(() => {
     let myself = clients.find((e) => e.connectionID === myConnID);
+    if (!myself) {
+      return;
+    }
+    if (!peer) {
+      return;
+    }
 
     let initiator = myself.onlineTime > peer.onlineTime;
 
