@@ -116,6 +116,11 @@ function EachPeer({ peer }) {
     <div>
       {peer.connectionID}
       {p2pAPI ? (
+        <div className="text-green-500 inline-block">online</div>
+      ) : (
+        <div className={"text-red-500 inline-block"}>offline</div>
+      )}
+      {p2pAPI ? (
         <button
           className={"p-3"}
           onClick={() => {
