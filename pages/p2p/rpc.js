@@ -130,7 +130,7 @@ function EachPeer({ peer }) {
     <div>
       {peer.connectionID}
       {p2pAPI ? (
-        <div className="text-green-500 inline-block">online</div>
+        <div className="text-green-500 inline-block">connected</div>
       ) : (
         <div className={"text-red-500 inline-block"}>offline</div>
       )}
@@ -165,7 +165,7 @@ function RPCApp() {
       setReload((s) => s + 1);
     });
   }, []);
-  //
+
   return (
     <div>
       Myself: {myConnID}
@@ -202,12 +202,12 @@ export default function RPC() {
       userID: Internal.userID,
     });
 
-    //
-    // Internal.socket = socket;
-    //
-    //
-    //
-    //
+    setInterval(() => {
+      socket.send({
+        action: "heartbeat",
+        roomID: Internal.roomID,
+      });
+    }, 1000 * 3);
   }, []);
 
   return (
