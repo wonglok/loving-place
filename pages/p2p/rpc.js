@@ -112,24 +112,28 @@ function EachPeer({ peer }) {
     });
 
     p2p.on("close", () => {
-      setAPI(false);
-      delete apis[myself.connectionID];
       socket.send({
         action: "heartbeat",
         roomID: Internal.roomID,
       });
+      delete apis[myself.connectionID];
+      setAPI(false);
     });
 
     p2p.on("error", () => {
-      setAPI(false);
-      delete apis[myself.connectionID];
       socket.send({
         action: "heartbeat",
         roomID: Internal.roomID,
       });
+      delete apis[myself.connectionID];
+      setAPI(false);
     });
 
     return () => {
+      socket.send({
+        action: "heartbeat",
+        roomID: Internal.roomID,
+      });
       delete apis[myself.connectionID];
       p2p.removeAllListeners("error");
       p2p.removeAllListeners("close");
@@ -137,11 +141,6 @@ function EachPeer({ peer }) {
       p2p.removeAllListeners("connect");
       p2p.removeAllListeners("signal");
       p2p.destroy();
-
-      socket.send({
-        action: "heartbeat",
-        roomID: Internal.roomID,
-      });
     };
   }, []);
 
