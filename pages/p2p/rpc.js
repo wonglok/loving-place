@@ -23,7 +23,7 @@ function EachPeer({ peer }) {
   useEffect(() => {
     let myself = clients.find((e) => e.connectionID === myConnID);
 
-    let initiator = myself.onlineTime >= peer.onlineTime;
+    let initiator = myself.onlineTime > peer.onlineTime;
 
     let p2p = (peers[peer.connectionID] = new SimplePeer({
       trickle: false,
