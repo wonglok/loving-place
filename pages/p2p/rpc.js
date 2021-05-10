@@ -9,12 +9,13 @@ let Internal = {
   socket: false,
   clients: [],
   peers: {},
+  apis: {},
 };
 
 export const RPCContext = createContext(Internal);
 
 function EachPeer({ peer }) {
-  let { socket, myConnID, peers, clients, roomID, userID } = useContext(
+  let { socket, myConnID, peers, apis, clients, roomID, userID } = useContext(
     RPCContext
   );
   let [p2pAPI, setAPI] = useState(false);
@@ -97,6 +98,7 @@ function EachPeer({ peer }) {
         `connected! myself: ${myself.connectionID} peer: ${peer.connectionID}`
       );
       setAPI(p2p);
+      apis[myself.connectionID] = p2p;
     });
 
     p2p.on("data", (str) => {
@@ -105,9 +107,17 @@ function EachPeer({ peer }) {
 
     p2p.on("close", () => {
       setAPI(false);
+      delete apis[myself.connectionID];
+    });
+
+    p2p.on("error", () => {
+      setAPI(false);
+      delete apis[myself.connectionID];
     });
 
     return () => {
+      delete apis[myself.connectionID];
+      p2p.removeAllListeners("error");
       p2p.removeAllListeners("close");
       p2p.removeAllListeners("data");
       p2p.removeAllListeners("connect");
