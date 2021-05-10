@@ -129,6 +129,11 @@ function EachPeer({ peer }) {
       p2p.removeAllListeners("connect");
       p2p.removeAllListeners("signal");
       p2p.destroy();
+
+      socket.send({
+        action: "heartbeat",
+        roomID: Internal.roomID,
+      });
     };
   }, []);
 
@@ -208,12 +213,12 @@ export default function RPC() {
       userID: Internal.userID,
     });
 
-    setInterval(() => {
-      socket.send({
-        action: "heartbeat",
-        roomID: Internal.roomID,
-      });
-    }, 1000 * 3);
+    // setInterval(() => {
+    //   socket.send({
+    //     action: "heartbeat",
+    //     roomID: Internal.roomID,
+    //   });
+    // }, 1000 * 3);
   }, []);
 
   return (
