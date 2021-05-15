@@ -44,15 +44,18 @@ let makeStore = (init = {}) => {
       let [st, setSt] = useState(0);
       useEffect(() => {
         let evName = `${Self._id}`;
+
         let hh = () => {
-          setSt((s) => s++);
+          setSt((s) => {
+            return s + 1;
+          });
         };
 
         window.addEventListener(`${evName}-${key}`, hh);
         return () => {
           window.removeEventListener(`${evName}-${key}`, hh);
         };
-      }, [st]);
+      }, [key, st]);
     },
     onChangeAny: (key, func) => {
       useEffect(() => {
@@ -76,14 +79,15 @@ let makeStore = (init = {}) => {
     set: (o, key, val) => {
       o[key] = val;
 
+      window.dispatchEvent(
+        new CustomEvent(`${Self._id}-${key}`, { detail: {} })
+      );
+
       if (key.indexOf("_") === 0) {
       } else {
         window.dispatchEvent(new CustomEvent(`${Self._id}`, { detail: {} }));
       }
 
-      window.dispatchEvent(
-        new CustomEvent(`${Self._id}-${key}`, { detail: {} })
-      );
       return true;
     },
   });

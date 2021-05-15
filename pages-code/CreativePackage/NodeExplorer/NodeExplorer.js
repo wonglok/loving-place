@@ -11,6 +11,7 @@ import { useState } from "@hookstate/core";
 import { BridgeLine } from "../BridgeLine/BridgeLine";
 import { AOCCore } from "../AOCCore/AOCCore";
 import { Hand } from "../AppEditorState/AppEditorState";
+import { useEffect } from "react";
 function Internal({ ProjectState }) {
   const project = useState(ProjectState);
   console.log(project.get());
@@ -37,10 +38,17 @@ function Internal({ ProjectState }) {
 
 function Overlays() {
   Hand.onChangeKeyRenderUI("overlay");
-  window.addEventListener("keydown", ({ key }) => {
-    if (key === "Escape") {
-      Hand.overlay = "";
-    }
+
+  useEffect(() => {
+    let hh = ({ key }) => {
+      if (key === "Escape") {
+        Hand.overlay = "";
+      }
+    };
+    window.addEventListener("keydown", hh);
+    return () => {
+      window.removeEventListener("keydown", hh);
+    };
   });
   return <>{Hand.overlay === "core" && <AOCCore>123</AOCCore>}</>;
 }

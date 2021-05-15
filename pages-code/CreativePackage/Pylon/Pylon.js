@@ -194,7 +194,7 @@ export function ShardLargeOne({ color = "#00ffff" }) {
         }}
         onPointerUp={({ eventObject }) => {
           crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.5);
-          if (Hand._moved < 10) {
+          if (Hand._moved <= 20) {
             Hand.overlay = "core";
           }
           Hand._moved = 0;
@@ -376,45 +376,6 @@ export function Pylon({ color = "cyan" }) {
           </group>
         </Floating>
       </Orbiting>
-
-      {/* <mesh
-      // onPointerDown={() => {
-      //   EditorHandState.movedAmount.set(0);
-      //   EditorHandState.isDown.set(true);
-      // }}
-      // onPointerUp={() => {
-      //   EditorHandState.isDown.set(false);
-      //   if (EditorHandState.movedAmount.get() < 10) {
-      //     // this is click
-      //   }
-      // }}
-      // onPointerLeave={() => {
-      //   document.body.style.cursor = "";
-      //   EditorHandState.isDown.set(false);
-      // }}
-      // onPointerMove={() => {
-      //   document.body.style.cursor = "move";
-      //   EditorHandState.movedAmount.set((m) => m + 1);
-      // }}
-      >
-        <boxBufferGeometry
-          args={[radius * 9, radius * 21, radius * 9]}
-        ></boxBufferGeometry>
-
-        <meshBasicMaterial
-          opacity={0.5}
-          color={"gray"}
-          transparent={true}
-          side={DoubleSide}
-          onBeforeCompile={(node) => {
-            node.fragmentShader = `
-              void main(void) {
-                discard;
-              }
-            `;
-          }}
-        ></meshBasicMaterial>
-      </mesh> */}
 
       <FloatingVertically>
         <Text
