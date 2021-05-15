@@ -53,6 +53,7 @@ export default function LandingPage() {
         <BallsArena></BallsArena>
       </group>
 
+      {/*  */}
       <ambientLight color={"white"} intensity={1}></ambientLight>
       <HDREnv></HDREnv>
       <LineDrop></LineDrop>

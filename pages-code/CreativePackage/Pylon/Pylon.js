@@ -1,8 +1,7 @@
 import { useFrame, useGraph, useLoader } from "@react-three/fiber";
 import { Suspense, useMemo, useRef } from "react";
-import { Color, DoubleSide, MeshStandardMaterial } from "three";
-import { HandState } from "../NodeState/NodeState";
-import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph";
+import { Color, MeshStandardMaterial } from "three";
+// import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph";
 // import { ShaderCubeChrome } from "../ShaderCubeChrome/ShaderCubeChrome";
 //
 
@@ -65,8 +64,8 @@ let url = [
 export function ShardLargeOne({ color = "#00ffff" }) {
   const { OBJLoader } = require("three/examples/jsm/loaders/OBJLoader");
   const arr = [
-    "/crystal/shard3.obj",
-    "/crystal/shard4.obj",
+    // "/crystal/shard3.obj",
+    // "/crystal/shard4.obj",
     "/crystal/shard5.obj",
   ];
   const obj = useLoader(OBJLoader, arr[Math.floor(arr.length * Math.random())]);
@@ -154,7 +153,8 @@ export function ShardLargeOne({ color = "#00ffff" }) {
 
     cloned.material.metalness = 1;
     cloned.material.roughness = 0.1;
-    cloned.layers.enable(BLOOM_SCENE);
+    // cloned.layers.enable(BLOOM_SCENE);
+
     return cloned;
   }, []);
 
@@ -171,28 +171,7 @@ export function ShardLargeOne({ color = "#00ffff" }) {
       ></primitive> */}
 
       <mesh
-        onPointerDown={() => {
-          HandState.movedAmount.set(0);
-          HandState.isDown.set(true);
-        }}
-        onPointerUp={() => {
-          HandState.isDown.set(false);
-          if (HandState.movedAmount.get() < 10) {
-            // this is click
-          }
-        }}
-        onPointerLeave={() => {
-          document.body.style.cursor = "";
-          HandState.isDown.set(false);
-        }}
-        onPointerCancel={() => {
-          document.body.style.cursor = "";
-          HandState.isDown.set(false);
-        }}
-        onPointerMove={() => {
-          document.body.style.cursor = "move";
-          HandState.movedAmount.set((m) => m + 1);
-        }}
+        // clicker  here
         geometry={crystalCloned.geometry}
         material={crystalCloned.material}
       ></mesh>
@@ -211,7 +190,7 @@ export function SmallShardThree({ color = "#00ffff" }) {
     cloned.material.metalness = 1;
     cloned.material.roughness = 0.1;
 
-    cloned.layers.enable(BLOOM_SCENE);
+    // cloned.layers.enable(BLOOM_SCENE);
     return cloned;
   }, []);
 
@@ -238,7 +217,7 @@ export function SmallShardTwo({ color = "#00ffff" }) {
     cloned.material.metalness = 1;
     cloned.material.roughness = 0.1;
 
-    cloned.layers.enable(BLOOM_SCENE);
+    // cloned.layers.enable(BLOOM_SCENE);
     return cloned;
   }, []);
 
@@ -266,7 +245,7 @@ export function SmallShardOne({ color = "#00ffff" }) {
     cloned.material.metalness = 1;
     cloned.material.roughness = 0.1;
 
-    cloned.layers.enable(BLOOM_SCENE);
+    // cloned.layers.enable(BLOOM_SCENE);
     return cloned;
   }, []);
 
@@ -292,36 +271,8 @@ export function SmallShardOne({ color = "#00ffff" }) {
   );
 }
 
-// export function CrystalInternal({ color = "#00ffff" }) {
-//   const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader");
-//   const { nodes } = useLoader(GLTFLoader, "/crystal/crystal2.glb");
-//   const crystalCloned = useMemo(() => {
-//     let cloned = nodes["Crystal_Rock4"].clone();
-//     cloned.material = cloned.material.clone();
-//     cloned.material.emissive = new Color(color);
-//     cloned.material.metalness = 0.0;
-//     cloned.material.emissiveIntensity = 4;
-//     cloned.layers.enable(BLOOM_SCENE);
-//     return cloned;
-//   }, []);
-
-//   const randSeed = Math.random();
-
-//   useFrame((state, dt) => {
-//     crystalCloned.tt = crystalCloned.tt || 0;
-//     crystalCloned.tt += dt * 0.5;
-//     crystalCloned.material.emissiveIntensity =
-//       Math.sin(crystalCloned.tt + randSeed * Math.PI) *
-//         Math.sin(crystalCloned.tt + randSeed * Math.PI) *
-//         10 +
-//       2;
-//   });
-
-//   return <primitive object={crystalCloned}></primitive>;
-// }
-
-export function Crystal({ color = "cyan" }) {
-  const radius = 12;
+export function Pylon({ color = "cyan" }) {
+  const radius = 13;
 
   return (
     <Suspense fallback={null}>
@@ -335,6 +286,7 @@ export function Crystal({ color = "cyan" }) {
           <ShardLargeOne
             color={new Color(color).offsetHSL(0, 0.0, 0.05)}
           ></ShardLargeOne>
+
           {/* <CrystalInternal
             color={new Color(color).offsetHSL(0, 0.0, 0.05)}
           ></CrystalInternal> */}
@@ -398,29 +350,30 @@ export function Crystal({ color = "cyan" }) {
         </Floating>
       </Orbiting>
 
-      <mesh
+      {/* <mesh
       // onPointerDown={() => {
-      //   HandState.movedAmount.set(0);
-      //   HandState.isDown.set(true);
+      //   EditorHandState.movedAmount.set(0);
+      //   EditorHandState.isDown.set(true);
       // }}
       // onPointerUp={() => {
-      //   HandState.isDown.set(false);
-      //   if (HandState.movedAmount.get() < 10) {
+      //   EditorHandState.isDown.set(false);
+      //   if (EditorHandState.movedAmount.get() < 10) {
       //     // this is click
       //   }
       // }}
       // onPointerLeave={() => {
       //   document.body.style.cursor = "";
-      //   HandState.isDown.set(false);
+      //   EditorHandState.isDown.set(false);
       // }}
       // onPointerMove={() => {
       //   document.body.style.cursor = "move";
-      //   HandState.movedAmount.set((m) => m + 1);
+      //   EditorHandState.movedAmount.set((m) => m + 1);
       // }}
       >
         <boxBufferGeometry
           args={[radius * 9, radius * 21, radius * 9]}
         ></boxBufferGeometry>
+
         <meshBasicMaterial
           opacity={0.5}
           color={"gray"}
@@ -434,27 +387,7 @@ export function Crystal({ color = "cyan" }) {
             `;
           }}
         ></meshBasicMaterial>
-      </mesh>
+      </mesh> */}
     </Suspense>
-  );
-}
-
-export function BallsArena() {
-  return (
-    //
-    <group>
-      <group position-x={120 * 0.0}>
-        <Crystal color={"#23ff23"}></Crystal>
-      </group>
-      <group position-x={120 * 1.0}>
-        <Crystal color={"#2323ff"}></Crystal>
-      </group>
-      <group position-x={120 * 2.0}>
-        <Crystal color={"#ff2323"}></Crystal>
-      </group>
-      <group position-x={120 * 3.0}>
-        <Crystal color={"#454545"}></Crystal>
-      </group>
-    </group>
   );
 }

@@ -53,7 +53,7 @@ export class LambdaClient extends EventEmitter {
   constructor({ url }) {
     super();
     this.url = url;
-    this.autoReconnectInterval = 5 * 1000;
+    this.autoReconnectInterval = 15 * 1000;
     this.open();
   }
 

@@ -10,6 +10,9 @@ export default function Index() {
       <a className="p-3 m-3" href="/p2p/rpc">
         Remote Prodedral Call
       </a>
+      <a className="p-3 m-3" href="/p2p/oc">
+        OneChannel
+      </a>
     </div>
   );
 }

@@ -63,8 +63,6 @@ function EachPeer({ peer }) {
       });
     });
 
-    //
-
     socket.on("signal", (ev) => {
       if (p2p.destroyed) {
         return;
@@ -78,6 +76,7 @@ function EachPeer({ peer }) {
           }
         }
       }
+
       if (!ev.initiator && initiator) {
         if (ev.myself.connectionID === peer.connectionID) {
           if (ev.signal.type === "answer" && !p2p.isConnected) {
@@ -96,6 +95,7 @@ function EachPeer({ peer }) {
       //     p2p.signal(ev.signal);
       //   }
       // }
+
       // let senderIsInit = ev.initiator;
       // if (senderIsInit) {
       //   // p2p.signal(ev.signal);
@@ -112,6 +112,7 @@ function EachPeer({ peer }) {
       p2p.send(
         `connected! myself: ${myself.connectionID} peer: ${peer.connectionID}`
       );
+
       setAPI(p2p);
       apis[myself.connectionID] = p2p;
     });

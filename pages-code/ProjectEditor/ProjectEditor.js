@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Project } from "../../pages-code/api/Project";
 import { AuthState } from "../api/realtime";
-import { Konva } from "./Konva";
-import { OrbitGraph } from "../OrbitGraph/OrbitGraph";
+// import { Konva } from "./Konva";
+
+import { NodeExplorer } from "../../pages-code/CreativePackage";
 
 export const ProjectState = createState(null);
 
@@ -23,13 +24,15 @@ export function ProjectEditorRoot() {
 }
 
 export const ProjectEditorProtected = ({ project }) => {
-  const proj = useState(project);
+  // const proj = useState(project);
 
   return (
-    <div className={"h-full w-full bg-gray-100"}>
+    <div className={"h-full w-full"}>
+      {/* {proj._id.get()} */}
       {/* <OrbitGraph project={proj}></OrbitGraph> */}
-      <Konva project={proj.value}></Konva>
+      {/* <Konva project={proj.value}></Konva> */}
       {/* <div>{JSON.stringify(proj.value)}</div> */}
+      <NodeExplorer ProjectState={project}></NodeExplorer>
     </div>
   );
 };
