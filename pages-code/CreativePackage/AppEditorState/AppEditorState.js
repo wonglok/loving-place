@@ -10,6 +10,9 @@ export const getID = function () {
 };
 
 let makeSimpleShallowStore = (init = {}) => {
+  if (typeof init._id !== "undefined") {
+    throw new Error("reserved keyname _id");
+  }
   let Self = {
     _id: getID(),
 
@@ -104,7 +107,3 @@ export const Hand = makeSimpleShallowStore({
 export const ProjectState = createState({
   current: false,
 });
-
-export const makeDragger = () => {
-  return {};
-};
