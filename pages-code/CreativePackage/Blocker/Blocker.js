@@ -20,6 +20,18 @@ export function FloatingVertically({ children }) {
   return <group ref={floating}>{children}</group>;
 }
 
+export function SpinnerY({ children }) {
+  const ref = useRef();
+  let time = 0;
+  useFrame((st, dt) => {
+    time += dt;
+    if (ref.current) {
+      ref.current.rotation.y = time + Math.random() / 1000;
+    }
+  });
+  return <group ref={ref}>{children}</group>;
+}
+
 export function Blocker({ blocker }) {
   let scale = 5.123;
   let size = [25 * scale, 5 * scale, 25 * scale];
@@ -63,47 +75,56 @@ export function Blocker({ blocker }) {
     document.body.style.cursor = v;
   };
 
-  let makeSphere = ({ io = 1, port = 0 }) => {
-    let portType = io === 1 ? "input" : "output";
+  let makeSphere = ({ type = "input", port = 0 }) => {
+    let io = type === "input" ? 1 : -1;
 
     return (
-      <Icosahedron
-        ref={inputMesh}
+      <group
         position-x={[size[0] * -0.7 * io]}
         position-z={[size[2] * -0.5 + port * size[0] * 0.25]}
-        args={[size[0] * 0.1, 1]}
-        radius={2 * scale}
-        smoothness={2}
-        //
-        //
-        onPointerDown={({ eventObject }) => {
-          Hand._moved = 0;
-          eventObject.material.color = new Color("lime");
-        }}
-        onPointerMove={() => {
-          Hand._moved++;
-        }}
-        onPointerUp={({ eventObject }) => {
-          if (Hand._moved <= 10) {
-          }
-          Hand._moved = 0;
-          eventObject.material.color = new Color("#ffffff");
-        }}
-        onPointerEnter={({ eventObject }) => {
-          cursor("pointer");
-          eventObject.material.color = new Color("lime");
-        }}
-        onPointerLeave={({ eventObject }) => {
-          cursor("auto");
-          eventObject.material.color = new Color("#ffffff");
-        }}
       >
-        <meshStandardMaterial
-          metalness={0.9}
-          roughness={0.1}
-          flatShading={true}
-        ></meshStandardMaterial>
-      </Icosahedron>
+        <SpinnerY>
+          <Icosahedron
+            ref={inputMesh}
+            args={[size[0] * 0.1, 1]}
+            radius={2 * scale}
+            smoothness={2}
+            //
+            //
+            onPointerDown={({ eventObject }) => {
+              Hand._moved = 0;
+              Hand._isDown = true;
+              eventObject.material.color = new Color("lime");
+            }}
+            onPointerMove={() => {
+              if (Hand._isDown) {
+                Hand._moved++;
+              }
+            }}
+            onPointerUp={({ eventObject }) => {
+              if (Hand._moved <= 10) {
+              }
+              Hand._isDown = false;
+              Hand._moved = 0;
+              eventObject.material.color = new Color("#ffffff");
+            }}
+            onPointerEnter={({ eventObject }) => {
+              cursor("pointer");
+              eventObject.material.color = new Color("lime");
+            }}
+            onPointerLeave={({ eventObject }) => {
+              cursor("auto");
+              eventObject.material.color = new Color("#ffffff");
+            }}
+          >
+            <meshStandardMaterial
+              metalness={0.9}
+              roughness={0.1}
+              flatShading={true}
+            ></meshStandardMaterial>
+          </Icosahedron>
+        </SpinnerY>
+      </group>
     );
   };
 
@@ -168,11 +189,11 @@ export function Blocker({ blocker }) {
           ></meshStandardMaterial>
         </RoundedBox>
 
-        {makeSphere({ io: 1, port: 0 })}
-        {makeSphere({ io: 1, port: 1 })}
-        {makeSphere({ io: 1, port: 2 })}
-        {makeSphere({ io: 1, port: 3 })}
-        {makeSphere({ io: 1, port: 4 })}
+        {makeSphere({ type: "input", port: 0 })}
+        {makeSphere({ type: "input", port: 1 })}
+        {makeSphere({ type: "input", port: 2 })}
+        {makeSphere({ type: "input", port: 3 })}
+        {makeSphere({ type: "input", port: 4 })}
 
         <FloatingVertically>
           <Text
@@ -196,11 +217,11 @@ export function Blocker({ blocker }) {
           </Text>
         </FloatingVertically>
 
-        {makeSphere({ io: -1, port: 0 })}
-        {makeSphere({ io: -1, port: 1 })}
-        {makeSphere({ io: -1, port: 2 })}
-        {makeSphere({ io: -1, port: 3 })}
-        {makeSphere({ io: -1, port: 4 })}
+        {makeSphere({ type: "output", port: 0 })}
+        {makeSphere({ type: "output", port: 1 })}
+        {makeSphere({ type: "output", port: 2 })}
+        {makeSphere({ type: "output", port: 3 })}
+        {makeSphere({ type: "output", port: 4 })}
 
         <FloatingVertically>
           <Text

@@ -1,5 +1,5 @@
 import { createState } from "@hookstate/core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const getID = function () {
   return (
@@ -39,6 +39,21 @@ let makeStore = (init = {}) => {
         };
       }, []);
     },
+
+    onChangeKeyRenderUI: (key) => {
+      let [st, setSt] = useState(0);
+      useEffect(() => {
+        let evName = `${Self._id}`;
+        let hh = () => {
+          setSt((s) => s++);
+        };
+
+        window.addEventListener(`${evName}-${key}`, hh);
+        return () => {
+          window.removeEventListener(`${evName}-${key}`, hh);
+        };
+      }, [st]);
+    },
     onChangeAny: (key, func) => {
       useEffect(() => {
         let evName = `${Self._id}`;
@@ -77,6 +92,7 @@ let makeStore = (init = {}) => {
 export const Hand = makeStore({
   mode: "ready",
   floor: { x: 0, y: 0, z: 0 },
+  overlay: "overlay",
 });
 
 export const ProjectState = createState({

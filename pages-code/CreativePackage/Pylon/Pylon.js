@@ -195,7 +195,7 @@ export function ShardLargeOne({ color = "#00ffff" }) {
         onPointerUp={({ eventObject }) => {
           crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.5);
           if (Hand._moved < 10) {
-            window.dispatchEvent(new CustomEvent("click-core", { detail: {} }));
+            Hand.overlay = "core";
           }
           Hand._moved = 0;
         }}

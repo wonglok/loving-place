@@ -8,6 +8,9 @@ import { HDREnv } from "../../HDREnv/HDREnv";
 import { Pylon } from "../Pylon/Pylon";
 import { Blocker } from "../Blocker/Blocker";
 import { useState } from "@hookstate/core";
+import { BridgeLine } from "../BridgeLine/BridgeLine";
+import { AOCCore } from "../AOCCore/AOCCore";
+import { Hand } from "../AppEditorState/AppEditorState";
 function Internal({ ProjectState }) {
   const project = useState(ProjectState);
   console.log(project.get());
@@ -15,6 +18,7 @@ function Internal({ ProjectState }) {
   return (
     <group>
       <ambientLight color={"white"} intensity={0.5}></ambientLight>
+      <directionalLight position={[10, 10, 10]}></directionalLight>
       <HDREnv></HDREnv>
 
       {/* <LineDrop></LineDrop> */}
@@ -25,8 +29,20 @@ function Internal({ ProjectState }) {
 
       <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
       <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker>
+
+      <BridgeLine></BridgeLine>
     </group>
   );
+}
+
+function Overlays() {
+  Hand.onChangeKeyRenderUI("overlay");
+  window.addEventListener("keydown", ({ key }) => {
+    if (key === "Escape") {
+      Hand.overlay = "";
+    }
+  });
+  return <>{Hand.overlay === "core" && <AOCCore>123</AOCCore>}</>;
 }
 
 export function NodeExplorer({ ProjectState }) {
@@ -37,6 +53,7 @@ export function NodeExplorer({ ProjectState }) {
       >
         <Internal ProjectState={ProjectState}></Internal>
       </Canvas>
+      <Overlays></Overlays>
     </div>
   );
 }
