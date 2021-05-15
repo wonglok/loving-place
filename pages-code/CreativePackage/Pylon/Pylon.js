@@ -174,8 +174,6 @@ export function ShardLargeOne({ color = "#00ffff" }) {
       ></primitive> */}
 
       <mesh
-        // clicker  here
-
         onPointerEnter={({ eventObject }) => {
           document.body.style.cursor = "pointer";
           crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.3);
