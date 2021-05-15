@@ -9,11 +9,10 @@ export const getID = function () {
   );
 };
 
-let makeStore = (init = {}) => {
+let makeSimpleShallowStore = (init = {}) => {
   let Self = {
     _id: getID(),
-    _isDown: false,
-    _moved: 0,
+
     ...init,
     onEventChangeKey: (key, func) => {
       let evName = `${Self._id}`;
@@ -93,7 +92,10 @@ let makeStore = (init = {}) => {
   });
 };
 
-export const Hand = makeStore({
+export const Hand = makeSimpleShallowStore({
+  _isDown: false,
+  _moved: 0,
+
   mode: "ready",
   floor: { x: 0, y: 0, z: 0 },
   overlay: "overlay",
