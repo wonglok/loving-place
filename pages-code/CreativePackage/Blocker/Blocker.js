@@ -202,13 +202,16 @@ export function Blocker({ position }) {
           //
           //
           onPointerDown={() => {
+            Hand._isDown = true;
             Hand._moved = 0;
           }}
           onPointerMove={() => {
-            Hand._moved++;
+            if (Hand._isDown) Hand._moved++;
           }}
           onPointerUp={(ev) => {
+            Hand._isDown = false;
             if (Hand._moved <= 10) {
+              console.log(21);
             }
 
             Hand._moved = 0;

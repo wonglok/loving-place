@@ -12,6 +12,7 @@ export const getID = function () {
 let makeStore = (init = {}) => {
   let Self = {
     _id: getID(),
+    _isDown: false,
     _moved: 0,
     ...init,
     onEventChangeKey: (key, func) => {
