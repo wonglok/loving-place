@@ -38,8 +38,7 @@
     "tailwindcss": "^2.1.1",
     "three": "^0.127.0",
     "three-stdlib": "^2.0.3",
-    "uuid": "^8.3.2",
-    "zustand": "^3.5.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "svg-inline-loader": "^0.8.2"
