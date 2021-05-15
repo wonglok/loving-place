@@ -394,6 +394,27 @@ export function Pylon({ color = "cyan" }) {
           rotation-x={Math.PI * -0.3}
           outlineWidth={1}
           outlineColor="#ffffff"
+          onPointerEnter={({ eventObject }) => {
+            document.body.style.cursor = "pointer";
+          }}
+          onPointerLeave={({ eventObject }) => {
+            document.body.style.cursor = "";
+          }}
+          onPointerDown={({ eventObject }) => {
+            Hand._isDown = true;
+            Hand._moved = 0;
+          }}
+          onPointerMove={() => {
+            if (Hand._isDown) {
+              Hand._moved++;
+            }
+          }}
+          onPointerUp={({ eventObject }) => {
+            if (Hand._moved <= 20) {
+              Hand.overlay = "core";
+            }
+            Hand._moved = 0;
+          }}
         >
           {"Crystal Core\n\n" + "Click to Start"}
         </Text>
