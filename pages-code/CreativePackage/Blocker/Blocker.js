@@ -1,4 +1,10 @@
-import { Icosahedron, Octahedron, RoundedBox, Text } from "@react-three/drei";
+import {
+  Icosahedron,
+  Octahedron,
+  RoundedBox,
+  Sphere,
+  Text,
+} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { Color, DoubleSide, Vector3 } from "three";
@@ -55,6 +61,50 @@ export function Blocker({ blocker }) {
 
   let cursor = (v) => {
     document.body.style.cursor = v;
+  };
+
+  let makeSphere = ({ io = 1, port = 0 }) => {
+    let portType = io === 1 ? "input" : "output";
+
+    return (
+      <Icosahedron
+        ref={inputMesh}
+        position-x={[size[0] * -0.7 * io]}
+        position-z={[size[2] * -0.5 + port * size[0] * 0.25]}
+        args={[size[0] * 0.1, 1]}
+        radius={2 * scale}
+        smoothness={2}
+        //
+        //
+        onPointerDown={({ eventObject }) => {
+          Hand._moved = 0;
+          eventObject.material.color = new Color("lime");
+        }}
+        onPointerMove={() => {
+          Hand._moved++;
+        }}
+        onPointerUp={({ eventObject }) => {
+          if (Hand._moved <= 10) {
+          }
+          Hand._moved = 0;
+          eventObject.material.color = new Color("#ffffff");
+        }}
+        onPointerEnter={({ eventObject }) => {
+          cursor("pointer");
+          eventObject.material.color = new Color("lime");
+        }}
+        onPointerLeave={({ eventObject }) => {
+          cursor("auto");
+          eventObject.material.color = new Color("#ffffff");
+        }}
+      >
+        <meshStandardMaterial
+          metalness={0.9}
+          roughness={0.1}
+          flatShading={true}
+        ></meshStandardMaterial>
+      </Icosahedron>
+    );
   };
 
   return (
@@ -118,123 +168,61 @@ export function Blocker({ blocker }) {
           ></meshStandardMaterial>
         </RoundedBox>
 
-        <RoundedBox
-          ref={inputMesh}
-          position-x={[size[0] * -0.7]}
-          args={[size[0] * 0.2, size[1], size[2]]}
-          radius={2 * scale}
-          smoothness={2}
-          //
-          //
-          onPointerDown={() => {
-            Hand._moved = 0;
-          }}
-          onPointerMove={() => {
-            Hand._moved++;
-          }}
-          onPointerUp={(ev) => {
-            if (Hand._moved <= 10) {
-            }
+        {makeSphere({ io: 1, port: 0 })}
+        {makeSphere({ io: 1, port: 1 })}
+        {makeSphere({ io: 1, port: 2 })}
+        {makeSphere({ io: 1, port: 3 })}
+        {makeSphere({ io: 1, port: 4 })}
 
-            Hand._moved = 0;
-          }}
-          onPointerEnter={({ eventObject }) => {
-            cursor("pointer");
-            eventObject.material.color = new Color("lime");
-          }}
-          onPointerLeave={({ eventObject }) => {
-            cursor("auto");
-            eventObject.material.color = new Color("#ffffff");
-          }}
-        >
-          <meshStandardMaterial
-            metalness={0.9}
-            roughness={0.1}
-            flatShading={true}
-          ></meshStandardMaterial>
+        <FloatingVertically>
+          <Text
+            color={"#1256de"}
+            fontSize={10}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={"left"}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            anchorX="center"
+            anchorY="middle"
+            position-z={size[2] * 0.5}
+            position-y={20}
+            position-x={size[0] * -0.7}
+            rotation-x={Math.PI * -0.25}
+            outlineWidth={1}
+            outlineColor="#ffffff"
+          >
+            Input
+          </Text>
+        </FloatingVertically>
 
-          <FloatingVertically>
-            <Text
-              color={"#1256de"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * -0.5}
-              position-y={20}
-              rotation-x={Math.PI * -0.25}
-              outlineWidth={1}
-              outlineColor="#ffffff"
-            >
-              Input
-            </Text>
-          </FloatingVertically>
-        </RoundedBox>
+        {makeSphere({ io: -1, port: 0 })}
+        {makeSphere({ io: -1, port: 1 })}
+        {makeSphere({ io: -1, port: 2 })}
+        {makeSphere({ io: -1, port: 3 })}
+        {makeSphere({ io: -1, port: 4 })}
 
-        <RoundedBox
-          ref={inputMesh}
-          position-x={[size[0] * 0.7]}
-          args={[size[0] * 0.2, size[1], size[2]]}
-          radius={2 * scale}
-          smoothness={2}
-          //
-          //
-
-          onPointerEnter={({ eventObject }) => {
-            cursor("pointer");
-            eventObject.material.color = new Color("cyan");
-          }}
-          onPointerLeave={({ eventObject }) => {
-            cursor("auto");
-            eventObject.material.color = new Color("#ffffff");
-          }}
-          onPointerDown={() => {
-            Hand._isDown = true;
-            Hand._moved = 0;
-          }}
-          onPointerMove={() => {
-            if (Hand._isDown) Hand._moved++;
-          }}
-          onPointerUp={(ev) => {
-            Hand._isDown = false;
-            if (Hand._moved <= 10) {
-              console.log("click edit");
-            }
-
-            Hand._moved = 0;
-          }}
-        >
-          <meshStandardMaterial
-            metalness={0.9}
-            roughness={0.1}
-            flatShading={true}
-          ></meshStandardMaterial>
-
-          <FloatingVertically>
-            <Text
-              color={"#1256de"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * -0.5}
-              position-y={20}
-              rotation-x={Math.PI * -0.25}
-              outlineWidth={1}
-              outlineColor="#ffffff"
-            >
-              Output
-            </Text>
-          </FloatingVertically>
-        </RoundedBox>
+        <FloatingVertically>
+          <Text
+            color={"#1256de"}
+            fontSize={10}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={"left"}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            anchorX="center"
+            anchorY="middle"
+            position-z={size[2] * 0.5}
+            position-y={20}
+            position-x={size[0] * 0.7}
+            rotation-x={Math.PI * -0.25}
+            outlineWidth={1}
+            outlineColor="#ffffff"
+          >
+            Output
+          </Text>
+        </FloatingVertically>
 
         <RoundedBox
           ref={inputMesh}
@@ -246,29 +234,26 @@ export function Blocker({ blocker }) {
           //
           onPointerEnter={({ eventObject }) => {
             cursor("pointer");
-            eventObject.material.color = new Color("#ffffff").offsetHSL(
-              0,
-              0,
-              -0.3
-            );
+            eventObject.material.color = new Color("silver");
           }}
           onPointerLeave={({ eventObject }) => {
             cursor("auto");
             eventObject.material.color = new Color("#ffffff");
           }}
-          onPointerDown={() => {
+          onPointerDown={({ eventObject }) => {
             Hand._isDown = true;
             Hand._moved = 0;
+            eventObject.material.color = new Color("grey");
           }}
           onPointerMove={() => {
             if (Hand._isDown) Hand._moved++;
           }}
-          onPointerUp={(ev) => {
+          onPointerUp={({ eventObject }) => {
             Hand._isDown = false;
             if (Hand._moved <= 10) {
               console.log("click edit");
             }
-
+            eventObject.material.color = new Color("white");
             Hand._moved = 0;
           }}
         >
@@ -277,28 +262,28 @@ export function Blocker({ blocker }) {
             roughness={0.1}
             flatShading={true}
           ></meshStandardMaterial>
-
-          <FloatingVertically>
-            <Text
-              color={"#1256de"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * -0.1}
-              position-y={20}
-              rotation-x={Math.PI * -0.25}
-              outlineWidth={1}
-              outlineColor="#ffffff"
-            >
-              Edit
-            </Text>
-          </FloatingVertically>
         </RoundedBox>
+
+        <FloatingVertically>
+          <Text
+            color={"#1256de"}
+            fontSize={10}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={"left"}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            anchorX="center"
+            anchorY="middle"
+            position-z={size[2] * 0.5}
+            position-y={20}
+            rotation-x={Math.PI * -0.25}
+            outlineWidth={1}
+            outlineColor="#ffffff"
+          >
+            Edit
+          </Text>
+        </FloatingVertically>
 
         <FloatingVertically>
           <Text

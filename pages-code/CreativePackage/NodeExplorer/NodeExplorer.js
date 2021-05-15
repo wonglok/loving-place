@@ -23,8 +23,8 @@ function Internal({ ProjectState }) {
       <EditorBed></EditorBed>
       <Pylon color={"#00ffff"}></Pylon>
 
-      <Blocker blocker={{ _id: "1", position: [200, 0, 0] }}></Blocker>
-      <Blocker blocker={{ _id: "2", position: [-200, 0, 0] }}></Blocker>
+      <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
+      <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker>
     </group>
   );
 }
