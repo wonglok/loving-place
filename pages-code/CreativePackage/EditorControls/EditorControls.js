@@ -22,8 +22,8 @@ export function EditorControls() {
     camera.far = 10000;
 
     camera.position.x = 0;
-    camera.position.y = 300;
-    camera.position.z = 125;
+    camera.position.y = 300 * 1.5;
+    camera.position.z = 125 * 1.5;
 
     camera.updateProjectionMatrix();
     camera.updateMatrix();

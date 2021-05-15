@@ -1,7 +1,7 @@
 import { Icosahedron, Octahedron, RoundedBox, Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
-import { Color, DoubleSide } from "three";
+import { Color, DoubleSide, Vector3 } from "three";
 import { getID, Hand } from "../AppEditorState/AppEditorState";
 
 function FloatingVertically({ children }) {
@@ -14,7 +14,7 @@ function FloatingVertically({ children }) {
   return <group ref={floating}>{children}</group>;
 }
 
-export function Blocker({ position }) {
+export function Blocker({ blocker }) {
   let scale = 5.123;
   let size = [25 * scale, 5 * scale, 25 * scale];
   let blockerGroup = useRef(null);
@@ -25,9 +25,9 @@ export function Blocker({ position }) {
 
   useEffect(() => {
     if (blockerGroup.current) {
-      blockerGroup.current.userData.position = position;
+      blockerGroup.current.userData.position = blocker.position;
     }
-  }, [position]);
+  }, [blocker]);
 
   Hand.onChangeKey("mode", (hand) => {
     console.log("hand", hand);
@@ -42,15 +42,19 @@ export function Blocker({ position }) {
     }
   });
 
+  let tempo = new Vector3();
   useFrame(() => {
     if (blockerGroup.current) {
       if (blockerGroup.current.userData.position) {
-        blockerGroup.current.position.fromArray(
-          blockerGroup.current.userData.position
-        );
+        tempo.fromArray(blockerGroup.current.userData.position);
+        blockerGroup.current.position.lerp(tempo, 0.35);
       }
     }
   });
+
+  let cursor = (v) => {
+    document.body.style.cursor = v;
+  };
 
   return (
     <group>
@@ -67,10 +71,10 @@ export function Blocker({ position }) {
 
             Hand.mode = "pickup";
             Hand.pickup = blockerGroup.current.uuid;
-            blockerMesh.current.material.color = new Color("#0000ff").offsetHSL(
+            blockerMesh.current.material.color = new Color("#ffffff").offsetHSL(
               0,
-              0.2,
-              0.2
+              0,
+              -0.2
             );
             Hand.floor = ev.point.toArray();
             Hand.floor[1] = 0;
@@ -80,12 +84,30 @@ export function Blocker({ position }) {
             Hand.mode = "moving";
             Hand.floor = ev.point.toArray();
             Hand.floor[1] = 0;
+            let { eventObject } = ev;
+            eventObject.material.color = new Color("#ffffff").offsetHSL(
+              0,
+              0,
+              -0.3
+            );
           }}
           onPointerUp={(ev) => {
             Hand.mode = "ready";
             Hand.pickup = false;
             blockerMesh.current.material.color = new Color("#ffffff");
             Hand._moved = 0;
+          }}
+          onPointerEnter={({ eventObject }) => {
+            cursor("move");
+            eventObject.material.color = new Color("#ffffff").offsetHSL(
+              0,
+              0.2,
+              0.2
+            );
+          }}
+          onPointerLeave={({ eventObject }) => {
+            cursor("auto");
+            eventObject.material.color = new Color("#ffffff");
           }}
         >
           <meshStandardMaterial
@@ -115,6 +137,14 @@ export function Blocker({ position }) {
 
             Hand._moved = 0;
           }}
+          onPointerEnter={({ eventObject }) => {
+            cursor("pointer");
+            eventObject.material.color = new Color("lime");
+          }}
+          onPointerLeave={({ eventObject }) => {
+            cursor("auto");
+            eventObject.material.color = new Color("#ffffff");
+          }}
         >
           <meshStandardMaterial
             metalness={0.9}
@@ -125,7 +155,7 @@ export function Blocker({ position }) {
           <FloatingVertically>
             <Text
               color={"#1256de"}
-              fontSize={13}
+              fontSize={10}
               maxWidth={200}
               lineHeight={1}
               letterSpacing={0.02}
@@ -152,14 +182,26 @@ export function Blocker({ position }) {
           smoothness={2}
           //
           //
+
+          onPointerEnter={({ eventObject }) => {
+            cursor("pointer");
+            eventObject.material.color = new Color("cyan");
+          }}
+          onPointerLeave={({ eventObject }) => {
+            cursor("auto");
+            eventObject.material.color = new Color("#ffffff");
+          }}
           onPointerDown={() => {
+            Hand._isDown = true;
             Hand._moved = 0;
           }}
           onPointerMove={() => {
-            Hand._moved++;
+            if (Hand._isDown) Hand._moved++;
           }}
           onPointerUp={(ev) => {
+            Hand._isDown = false;
             if (Hand._moved <= 10) {
+              console.log("click edit");
             }
 
             Hand._moved = 0;
@@ -174,7 +216,7 @@ export function Blocker({ position }) {
           <FloatingVertically>
             <Text
               color={"#1256de"}
-              fontSize={13}
+              fontSize={10}
               maxWidth={200}
               lineHeight={1}
               letterSpacing={0.02}
@@ -196,11 +238,23 @@ export function Blocker({ position }) {
         <RoundedBox
           ref={inputMesh}
           position-z={[size[0] * 0.7]}
-          args={[size[0], size[1], size[2] * 0.2]}
+          args={[size[0] * 0.5, size[1], size[2] * 0.2]}
           radius={2 * scale}
           smoothness={2}
           //
           //
+          onPointerEnter={({ eventObject }) => {
+            cursor("pointer");
+            eventObject.material.color = new Color("#ffffff").offsetHSL(
+              0,
+              0,
+              -0.3
+            );
+          }}
+          onPointerLeave={({ eventObject }) => {
+            cursor("auto");
+            eventObject.material.color = new Color("#ffffff");
+          }}
           onPointerDown={() => {
             Hand._isDown = true;
             Hand._moved = 0;
@@ -211,7 +265,7 @@ export function Blocker({ position }) {
           onPointerUp={(ev) => {
             Hand._isDown = false;
             if (Hand._moved <= 10) {
-              console.log(21);
+              console.log("click edit");
             }
 
             Hand._moved = 0;
@@ -226,7 +280,7 @@ export function Blocker({ position }) {
           <FloatingVertically>
             <Text
               color={"#1256de"}
-              fontSize={13}
+              fontSize={10}
               maxWidth={200}
               lineHeight={1}
               letterSpacing={0.02}
@@ -234,7 +288,7 @@ export function Blocker({ position }) {
               font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
               anchorX="center"
               anchorY="middle"
-              position-z={size[2] * 0.0}
+              position-z={size[2] * -0.1}
               position-y={20}
               rotation-x={Math.PI * -0.25}
               outlineWidth={1}
@@ -244,6 +298,27 @@ export function Blocker({ position }) {
             </Text>
           </FloatingVertically>
         </RoundedBox>
+
+        <FloatingVertically>
+          <Text
+            color={"#1256de"}
+            fontSize={10}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={"left"}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            anchorX="center"
+            anchorY="middle"
+            position-z={size[2] * 0.0}
+            position-y={20}
+            rotation-x={Math.PI * -0.3}
+            outlineWidth={1}
+            outlineColor="#ffffff"
+          >
+            My New Module
+          </Text>
+        </FloatingVertically>
       </group>
     </group>
   );
