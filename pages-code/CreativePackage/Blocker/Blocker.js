@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { Color, DoubleSide, Vector3 } from "three";
 import { getID, Hand } from "../AppEditorState/AppEditorState";
 
-function FloatingVertically({ children }) {
+export function FloatingVertically({ children }) {
   const floating = useRef();
   let time = 0;
   useFrame((st, dt) => {
@@ -26,8 +26,9 @@ export function Blocker({ blocker }) {
   useEffect(() => {
     if (blockerGroup.current) {
       blockerGroup.current.userData.position = blocker.position;
+      blockerGroup.current.position.fromArray(blocker.position);
     }
-  }, [blocker]);
+  }, [blocker._id]);
 
   Hand.onChangeKey("mode", (hand) => {
     console.log("hand", hand);

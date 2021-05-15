@@ -1,6 +1,9 @@
+import { Text } from "@react-three/drei";
 import { useFrame, useGraph, useLoader } from "@react-three/fiber";
 import { Suspense, useMemo, useRef } from "react";
 import { Color, MeshStandardMaterial } from "three";
+import { Hand } from "../AppEditorState/AppEditorState";
+import { FloatingVertically } from "../Blocker/Blocker";
 // import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph";
 // import { ShaderCubeChrome } from "../ShaderCubeChrome/ShaderCubeChrome";
 //
@@ -172,6 +175,32 @@ export function ShardLargeOne({ color = "#00ffff" }) {
 
       <mesh
         // clicker  here
+
+        onPointerEnter={({ eventObject }) => {
+          document.body.style.cursor = "pointer";
+          crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.3);
+        }}
+        onPointerLeave={({ eventObject }) => {
+          crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.5);
+          document.body.style.cursor = "";
+        }}
+        onPointerDown={({ eventObject }) => {
+          Hand._isDown = true;
+          Hand._moved = 0;
+          crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.3);
+        }}
+        onPointerMove={() => {
+          if (Hand._isDown) {
+            Hand._moved++;
+          }
+        }}
+        onPointerUp={({ eventObject }) => {
+          crystalCloned.material.color = new Color(color).offsetHSL(0, 0, -0.5);
+          if (Hand._moved < 10) {
+            window.dispatchEvent(new CustomEvent("click-core", { detail: {} }));
+          }
+          Hand._moved = 0;
+        }}
         geometry={crystalCloned.geometry}
         material={crystalCloned.material}
       ></mesh>
@@ -388,6 +417,28 @@ export function Pylon({ color = "cyan" }) {
           }}
         ></meshBasicMaterial>
       </mesh> */}
+
+      <FloatingVertically>
+        <Text
+          color={"#1256de"}
+          fontSize={10}
+          maxWidth={200}
+          lineHeight={1}
+          letterSpacing={0.02}
+          textAlign={"left"}
+          font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+          anchorX="center"
+          anchorY="middle"
+          textAlign={"center"}
+          position-z={80}
+          position-y={50}
+          rotation-x={Math.PI * -0.3}
+          outlineWidth={1}
+          outlineColor="#ffffff"
+        >
+          {"Crystal Core\n\n" + "Click to Start"}
+        </Text>
+      </FloatingVertically>
     </Suspense>
   );
 }
