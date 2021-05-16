@@ -50,7 +50,7 @@ export function PlaceFloor() {
 
   return (
     <group>
-      <gridHelper args={[10000, 50]} position-y={1}></gridHelper>
+      <gridHelper args={[10000, 50]} position-y={-1}></gridHelper>
       <mesh
         ref={floorRef}
         rotation-x={-0.5 * Math.PI}

@@ -164,11 +164,13 @@ export const Hand = makeSimpleShallowStore({
 
   addMode: "ready",
 
+  pickupPort: false,
+  releasePort: false,
+
   mode: "ready",
-  floor: { x: 0, y: 0, z: 0 },
+  floor: [0, 0, 0],
 
   overlay: "overlay",
-
   currentBlockerID: false,
 
   tooltip: "ready",
@@ -180,7 +182,7 @@ export const ProjectStore = makeSimpleShallowStore({
   blockers: [],
   ports: [],
   connections: [],
-  pickers: [],
+  tunes: [],
 });
 
 export const TempData = {

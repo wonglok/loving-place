@@ -37,8 +37,17 @@ export function EditorControls() {
       }
     });
 
+    let cleanAddMode = Hand.onEventChangeKey("addMode", () => {
+      if (Hand.addMode === "add-connection") {
+        ctrl.enabled = false;
+      } else {
+        ctrl.enabled = true;
+      }
+    });
+
     return () => {
       cleanMode();
+      cleanAddMode();
       ctrl.dispose();
     };
   }, [works.current]);

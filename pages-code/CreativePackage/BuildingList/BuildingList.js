@@ -133,7 +133,7 @@ export function Antenna({ ...props }) {
     <group rotation-y={Math.PI * 0.5}>
       <mesh
         {...props}
-        scale={0.015}
+        scale={0.0125}
         geometry={getFistGeo(glb.scene)}
         rotation-x={Math.PI * 0.5}
       >

@@ -6,6 +6,7 @@ import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 export function Overlays() {
   Hand.onChangeKeyRenderUI("overlay");
   Hand.onChangeKeyRenderUI("tooltip");
+  Hand.onChangeKeyRenderUI("addMode");
 
   useEffect(() => {
     let hh = ({ key }) => {
@@ -21,8 +22,13 @@ export function Overlays() {
   return (
     <>
       {/*  */}
-      {Hand.tooltip === "code-block" && (
-        <Tooltip>Top on Floor to Create Item</Tooltip>
+      {Hand.tooltip === "add-blocker" && (
+        <Tooltip>Tap on Floor to Create Item</Tooltip>
+      )}
+      {Hand.addMode === "add-connection" && (
+        <Tooltip>
+          <span>Tap or Realse on other input output to connect</span>
+        </Tooltip>
       )}
       {Hand.overlay === "core" && <AOCore></AOCore>}
       {Hand.overlay === "edit-blocker" && <AOEditBlocker></AOEditBlocker>}
@@ -54,13 +60,9 @@ export function AOCore() {
               className="rounded-2xl cursor-pointer"
               src="/scene-items/blocker.png"
               onClick={() => {
-                addBlockerTemp();
+                Hand.addMode = "add-blocker";
+                Hand.tooltip = "add-blocker";
                 Hand.overlay = "";
-                Hand.tooltip = "code-block";
-                setTimeout(() => {
-                  Hand.tooltip = "ready";
-                }, 3000);
-                //
               }}
             />
             <div className="text-center">JS Code Block</div>

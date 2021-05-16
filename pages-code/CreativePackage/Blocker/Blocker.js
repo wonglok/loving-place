@@ -9,6 +9,7 @@ import { useFrame } from "@react-three/fiber";
 import { Suspense } from "react";
 import { useEffect, useRef } from "react";
 import { Color, DoubleSide, Vector3 } from "three";
+import { addConnection } from "../AppEditorLogic/AppEditorLogic";
 // import { addBlocker } from "../AppEditorLogic/AppEditorLogic";
 import { getID, Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 import { Antenna, CodeBuilding, EditBlock } from "../BuildingList/BuildingList";
@@ -44,8 +45,12 @@ export function Blocker({ blocker, isTemp }) {
   let blockerGroup = useRef(null);
   let blockerMesh = useRef(null);
 
-  let inputMesh = useRef(null);
-  let outputMesh = useRef(null);
+  let inputs = ProjectStore.ports.filter(
+    (e) => e.blockerID === blocker._id && e.type === "input"
+  );
+  let outputs = ProjectStore.ports.filter(
+    (e) => e.blockerID === blocker._id && e.type === "output"
+  );
 
   useEffect(() => {
     if (blockerGroup.current) {
@@ -54,10 +59,6 @@ export function Blocker({ blocker, isTemp }) {
       blockerGroup.current.visible = true;
     }
   }, [blocker._id]);
-
-  // Hand.onChangeKey("mode", (hand) => {
-  //   console.log("hand", hand);
-  // });
 
   Hand.onChangeKey("floor", () => {
     if (blockerGroup.current) {
@@ -73,7 +74,7 @@ export function Blocker({ blocker, isTemp }) {
   let tempo = new Vector3();
   useFrame(() => {
     if (blockerGroup.current) {
-      if (isTemp && Hand.addMode === "addBlocker") {
+      if (isTemp && Hand.addMode === "add-blocker") {
         blockerGroup.current.userData.position = Hand.floor;
       }
 
@@ -88,26 +89,45 @@ export function Blocker({ blocker, isTemp }) {
     document.body.style.cursor = v;
   };
 
-  let makePort = ({ type = "input", port = 0 }) => {
+  let makePort = ({ port, type = "input", idx = 0 }) => {
     let io = type === "input" ? 1 : -1;
 
     return (
       <group
+        key={port._id}
         position-x={[size[0] * -0.7 * io]}
-        position-z={[size[2] * -0.5 + port * size[0] * 0.25]}
+        position-z={[size[2] * -0.5 + idx * size[0] * 0.25]}
       >
         <Antenna
+          name={port._id}
           onPointerDown={({ eventObject }) => {
             Hand._moved = 0;
             Hand._isDown = true;
             eventObject.material.color = new Color("lime");
+            let did = false;
+
+            if (Hand.addMode === "ready" && !did) {
+              did = true;
+              Hand.pickupPort = port;
+              Hand.addMode = "add-connection";
+            }
           }}
+          //
           onPointerMove={() => {
             if (Hand._isDown) {
               Hand._moved++;
             }
           }}
           onPointerUp={({ eventObject }) => {
+            let did = false;
+
+            if (Hand.addMode === "add-connection") {
+              Hand.releasePort = port;
+              Hand.addMode = "ready";
+
+              addConnection();
+            }
+
             if (Hand._moved <= 10) {
             }
             Hand._isDown = false;
@@ -123,22 +143,6 @@ export function Blocker({ blocker, isTemp }) {
             eventObject.material.color = new Color("#ffffff");
           }}
         ></Antenna>
-        {/* <SpinnerY>
-          <Icosahedron
-            ref={inputMesh}
-            args={[size[0] * 0.1, 1]}
-            radius={2 * scale}
-            smoothness={2}
-            //
-            //
-          >
-            <meshStandardMaterial
-              metalness={0.9}
-              roughness={0.1}
-              flatShading={true}
-            ></meshStandardMaterial>
-          </Icosahedron>
-        </SpinnerY> */}
       </group>
     );
   };
@@ -165,31 +169,6 @@ export function Blocker({ blocker, isTemp }) {
           }
         >
           <CodeBuilding
-            // onPointerEnter={({ eventObject }) => {
-            //   cursor("pointer");
-            //   eventObject.material.color = new Color("silver");
-            // }}
-            // onPointerLeave={({ eventObject }) => {
-            //   cursor("auto");
-            //   eventObject.material.color = new Color("#ffffff");
-            // }}
-            // onPointerDown={({ eventObject }) => {
-            //   Hand._isDown = true;
-            //   Hand._moved = 0;
-            //   eventObject.material.color = new Color("grey");
-            // }}
-            // onPointerMove={() => {
-            //   if (Hand._isDown) Hand._moved++;
-            // }}
-            // onPointerUp={({ eventObject }) => {
-            //   Hand._isDown = false;
-            //   if (Hand._moved <= 10) {
-            //     console.log("click edit");
-            //   }
-            //   eventObject.material.color = new Color("white");
-            //   Hand._moved = 0;
-            // }}
-
             onPointerDown={(ev) => {
               Hand._moved = 0;
               Hand._isDown = true;
@@ -246,6 +225,15 @@ export function Blocker({ blocker, isTemp }) {
             }}
           ></CodeBuilding>
 
+          {inputs.map((i, idx) => {
+            return makePort({ type: "input", port: i, idx });
+          })}
+
+          {outputs.map((i, idx) => {
+            return makePort({ type: "output", port: i, idx });
+          })}
+
+          {/*
           {makePort({ type: "input", port: 0 })}
           {makePort({ type: "input", port: 1 })}
           {makePort({ type: "input", port: 2 })}
@@ -256,7 +244,7 @@ export function Blocker({ blocker, isTemp }) {
           {makePort({ type: "output", port: 1 })}
           {makePort({ type: "output", port: 2 })}
           {makePort({ type: "output", port: 3 })}
-          {makePort({ type: "output", port: 4 })}
+          {makePort({ type: "output", port: 4 })} */}
 
           {/* <RoundedBox
           position-z={[size[0] * 0.7]}
@@ -296,79 +284,89 @@ export function Blocker({ blocker, isTemp }) {
             flatShading={true}
           ></meshStandardMaterial>
         </RoundedBox> */}
-          <group position-z={[size[0] * 0.7]}>
-            <EditBlock
-              onPointerEnter={({ eventObject }) => {
-                cursor("pointer");
-                eventObject.material.color = new Color("silver");
-              }}
-              onPointerLeave={({ eventObject }) => {
-                cursor("auto");
-                eventObject.material.color = new Color("#ffffff");
-              }}
-              onPointerDown={({ eventObject }) => {
-                Hand._isDown = true;
-                Hand._moved = 0;
-                eventObject.material.color = new Color("grey");
-              }}
-              onPointerMove={() => {
-                if (Hand._isDown) Hand._moved++;
-              }}
-              onPointerUp={({ eventObject }) => {
-                Hand._isDown = false;
-                if (Hand._moved <= 10) {
-                  Hand.currentBlockerID = blocker._id;
-                  Hand.overlay = "edit-blocker";
-                }
-                eventObject.material.color = new Color("white");
-                Hand._moved = 0;
-              }}
-            ></EditBlock>
-          </group>
 
-          <FloatingVertically>
-            <Text
-              color={"#1256de"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * 0.75}
-              position-y={20}
-              position-x={size[0] * -0.7}
-              rotation-x={Math.PI * -0.25}
-              outlineWidth={1}
-              outlineColor="#ffffff"
-            >
-              Input
-            </Text>
-          </FloatingVertically>
+          {inputs && inputs.length > 0 && outputs && outputs.length > 0 && (
+            <>
+              <group position-z={[size[0] * 0.7]}>
+                <EditBlock
+                  onPointerEnter={({ eventObject }) => {
+                    cursor("pointer");
+                    eventObject.material.color = new Color("silver");
+                  }}
+                  onPointerLeave={({ eventObject }) => {
+                    cursor("auto");
+                    eventObject.material.color = new Color("#ffffff");
+                  }}
+                  onPointerDown={({ eventObject }) => {
+                    Hand._isDown = true;
+                    Hand._moved = 0;
+                    eventObject.material.color = new Color("grey");
+                  }}
+                  onPointerMove={() => {
+                    if (Hand._isDown) Hand._moved++;
+                  }}
+                  onPointerUp={({ eventObject }) => {
+                    Hand._isDown = false;
+                    if (Hand._moved <= 10) {
+                      Hand.currentBlockerID = blocker._id;
+                      Hand.overlay = "edit-blocker";
+                    }
+                    eventObject.material.color = new Color("white");
+                    Hand._moved = 0;
+                  }}
+                ></EditBlock>
+              </group>
+              <RefreshText blocker={blocker} size={size}></RefreshText>
+            </>
+          )}
 
-          <FloatingVertically>
-            <Text
-              color={"#1256de"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * 0.75}
-              position-y={20}
-              position-x={size[0] * 0.7}
-              rotation-x={Math.PI * -0.25}
-              outlineWidth={1}
-              outlineColor="#ffffff"
-            >
-              Output
-            </Text>
-          </FloatingVertically>
+          {inputs && inputs.length > 0 && (
+            <FloatingVertically>
+              <Text
+                color={"#1256de"}
+                fontSize={10}
+                maxWidth={200}
+                lineHeight={1}
+                letterSpacing={0.02}
+                textAlign={"left"}
+                font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+                anchorX="center"
+                anchorY="middle"
+                position-z={size[2] * 0.75}
+                position-y={20}
+                position-x={size[0] * -0.7}
+                rotation-x={Math.PI * -0.25}
+                outlineWidth={1}
+                outlineColor="#ffffff"
+              >
+                Input
+              </Text>
+            </FloatingVertically>
+          )}
+
+          {inputs && inputs.length > 0 && (
+            <FloatingVertically>
+              <Text
+                color={"#1256de"}
+                fontSize={10}
+                maxWidth={200}
+                lineHeight={1}
+                letterSpacing={0.02}
+                textAlign={"left"}
+                font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+                anchorX="center"
+                anchorY="middle"
+                position-z={size[2] * 0.75}
+                position-y={20}
+                position-x={size[0] * 0.7}
+                rotation-x={Math.PI * -0.25}
+                outlineWidth={1}
+                outlineColor="#ffffff"
+              >
+                Output
+              </Text>
+            </FloatingVertically>
+          )}
 
           {/* <FloatingVertically>
             <Text
@@ -390,8 +388,6 @@ export function Blocker({ blocker, isTemp }) {
               Edit
             </Text>
           </FloatingVertically> */}
-
-          <RefreshText blocker={blocker} size={size}></RefreshText>
         </Suspense>
       </group>
     </group>
@@ -409,18 +405,18 @@ function RefreshText({ blocker, size }) {
         maxWidth={200}
         lineHeight={1}
         letterSpacing={0.02}
-        textAlign={"left"}
+        textAlign={"center"}
         font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
         anchorX="center"
         anchorY="middle"
-        position-z={size[2] * 1}
+        position-z={size[2] * 1.1}
         // position-z={size[2] * 0.0}
         position-y={20}
-        rotation-x={Math.PI * -0.3}
+        rotation-x={Math.PI * -0.25}
         outlineWidth={1}
         outlineColor="#ffffff"
       >
-        Edit {blocker.title || ""}
+        Edit {blocker.title ? "\n\n" + blocker.title : ""}
       </Text>
     </FloatingVertically>
   );
