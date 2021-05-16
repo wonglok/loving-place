@@ -1,7 +1,6 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { useMemo } from "react";
 import { CatmullRomCurve3, Color, Vector3 } from "three";
-import { LineSegmentsGeometry } from "three-stdlib";
 
 export function BridgeLine() {
   const { LineMaterial } = require("three/examples/jsm/lines/LineMaterial");
@@ -10,28 +9,7 @@ export function BridgeLine() {
 
   const { gl } = useThree();
 
-  const line2 = useMemo(() => {
-    const curve = new CatmullRomCurve3([
-      new Vector3(-100, 0, 100),
-      new Vector3(-50, 50, 50),
-      new Vector3(50, 100, 50),
-      new Vector3(59, -59, 59),
-      new Vector3(100, 0, 100),
-    ]);
-
-    const points = curve.getPoints(100);
-    console.log(points);
-
-    const geometry = new LineSegmentsGeometry();
-    let pos = [];
-    let count = 100;
-    let temp = new Vector3();
-    for (let i = 0; i < count; i++) {
-      curve.getPointAt(i / count, temp);
-      pos.push(temp.x, temp.y, temp.z);
-    }
-    geometry.setPositions(pos);
-
+  const lineMat = useMemo(() => {
     const material = new LineMaterial({
       transparent: true,
       color: new Color("#00ffff"),
@@ -41,19 +19,40 @@ export function BridgeLine() {
       vertexColors: false,
     });
 
-    const line2 = new Line2(geometry, material);
-    line2.computeLineDistances();
+    return material;
+  }, []);
 
-    // useFrame(() => {
-    //   material.resolution.set(gl.width, gl.height);
-    // });
+  const lineGeo = useMemo(() => {
+    const curvePts = new CatmullRomCurve3([
+      new Vector3(-100, 0, 100),
+      new Vector3(-50, 50, 50),
+      new Vector3(50, 100, 50),
+      new Vector3(59, -59, 59),
+      new Vector3(100, 0, 100),
+    ]);
 
-    return line2;
-  });
+    const lineGeo = new LineGeometry();
+    let pos = [];
+    let count = 101;
+    let temp = new Vector3();
+    for (let i = 0; i < count; i++) {
+      curvePts.getPointAt(i / count, temp);
+      pos.push(temp.x, temp.y, temp.z);
+    }
+    lineGeo.setPositions(pos);
+
+    return lineGeo;
+  }, [lineMat]);
+
+  const lineMesh = useMemo(() => {
+    const mesh = new Line2(lineGeo, lineMat);
+    mesh.computeLineDistances();
+    return mesh;
+  }, [lineGeo, lineMat]);
 
   return (
     <group>
-      <primitive object={line2}></primitive>
+      <primitive object={lineMesh}></primitive>
     </group>
   );
 }

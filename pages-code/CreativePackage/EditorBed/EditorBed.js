@@ -2,6 +2,7 @@ import { Plane } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { Color, Fog } from "three";
+import { addBlocker } from "../AppEditorLogic/AppEditorLogic";
 import { Hand } from "../AppEditorState/AppEditorState";
 
 export function EditorBed() {
@@ -27,15 +28,21 @@ export function EditorBed() {
   return (
     <group>
       <Plane
+        name="app-floor"
         rotation-x={Math.PI * -0.5}
         args={[10000, 10000, 1, 1]}
         onPointerDown={() => {}}
         onPointerMove={(ev) => {
           Hand.floor = ev.point.toArray();
         }}
-        onPointerUp={() => {
+        onPointerUp={({ point }) => {
           Hand.mode = "ready";
           Hand.pickup = false;
+
+          if (Hand.addMode === "addItem") {
+            Hand.addMode = "";
+            addBlocker({ point });
+          }
         }}
       >
         <shaderMaterial

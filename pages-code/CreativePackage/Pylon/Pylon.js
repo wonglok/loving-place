@@ -4,6 +4,7 @@ import { Suspense, useMemo, useRef } from "react";
 import { Color, MeshStandardMaterial } from "three";
 import { Hand } from "../AppEditorState/AppEditorState";
 import { FloatingVertically } from "../Blocker/Blocker";
+import { MainTower } from "../BuildingList/BuildingList";
 // import { BLOOM_SCENE } from "../OrbitGraph/OrbitGraph";
 // import { ShaderCubeChrome } from "../ShaderCubeChrome/ShaderCubeChrome";
 //
@@ -81,7 +82,7 @@ export function ShardLargeOne({ color = "#00ffff" }) {
       emissive: new Color(color).offsetHSL(0, 0, -0.7),
     });
     cloned.material.onBeforeCompile = (node) => {
-      console.log(node);
+      // console.log(node);
       node.uniforms.time = time.current;
 
       node.vertexShader = node.vertexShader.replace(
@@ -303,7 +304,7 @@ export function Pylon({ color = "cyan" }) {
 
   return (
     <Suspense fallback={null}>
-      <Floating
+      {/* <Floating
         floatingOffset={0.0 * Math.PI}
         height={radius}
         rotationY={-0.5}
@@ -313,14 +314,10 @@ export function Pylon({ color = "cyan" }) {
           <ShardLargeOne
             color={new Color(color).offsetHSL(0, 0.0, 0.05)}
           ></ShardLargeOne>
-
-          {/* <CrystalInternal
-            color={new Color(color).offsetHSL(0, 0.0, 0.05)}
-          ></CrystalInternal> */}
         </group>
-      </Floating>
+      </Floating> */}
 
-      <Orbiting
+      {/* <Orbiting
         orbitSpeed={0.1}
         orbitRadius={radius + radius * 2.5}
         offsetRotationY={((Math.PI * 2) / 3) * 1}
@@ -375,7 +372,51 @@ export function Pylon({ color = "cyan" }) {
             ></SmallShardOne>
           </group>
         </Floating>
-      </Orbiting>
+      </Orbiting> */}
+
+      <MainTower
+        onPointerEnter={({ eventObject }) => {
+          document.body.style.cursor = "pointer";
+          eventObject.material.emissive = new Color("#000000").offsetHSL(
+            0,
+            0,
+            0.1
+          );
+        }}
+        onPointerLeave={({ eventObject }) => {
+          eventObject.material.emissive = new Color("#000000").offsetHSL(
+            0,
+            0,
+            0.0
+          );
+          document.body.style.cursor = "";
+        }}
+        onPointerDown={({ eventObject }) => {
+          Hand._isDown = true;
+          Hand._moved = 0;
+          eventObject.material.emissive = new Color("#000000").offsetHSL(
+            0,
+            0,
+            0.1
+          );
+        }}
+        onPointerMove={() => {
+          if (Hand._isDown) {
+            Hand._moved++;
+          }
+        }}
+        onPointerUp={({ eventObject }) => {
+          eventObject.material.emissive = new Color("#000000").offsetHSL(
+            0,
+            0,
+            0.0
+          );
+          if (Hand._moved <= 20) {
+            Hand.overlay = "core";
+          }
+          Hand._moved = 0;
+        }}
+      ></MainTower>
 
       <FloatingVertically>
         <Text

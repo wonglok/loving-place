@@ -1,4 +1,4 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { EditorBed } from "../EditorBed/EditorBed";
 import { EditorControls } from "../EditorControls/EditorControls";
 import { HDREnv } from "../../HDREnv/HDREnv";
@@ -10,11 +10,33 @@ import { Blocker } from "../Blocker/Blocker";
 import { useState } from "@hookstate/core";
 import { BridgeLine } from "../BridgeLine/BridgeLine";
 import { AOCCore } from "../AOCCore/AOCCore";
-import { Hand } from "../AppEditorState/AppEditorState";
+import { TempAdd } from "../TempAdd/TempAdd";
+import {
+  Hand,
+  ProjectStore,
+  provdeCanvasState,
+} from "../AppEditorState/AppEditorState";
 import { useEffect } from "react";
-function Internal({ ProjectState }) {
-  const project = useState(ProjectState);
-  console.log(project.get());
+import { BuildingCoreTower } from "../BuildingCoreTower/BuildingCoreTower";
+
+function Display() {
+  ProjectStore.onChangeKeyRenderUI("blockers");
+
+  return (
+    <group>
+      {ProjectStore.blockers.map((blocker) => {
+        return <Blocker key={blocker._id} blocker={blocker}></Blocker>;
+      })}
+      {/*  */}
+      {/*  */}
+    </group>
+  );
+}
+
+function Internal() {
+  useFrame((st) => {
+    provdeCanvasState(st);
+  });
 
   return (
     <group>
@@ -28,10 +50,12 @@ function Internal({ ProjectState }) {
       <EditorBed></EditorBed>
       <Pylon color={"#00ffff"}></Pylon>
 
-      <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
-      <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker>
+      <TempAdd></TempAdd>
+      <Display></Display>
 
-      <BridgeLine></BridgeLine>
+      {/* <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
+      <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker> */}
+      {/* <BridgeLine></BridgeLine> */}
     </group>
   );
 }
@@ -53,13 +77,13 @@ function Overlays() {
   return <>{Hand.overlay === "core" && <AOCCore>123</AOCCore>}</>;
 }
 
-export function NodeExplorer({ ProjectState }) {
+export function NodeExplorer() {
   return (
     <div className="w-full h-full">
       <Canvas
         dpr={(typeof window !== "undefined" && window.devicePixelRatio) || 1.0}
       >
-        <Internal ProjectState={ProjectState}></Internal>
+        <Internal></Internal>
       </Canvas>
       <Overlays></Overlays>
     </div>
