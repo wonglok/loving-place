@@ -1,30 +1,17 @@
 import { getID, Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 
 export const addBlockerTemp = () => {
-  // queryCanvasState(({ raycaster, mouse, camera, scene }) => {
-  //   raycaster.setFromCamera({ x: 0, y: 0 }, camera);
-
-  //   let floor = scene.getObjectByName("app-floor");
-  //   if (floor) {
-  //     raycaster.intersectObject(floor);
-  //     // let newItem = {
-  //     //   _id: getID(),
-  //     //   x:
-  //     // }
-  //   } else {
-  //     console.error("cannot find app-floor");
-  //   }
-  //   //
-  //   // ProjectStore.blockers.addItem(newItem)
-  // });
-
-  Hand.addMode = "addItem";
+  Hand.addMode = "addBlocker";
 };
 
 export const addBlocker = ({ point }) => {
+  Hand.floor = { x: 0, y: 0, z: 0 };
+
   let newObj = {
     _id: getID(),
     position: [point.x, point.y, point.z],
+    title: "",
   };
+
   ProjectStore.blockers.addItem(newObj);
 };

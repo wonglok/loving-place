@@ -457,7 +457,7 @@ export function Pylon({ color = "cyan" }) {
             Hand._moved = 0;
           }}
         >
-          {"Crystal Core\n\n" + "Click to Start"}
+          {"Core Tower\n\n" + "Click to Start"}
         </Text>
       </FloatingVertically>
     </Suspense>

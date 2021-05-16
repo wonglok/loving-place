@@ -1,24 +1,19 @@
-import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
-import { Hand } from "../AppEditorState/AppEditorState";
+import { Hand, makeSimpleShallowStore } from "../AppEditorState/AppEditorState";
 import { Blocker } from "../Blocker/Blocker";
 
 function TempBlocker() {
-  return (
-    <Blocker
-      isTemp={true}
-      blocker={{ _id: "temp", position: [0, 0, 0] }}
-    ></Blocker>
-  );
+  let temp = makeSimpleShallowStore({ _id: "temp", position: [0, 0, 0] });
+
+  return <Blocker isTemp={true} blocker={temp}></Blocker>;
 }
 
 export function TempAdd() {
   Hand.onChangeKeyRenderUI("addMode");
-
   return (
     <>
       {/*  */}
-      {Hand.addMode === "addItem" && <TempBlocker></TempBlocker>}
+      {/*  */}
+      {Hand.addMode === "addBlocker" && <TempBlocker></TempBlocker>}
     </>
   );
 }

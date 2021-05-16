@@ -9,8 +9,8 @@ import { useFrame } from "@react-three/fiber";
 import { Suspense } from "react";
 import { useEffect, useRef } from "react";
 import { Color, DoubleSide, Vector3 } from "three";
-import { addBlocker } from "../AppEditorLogic/AppEditorLogic";
-import { getID, Hand } from "../AppEditorState/AppEditorState";
+// import { addBlocker } from "../AppEditorLogic/AppEditorLogic";
+import { getID, Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 import { Antenna, CodeBuilding, EditBlock } from "../BuildingList/BuildingList";
 
 export function FloatingVertically({ children }) {
@@ -51,6 +51,7 @@ export function Blocker({ blocker, isTemp }) {
     if (blockerGroup.current) {
       blockerGroup.current.userData.position = blocker.position;
       blockerGroup.current.position.fromArray(blocker.position);
+      blockerGroup.current.visible = true;
     }
   }, [blocker._id]);
 
@@ -72,7 +73,7 @@ export function Blocker({ blocker, isTemp }) {
   let tempo = new Vector3();
   useFrame(() => {
     if (blockerGroup.current) {
-      if (isTemp && Hand.addMode === "addItem") {
+      if (isTemp && Hand.addMode === "addBlocker") {
         blockerGroup.current.userData.position = Hand.floor;
       }
 
@@ -144,7 +145,7 @@ export function Blocker({ blocker, isTemp }) {
 
   return (
     <group>
-      <group ref={blockerGroup}>
+      <group ref={blockerGroup} visible={false}>
         <Suspense
           fallback={
             <RoundedBox
@@ -228,7 +229,8 @@ export function Blocker({ blocker, isTemp }) {
 
               blocker.position = ev.point.toArray();
 
-              console.log(blocker);
+              // ProjectStore.notifyChange("blockers");
+              // console.log(blocker);
             }}
             onPointerEnter={({ eventObject }) => {
               cursor("move");
@@ -315,7 +317,8 @@ export function Blocker({ blocker, isTemp }) {
               onPointerUp={({ eventObject }) => {
                 Hand._isDown = false;
                 if (Hand._moved <= 10) {
-                  console.log("click edit");
+                  Hand.currentBlockerID = blocker._id;
+                  Hand.overlay = "edit-blocker";
                 }
                 eventObject.material.color = new Color("white");
                 Hand._moved = 0;
@@ -388,29 +391,37 @@ export function Blocker({ blocker, isTemp }) {
             </Text>
           </FloatingVertically> */}
 
-          <FloatingVertically>
-            <Text
-              color={"#1256de"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * 0.75}
-              // position-z={size[2] * 0.0}
-              position-y={20}
-              rotation-x={Math.PI * -0.3}
-              outlineWidth={1}
-              outlineColor="#ffffff"
-            >
-              Edit {blocker.title || ""}
-            </Text>
-          </FloatingVertically>
+          <RefreshText blocker={blocker} size={size}></RefreshText>
         </Suspense>
       </group>
     </group>
+  );
+}
+
+function RefreshText({ blocker, size }) {
+  blocker.onChangeKeyRenderUI("title");
+
+  return (
+    <FloatingVertically>
+      <Text
+        color={"#1256de"}
+        fontSize={10}
+        maxWidth={200}
+        lineHeight={1}
+        letterSpacing={0.02}
+        textAlign={"left"}
+        font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+        anchorX="center"
+        anchorY="middle"
+        position-z={size[2] * 1}
+        // position-z={size[2] * 0.0}
+        position-y={20}
+        rotation-x={Math.PI * -0.3}
+        outlineWidth={1}
+        outlineColor="#ffffff"
+      >
+        Edit {blocker.title || ""}
+      </Text>
+    </FloatingVertically>
   );
 }

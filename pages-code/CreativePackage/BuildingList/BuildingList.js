@@ -1,10 +1,11 @@
-import { useGLTF, useTexture } from "@react-three/drei";
+import { useGLTF, useTexture, Sphere, Box } from "@react-three/drei";
 import { useGraph, useThree } from "@react-three/fiber";
 
 import { useMemo } from "react";
 import {
   // EquirectangularReflectionMapping,
   PMREMGenerator,
+  Vector3,
   // TextureLoader,
 } from "three";
 
@@ -22,7 +23,7 @@ let getFistGeo = (scene) => {
   return res;
 };
 
-export function useEnvMap(url = `/hdr/adams_place_bridge_1k.png`) {
+export function useEnvMap(url = `/hdr/bubble.png`) {
   let { gl } = useThree();
   let texture = useTexture(url);
 
@@ -43,17 +44,35 @@ export function useEnvMap(url = `/hdr/adams_place_bridge_1k.png`) {
   return output;
 }
 
+export const SharedEnvURL = "/hdr/bubble.png";
+
 export function MainTower({ ...props }) {
-  let envMap = useEnvMap("/hdr/pexels-faik-akmd-1025469.jpg");
+  let envMap = useEnvMap(SharedEnvURL);
   let glb = useGLTF("/fixed-buildings/main-tower.glb");
+
+  let firstGeo = getFistGeo(glb.scene);
+  firstGeo.computeBoundingBox();
+  let rect = firstGeo.boundingBox.max.clone().sub(firstGeo.boundingBox.min);
+  rect.multiplyScalar(0.02);
+  rect.applyAxisAngle(new Vector3(1, 0, 0), Math.PI * 0.5);
+
   return (
     <group rotation-y={Math.PI * 0.5}>
-      <mesh
+      <Box
         {...props}
-        scale={0.02}
-        geometry={getFistGeo(glb.scene)}
-        rotation-x={Math.PI * 0.5}
+        args={[rect.x, rect.y, rect.z]}
+        position-y={rect.y * -0.5}
       >
+        <shaderMaterial
+          fragmentShader={`
+            void main (void) {
+              discard;
+            }
+          `}
+        ></shaderMaterial>
+      </Box>
+
+      <mesh scale={0.02} geometry={firstGeo} rotation-x={Math.PI * 0.5}>
         <meshStandardMaterial
           metalness={0.9}
           roughness={0.2}
@@ -65,13 +84,33 @@ export function MainTower({ ...props }) {
 }
 
 export function CodeBuilding({ ...props }) {
-  let envMap = useEnvMap("/hdr/pexels-faik-akmd-1025469.jpg");
+  let envMap = useEnvMap(SharedEnvURL);
   let glb = useGLTF("/fixed-buildings/small-tower.glb");
+
+  let firstGeo = getFistGeo(glb.scene);
+  firstGeo.computeBoundingBox();
+  let rect = firstGeo.boundingBox.max.clone().sub(firstGeo.boundingBox.min);
+  rect.multiplyScalar(0.02);
+  rect.applyAxisAngle(new Vector3(1, 0, 0), Math.PI * 0.5);
 
   return (
     <group position-x={-10 * 0.0} rotation-y={Math.PI * -0.5}>
-      <mesh
+      <Box
         {...props}
+        args={[rect.x, rect.y * 0.5, rect.z]}
+        position-y={rect.y * -0.25}
+      >
+        <shaderMaterial
+          fragmentShader={
+            /* glsl */ `
+            void main (void) {
+              discard;
+            }
+          `
+          }
+        ></shaderMaterial>
+      </Box>
+      <mesh
         scale={0.02}
         geometry={getFistGeo(glb.scene)}
         rotation-x={Math.PI * 0.5}
@@ -87,7 +126,7 @@ export function CodeBuilding({ ...props }) {
 }
 
 export function Antenna({ ...props }) {
-  let envMap = useEnvMap("/hdr/pexels-faik-akmd-1025469.jpg");
+  let envMap = useEnvMap(SharedEnvURL);
   let glb = useGLTF("/fixed-buildings/antenna-4.glb");
 
   return (
@@ -109,10 +148,10 @@ export function Antenna({ ...props }) {
 }
 
 export function EditBlock({ ...props }) {
-  let envMap = useEnvMap("/hdr/pexels-faik-akmd-1025469.jpg");
+  let envMap = useEnvMap(SharedEnvURL);
 
   let glb = useGLTF("/fixed-buildings/edit-building.glb");
-  console.log(glb);
+  // console.log(glb);
   return (
     <group rotation-y={Math.PI * -0.5}>
       <mesh

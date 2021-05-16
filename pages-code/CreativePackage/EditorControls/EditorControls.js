@@ -5,6 +5,7 @@ import { Hand } from "../AppEditorState/AppEditorState";
 export function EditorControls() {
   let { camera, gl } = useThree();
   let works = useRef({});
+
   useEffect(() => {
     let ctrl = new MapControls(camera, gl.domElement);
     works.current.mapctrl = () => {
@@ -16,14 +17,14 @@ export function EditorControls() {
     ctrl.screenSpacePanning = false;
 
     ctrl.maxDistance = 5000;
-    ctrl.minDistance = 200;
+    ctrl.minDistance = 500;
 
     camera.near = 0.1;
     camera.far = 10000;
 
     camera.position.x = 0;
-    camera.position.y = 300 * 1.5;
-    camera.position.z = 200 * 1.5;
+    camera.position.y = 300 * 1.3;
+    camera.position.z = 300 * 1.3;
 
     camera.updateProjectionMatrix();
     camera.updateMatrix();
@@ -48,3 +49,5 @@ export function EditorControls() {
 
   return <group></group>;
 }
+
+//

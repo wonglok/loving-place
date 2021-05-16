@@ -39,7 +39,7 @@ export function EditorBed() {
           Hand.mode = "ready";
           Hand.pickup = false;
 
-          if (Hand.addMode === "addItem") {
+          if (Hand.addMode === "addBlocker") {
             Hand.addMode = "";
             addBlocker({ point });
           }

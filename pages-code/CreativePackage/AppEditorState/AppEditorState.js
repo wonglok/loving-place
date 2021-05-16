@@ -17,7 +17,7 @@ export const onEvent = function (ev, fnc) {
   }, []);
 };
 
-let makeSimpleShallowStore = (myObject = {}) => {
+export const makeSimpleShallowStore = (myObject = {}) => {
   let ___NameSpaceID = getID();
   let Utils = {
     exportJSON: () => {
@@ -67,6 +67,11 @@ let makeSimpleShallowStore = (myObject = {}) => {
           window.removeEventListener(`${evName}-${key}`, hh);
         };
       }, [key, st]);
+    },
+    notifyKeyChange: (key) => {
+      window.dispatchEvent(
+        new CustomEvent(`${___NameSpaceID}-${key}`, { detail: {} })
+      );
     },
     // onChangeAny: (key, func) => {
     //   useEffect(() => {
@@ -163,6 +168,12 @@ export const Hand = makeSimpleShallowStore({
   floor: { x: 0, y: 0, z: 0 },
 
   overlay: "overlay",
+
+  currentBlockerID: false,
+
+  tooltip: "ready",
+
+  autoSave: 0,
 });
 
 export const ProjectStore = makeSimpleShallowStore({

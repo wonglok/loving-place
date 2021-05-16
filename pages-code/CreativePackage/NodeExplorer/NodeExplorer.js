@@ -4,12 +4,9 @@ import { EditorControls } from "../EditorControls/EditorControls";
 import { HDREnv } from "../../HDREnv/HDREnv";
 // import { LineDrop } from "../../LineDrop/LineDrop";
 
-// import { Bloom } from "../Bloom/Bloom.js";
 import { Pylon } from "../Pylon/Pylon";
 import { Blocker } from "../Blocker/Blocker";
-import { useState } from "@hookstate/core";
-import { BridgeLine } from "../BridgeLine/BridgeLine";
-import { AOCCore } from "../AOCCore/AOCCore";
+import { Overlays } from "../AOItemList/AOItemList";
 import { TempAdd } from "../TempAdd/TempAdd";
 import {
   Hand,
@@ -17,9 +14,9 @@ import {
   provdeCanvasState,
 } from "../AppEditorState/AppEditorState";
 import { useEffect } from "react";
-import { BuildingCoreTower } from "../BuildingCoreTower/BuildingCoreTower";
+// import { useEffect } from "react";
 
-function Display() {
+function DisplayItems() {
   ProjectStore.onChangeKeyRenderUI("blockers");
 
   return (
@@ -27,10 +24,30 @@ function Display() {
       {ProjectStore.blockers.map((blocker) => {
         return <Blocker key={blocker._id} blocker={blocker}></Blocker>;
       })}
-      {/*  */}
-      {/*  */}
     </group>
   );
+}
+
+// function DisplayConnections() {
+//   ProjectStore.onChangeKeyRenderUI("connections");
+//   ProjectStore.onChangeKeyRenderUI("ports");
+//   return (
+//     <group>
+//       {/* {ProjectStore.blockers.map((blocker) => {
+//         return <Blocker key={blocker._id} blocker={blocker}></Blocker>;
+//       })} */}
+//     </group>
+//   );
+// }
+
+function AutoSave() {
+  useEffect(() => {
+    Hand.autoSave = Hand.autoSave + 1;
+  }, []);
+  Hand.onChangeKey("autoSave", () => {
+    console.log(Hand.autoSave);
+  });
+  return null;
 }
 
 function Internal() {
@@ -51,30 +68,14 @@ function Internal() {
       <Pylon color={"#00ffff"}></Pylon>
 
       <TempAdd></TempAdd>
-      <Display></Display>
+      <DisplayItems></DisplayItems>
 
       {/* <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
       <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker> */}
       {/* <BridgeLine></BridgeLine> */}
+      <AutoSave></AutoSave>
     </group>
   );
-}
-
-function Overlays() {
-  Hand.onChangeKeyRenderUI("overlay");
-
-  useEffect(() => {
-    let hh = ({ key }) => {
-      if (key === "Escape") {
-        Hand.overlay = "";
-      }
-    };
-    window.addEventListener("keydown", hh);
-    return () => {
-      window.removeEventListener("keydown", hh);
-    };
-  });
-  return <>{Hand.overlay === "core" && <AOCCore>123</AOCCore>}</>;
 }
 
 export function NodeExplorer() {
