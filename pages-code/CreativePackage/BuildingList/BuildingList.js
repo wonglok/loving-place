@@ -44,7 +44,7 @@ export function useEnvMap(url = `/hdr/bubble.png`) {
   return output;
 }
 
-export const SharedEnvURL = "/hdr/bubble.png";
+export const SharedEnvURL = "/hdr/pexels-pixabay-35016.jpg";
 
 export function MainTower({ ...props }) {
   let envMap = useEnvMap(SharedEnvURL);

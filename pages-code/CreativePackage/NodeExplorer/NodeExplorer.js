@@ -14,9 +14,10 @@ import {
   provdeCanvasState,
 } from "../AppEditorState/AppEditorState";
 import { useEffect } from "react";
+import { CommunicationBridge } from "../BridgeLine/BridgeLine";
 // import { useEffect } from "react";
 
-function DisplayItems() {
+function DisplayBlockers() {
   ProjectStore.onChangeKeyRenderUI("blockers");
 
   return (
@@ -28,17 +29,23 @@ function DisplayItems() {
   );
 }
 
-// function DisplayConnections() {
-//   ProjectStore.onChangeKeyRenderUI("connections");
-//   ProjectStore.onChangeKeyRenderUI("ports");
-//   return (
-//     <group>
-//       {/* {ProjectStore.blockers.map((blocker) => {
-//         return <Blocker key={blocker._id} blocker={blocker}></Blocker>;
-//       })} */}
-//     </group>
-//   );
-// }
+function DisplayConnections() {
+  ProjectStore.onChangeKeyRenderUI("connections");
+  ProjectStore.onChangeKeyRenderUI("ports");
+
+  return (
+    <group>
+      {ProjectStore.connections.map((conn) => {
+        return (
+          <CommunicationBridge
+            key={conn._id}
+            connection={conn}
+          ></CommunicationBridge>
+        );
+      })}
+    </group>
+  );
+}
 
 function AutoSave() {
   useEffect(() => {
@@ -68,7 +75,8 @@ function Internal() {
       <Pylon color={"#00ffff"}></Pylon>
 
       <TempAdd></TempAdd>
-      <DisplayItems></DisplayItems>
+      <DisplayBlockers></DisplayBlockers>
+      <DisplayConnections></DisplayConnections>
 
       {/* <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
       <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker> */}

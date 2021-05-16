@@ -33,5 +33,20 @@ export const addBlocker = ({ point }) => {
 export const addConnection = () => {
   //
 
-  console.log(123);
+  if (Hand.pickupPort && Hand.releasePort) {
+    if (Hand.pickupPort.type !== Hand.releasePort.type) {
+      if (Hand.pickupPort.blockerID !== Hand.releasePort.blockerID) {
+        let io = [Hand.pickupPort, Hand.releasePort];
+        let newConn = {
+          _id: getID(),
+          // input:
+          input: io.find((e) => e.type === "input"),
+          output: io.find((e) => e.type === "output"),
+        };
+
+        ProjectStore.connections.addItem(newConn);
+        console.log("add-connection", Hand.pickupPort, Hand.releasePort);
+      }
+    }
+  }
 };

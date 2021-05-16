@@ -106,7 +106,13 @@ export function Blocker({ blocker, isTemp }) {
             eventObject.material.color = new Color("lime");
             let did = false;
 
-            if (Hand.addMode === "ready" && !did) {
+            // if (Hand.addMode === "ready" && !did) {
+            //   did = true;
+            //   Hand.pickupPort = port;
+            //   Hand.addMode = "add-connection";
+            // }
+
+            if (Hand.addMode === "ready") {
               did = true;
               Hand.pickupPort = port;
               Hand.addMode = "add-connection";
@@ -122,14 +128,13 @@ export function Blocker({ blocker, isTemp }) {
             let did = false;
 
             if (Hand.addMode === "add-connection") {
+              did = true;
               Hand.releasePort = port;
               Hand.addMode = "ready";
 
               addConnection();
             }
 
-            if (Hand._moved <= 10) {
-            }
             Hand._isDown = false;
             Hand._moved = 0;
             eventObject.material.color = new Color("#ffffff");
@@ -196,6 +201,8 @@ export function Blocker({ blocker, isTemp }) {
                 0,
                 -0.3
               );
+
+              Hand.renderConnection = Hand.renderConnection + 1;
             }}
             onPointerUp={(ev) => {
               if (Hand._moved < 20) {

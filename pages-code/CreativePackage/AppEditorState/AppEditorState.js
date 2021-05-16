@@ -178,6 +178,11 @@ export const Hand = makeSimpleShallowStore({
   autoSave: 0,
 });
 
+export const RenderTrigger = makeSimpleShallowStore({
+  renderConnection: 0,
+  frame: 0,
+});
+
 export const ProjectStore = makeSimpleShallowStore({
   blockers: [],
   ports: [],
