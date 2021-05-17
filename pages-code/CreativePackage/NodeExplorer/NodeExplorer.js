@@ -204,14 +204,14 @@ export function NodeExplorer({ project }) {
       {AutoSaver.showNeedsSave ? (
         <div
           onClick={saveProject}
-          className="cursor-pointer absolute top-0 right-0 rounded-xl m-3 p-3 text-white bg-yellow-400"
+          className="cursor-pointer shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 text-white bg-yellow-500"
         >
           {/*  */}
           Needs To Save
           {/*  */}
         </div>
       ) : (
-        <div className=" absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white">
+        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white">
           {/*  */}
           Saved to Cloud
           {/*  */}
