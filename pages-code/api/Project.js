@@ -131,10 +131,37 @@ export const getOneOfMine = async ({ _id }) => {
   return res;
 };
 
+export const getOneOfPublished = async ({ _id }) => {
+  let res = await axios({
+    method: "POST",
+    baseURL: EnvConfig.rest,
+    url: "/project?" + "action=get-one-of-published",
+    data: {
+      _id: _id,
+    },
+    headers: {
+      "access-control-allow-origin": window.location.origin,
+    },
+    withCredentials: true,
+  }).then(
+    (res) => res.data,
+    (e) => {
+      return Promise.reject({
+        message: e?.response?.data?.msg || "server error",
+      });
+    }
+  );
+
+  return res;
+};
+
 export const Project = {
   create,
   listMine,
   updateMine,
   removeMine,
   getOneOfMine,
+  getOneOfPublished,
 };
+
+export const ProjectAPI = Project;
