@@ -14,8 +14,8 @@ https://opensource.org/licenses/MIT
 
 ## Excluded files from the MIT License
 
-3D Models that are inside this project.
+3D Models inside this project are excluded.
 
 for eaxmple:
 
-- "fixed-buildings:
+- fixed-buildings
