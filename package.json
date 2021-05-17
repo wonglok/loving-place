@@ -27,6 +27,7 @@
     "next": "10.0.5",
     "postcss": "^8.2.9",
     "react": "17.0.1",
+    "react-color": "^2.19.3",
     "react-dom": "17.0.1",
     "react-konva": "^17.0.2-0",
     "react-konva-utils": "^0.1.1",

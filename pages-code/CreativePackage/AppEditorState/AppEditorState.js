@@ -194,6 +194,7 @@ export const RenderTrigger = makeSimpleShallowStore({
 });
 
 export const ProjectStore = makeSimpleShallowStore({
+  _id: "",
   blockers: [],
   ports: [],
   connections: [],

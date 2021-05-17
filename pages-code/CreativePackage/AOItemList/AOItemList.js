@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ChromePicker } from "react-color";
 import { AO } from "../AO/AO";
+import {
+  getColorPicker,
+  getSlider,
+  getSliderVec4,
+  getTextInput,
+} from "../AppEditorLogic/AppEditorLogic";
 import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 
 export function Overlays() {
@@ -360,6 +367,232 @@ function RemovePickerConfirm({ picker }) {
   );
 }
 
+function TitleEdit({ info, picker }) {
+  let [title, setTitle] = useState(info.title);
+  return (
+    <div>
+      <input
+        value={title}
+        onInput={(ev) => {
+          info.title = ev.target.value;
+          setTitle(ev.target.value);
+        }}
+        className={" border-b border-dashed border-black mb-3"}
+      ></input>
+      <div
+        onClick={() => {
+          picker.pickers.removeItem(info);
+        }}
+        className="inline-block text-xs text-red-500 p-1 m-1 border border-red-500 rounded-md cursor-pointer hover:bg-red-200"
+      >
+        Remove
+      </div>
+    </div>
+  );
+}
+
+function ColorPickerEdit({ info, picker }) {
+  let [val, setVal] = useState(info.value);
+  return (
+    <div className="m-2">
+      <TitleEdit picker={picker} info={info}></TitleEdit>
+      <ChromePicker
+        color={val}
+        onChange={(v) => {
+          info.value = v.hex;
+          setVal(v.hex);
+        }}
+      ></ChromePicker>
+    </div>
+  );
+}
+
+function TextPickerEdit({ info, picker }) {
+  let [val, setVal] = useState(info.value);
+  return (
+    <div className="m-2 w-full">
+      <TitleEdit picker={picker} info={info}></TitleEdit>
+      <div>
+        <textarea
+          value={val}
+          onInput={(ev) => {
+            info.value = ev.target.value;
+            setVal(ev.target.value);
+          }}
+          className={" border p-3 border-dashed border-black w-10/12"}
+        ></textarea>
+      </div>
+    </div>
+  );
+}
+
+function FloatPickerEdit({ info, picker }) {
+  let [val, setVal] = useState(info.value);
+  return (
+    <div className="m-2 w-full">
+      <TitleEdit picker={picker} info={info}></TitleEdit>
+      <div>
+        <input
+          type="range"
+          min={-100}
+          max={100}
+          step={0.1}
+          value={val}
+          onInput={(ev) => {
+            info.value = Number(ev.target.value);
+            setVal(Number(ev.target.value));
+          }}
+          className={" border-b border-dashed border-black mb-3 w-10/12"}
+        ></input>
+      </div>
+    </div>
+  );
+}
+
+function Vec4PickerEdit({ info, picker }) {
+  let [val, setVal] = useState(info.value);
+
+  let pickAtIdx = ({ idx }) => {
+    return (
+      <input
+        type="range"
+        min={-100}
+        max={100}
+        step={0.1}
+        value={val}
+        onInput={(ev) => {
+          info.value[idx] = Number(ev.target.value);
+          setVal((s) => {
+            s[idx] = Number(ev.target.value);
+            return s;
+          });
+        }}
+        className={" border-b border-dashed border-black mb-3 w-10/12"}
+      ></input>
+    );
+  };
+  return (
+    <div className="m-2 w-full">
+      <TitleEdit picker={picker} info={info}></TitleEdit>
+      <div>
+        <div className="text-sm  text-gray-400">vec4[0]:</div>
+        <div className="">{pickAtIdx({ idx: 0 })}</div>
+      </div>
+      <div>
+        <div className="text-sm  text-gray-400">vec4[1]:</div>
+        <div className="">{pickAtIdx({ idx: 1 })}</div>
+      </div>
+      <div>
+        <div className="text-sm  text-gray-400">vec4[2]:</div>
+        <div className="">{pickAtIdx({ idx: 2 })}</div>
+      </div>
+      <div>
+        <div className="text-sm  text-gray-400">vec4[3]:</div>
+        <div className="">{pickAtIdx({ idx: 3 })}</div>
+      </div>
+    </div>
+  );
+}
+
+function AddNewPickers({ picker }) {
+  return (
+    <div>
+      <button
+        onClick={() => {
+          picker.pickers.addItem(getColorPicker("text0"));
+        }}
+        className="p-3 m-2 border rounded-lg bg-blue-100"
+      >
+        + Color Picker
+      </button>
+      <button
+        onClick={() => {
+          picker.pickers.addItem(getSlider("slider0"));
+        }}
+        className="p-3 m-2 border rounded-lg bg-blue-100"
+      >
+        + Number Slider
+      </button>
+      <button
+        onClick={() => {
+          picker.pickers.addItem(getTextInput("text0"));
+        }}
+        className="p-3 m-2 border rounded-lg bg-blue-100"
+      >
+        + TextArea
+      </button>
+      <button
+        onClick={() => {
+          picker.pickers.addItem(getSliderVec4("vec4slider0"));
+        }}
+        className="p-3 m-2 border rounded-lg bg-blue-100"
+      >
+        + Vector4
+      </button>
+    </div>
+  );
+}
+
+function UserTunes({ picker }) {
+  let pickers = picker.pickers;
+  picker.onChangeKeyRenderUI("pickers");
+  let hexList = pickers.filter((e) => e.type === "hex");
+  let floatList = pickers.filter((e) => e.type === "float");
+  let textList = pickers.filter((e) => e.type === "text");
+  let vec4List = pickers.filter((e) => e.type === "vec4");
+
+  return (
+    <div className="mx-4 mt-4 mb-4 ">
+      <AddNewPickers picker={picker}></AddNewPickers>
+      <div className="flex flex-wrap">
+        {hexList.map((i) => {
+          return (
+            <ColorPickerEdit
+              key={i._id}
+              picker={picker}
+              info={i}
+            ></ColorPickerEdit>
+          );
+        })}
+      </div>
+      <div className="">
+        {floatList.map((i) => {
+          return (
+            <FloatPickerEdit
+              key={i._id}
+              picker={picker}
+              info={i}
+            ></FloatPickerEdit>
+          );
+        })}
+      </div>
+
+      <div className="">
+        {textList.map((i) => {
+          return (
+            <TextPickerEdit
+              key={i._id}
+              picker={picker}
+              info={i}
+            ></TextPickerEdit>
+          );
+        })}
+      </div>
+      <div className="">
+        {vec4List.map((i) => {
+          return (
+            <Vec4PickerEdit
+              key={i._id}
+              picker={picker}
+              info={i}
+            ></Vec4PickerEdit>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function AOEditPicker() {
   let picker = useMemo(() => {
     return ProjectStore.pickers.getItemByID(Hand.currentPickerID);
@@ -369,7 +602,7 @@ export function AOEditPicker() {
   return (
     <AO>
       <div className="h-16 w-full  bg-indigo-200 flex items-center">
-        <div className="mx-4 text-2xl">Edit JS Code Block</div>
+        <div className="mx-4 text-2xl">Edit Color Pickers / Animation</div>
       </div>
       <div className={"mx-4 mt-4 mb-4"}>
         <div className="  text-2xl">Change code name</div>
@@ -391,9 +624,8 @@ export function AOEditPicker() {
         {/* {JSON.stringify(picker)} */}
       </div>
       <hr></hr>
+      <UserTunes picker={picker}></UserTunes>
       <RemovePickerConfirm picker={picker}></RemovePickerConfirm>
-      {/* <RemoveConnection picker={picker}></RemoveConnection> */}
-      {/* <RemoveBlockerConfirm picker={picker}></RemoveBlockerConfirm> */}
     </AO>
   );
 }

@@ -42,15 +42,15 @@ export const getTextInput = (title = "text0") => {
 export const getColorPicker = (title = "color0") => {
   return {
     _id: getID(),
-    type: "colorhex",
+    type: "hex",
     title,
-    value: "",
+    value: "#ffffff",
   };
 };
 export const getSlider = (title = "slder0") => {
   return {
     _id: getID(),
-    type: "text",
+    type: "float",
     title,
     value: 0,
   };
@@ -58,7 +58,7 @@ export const getSlider = (title = "slder0") => {
 export const getSliderVec4 = (title = "vec4slider0") => {
   return {
     _id: getID(),
-    type: "text",
+    type: "vec4",
     title,
     value: [1, 1, 1, 1],
   };
