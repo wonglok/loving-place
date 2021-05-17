@@ -29,26 +29,13 @@ export default function TestAPI() {
 
 /*
 
-fetch("http://localhost:3333/project?action=get-one-of-published", {
+fetch("https://prod-rest.realtime.effectnode.com//project?action=get-one-of-published", {
   headers: {
-    "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7,zh-TW;q=0.6",
-    // "access-control-allow-origin": "http://localhost:3000",
-    "cache-control": "no-cache",
     "content-type": "application/json;charset=UTF-8",
-    pragma: "no-cache",
-    "sec-ch-ua":
-      '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-site",
   },
-  referrer: "http://localhost:3000/",
-  referrerPolicy: "strict-origin-when-cross-origin",
-  body: JSON.stringify({ _id: "609f0ac72a5e721c6831168c" }),
+  body: JSON.stringify({ _id: "609f60f7272b4b00095b633d" }),
   method: "POST",
   mode: "cors",
-  credentials: "omit",
-});
+}).then(r => r.json()).then(v => console.log(v));
 
 */
