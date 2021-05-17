@@ -1,3 +1,4 @@
+import { get } from "sortablejs";
 import { getID, Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 
 export const addBlocker = ({ point }) => {
@@ -30,12 +31,55 @@ export const addBlocker = ({ point }) => {
   ProjectStore.ports.addItem(makePort("output"));
 };
 
+export const getTextInput = (title = "text0") => {
+  return {
+    _id: getID(),
+    type: "text",
+    title,
+    value: "",
+  };
+};
+export const getColorPicker = (title = "color0") => {
+  return {
+    _id: getID(),
+    type: "colorhex",
+    title,
+    value: "",
+  };
+};
+export const getSlider = (title = "slder0") => {
+  return {
+    _id: getID(),
+    type: "text",
+    title,
+    value: 0,
+  };
+};
+export const getSliderVec4 = (title = "vec4slider0") => {
+  return {
+    _id: getID(),
+    type: "text",
+    title,
+    value: [1, 1, 1, 1],
+  };
+};
+
 export const addPicker = ({ point }) => {
   let newObj = {
     _id: getID(),
     position: [point.x, point.y, point.z],
     title: Hand.newPickerTitleName,
-    pickers: [],
+    pickers: [
+      getTextInput("text1"),
+      getTextInput("text2"),
+      getColorPicker("color1"),
+      getColorPicker("color2"),
+      getColorPicker("color3"),
+      getSlider("slider1"),
+      getSlider("slider2"),
+      getSliderVec4("vec4slider1"),
+      getSliderVec4("vec4slider2"),
+    ],
   };
 
   ProjectStore.pickers.addItem(newObj);
