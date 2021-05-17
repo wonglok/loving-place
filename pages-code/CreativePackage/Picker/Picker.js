@@ -150,28 +150,35 @@ export function Picker({ isTemp, picker }) {
             {/* // */}
             {/*  */}
 
-            <Text
-              color={"yellow"}
-              fontSize={10}
-              maxWidth={200}
-              lineHeight={1}
-              letterSpacing={0.02}
-              textAlign={"center"}
-              font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-              anchorX="center"
-              anchorY="middle"
-              position-z={size[2] * 1.1}
-              // position-z={size[2] * 0.0}
-              position-y={20}
-              rotation-x={Math.PI * -0.25}
-              outlineWidth={1}
-              outlineColor="#000000"
-            >
-              Edit {picker.title ? "\n\n" + picker.title : ""}
-            </Text>
+            <AutoChangeText size={size} picker={picker}></AutoChangeText>
           </FloatingVertically>
         </group>
       </group>
     </Suspense>
+  );
+}
+
+function AutoChangeText({ size, picker }) {
+  picker.onChangeKeyRenderUI("title");
+  return (
+    <Text
+      color={"yellow"}
+      fontSize={10}
+      maxWidth={200}
+      lineHeight={1}
+      letterSpacing={0.02}
+      textAlign={"center"}
+      font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+      anchorX="center"
+      anchorY="middle"
+      position-z={size[2] * 1.1}
+      // position-z={size[2] * 0.0}
+      position-y={20}
+      rotation-x={Math.PI * -0.25}
+      outlineWidth={1}
+      outlineColor="#000000"
+    >
+      Edit {picker.title ? "\n\n" + picker.title : ""}
+    </Text>
   );
 }
