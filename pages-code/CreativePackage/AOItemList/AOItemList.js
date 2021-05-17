@@ -225,22 +225,28 @@ function ConnectionInfo({ connection }) {
   let outputBlock = ProjectStore.blockers.getItemByID(
     connection.output.blockerID
   );
+
+  let inputBlockIDX = ProjectStore.blockers.getItemIndexByID(
+    connection.input.blockerID
+  );
+  let outputBlockIDX = ProjectStore.blockers.getItemIndexByID(
+    connection.output.blockerID
+  );
+
   inputBlock.onChangeKeyRenderUI("title");
   outputBlock.onChangeKeyRenderUI("title");
 
   return (
     <>
       <td className={"p-3"}>
-        From Input: {inputBlock.title || "untitled"} - To Output:{" "}
-        {outputBlock.title || "untitled"}
+        From Input {inputBlockIDX}: {inputBlock.title || "untitled"} - To Output{" "}
+        {outputBlockIDX}: {outputBlock.title || "untitled"}
       </td>
       <td>
         <button
           className="p-2 m-2 text-red-500 border-red-500 border rounded-lg text-xs"
           onClick={() => {
-            if (window.confirm("remove?")) {
-              ProjectStore.connections.removeItem(connection);
-            }
+            ProjectStore.connections.removeItem(connection);
           }}
         >
           Remove
@@ -250,7 +256,7 @@ function ConnectionInfo({ connection }) {
   );
 }
 
-function RemoveConnection() {
+function RemoveConnection({ blocker }) {
   ProjectStore.onChangeKeyRenderUI("connections");
 
   return (
@@ -262,13 +268,23 @@ function RemoveConnection() {
         </div>
         <table>
           <tbody>
-            {ProjectStore.connections.map((e) => {
-              return (
-                <tr key={e._id}>
-                  <ConnectionInfo connection={e}></ConnectionInfo>
-                </tr>
-              );
-            })}
+            {ProjectStore.connections
+              .filter((c) => {
+                if (
+                  c.input.blockerID === blocker._id ||
+                  c.output.blockerID === blocker._id
+                ) {
+                  return true;
+                }
+                return false;
+              })
+              .map((e) => {
+                return (
+                  <tr key={e._id}>
+                    <ConnectionInfo connection={e}></ConnectionInfo>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

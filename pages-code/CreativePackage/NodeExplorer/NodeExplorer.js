@@ -57,7 +57,6 @@ function DisplayConnections() {
   return (
     <group>
       {ProjectStore.connections.map((conn) => {
-        console.log(conn);
         return (
           <CommunicationBridge
             key={conn._id}
@@ -118,6 +117,31 @@ function Internal() {
   );
 }
 
+function NeedsToSave({ project, saveProject }) {
+  AutoSaver.onChangeKeyRenderUI("showNeedsSave");
+
+  return (
+    <>
+      {AutoSaver.showNeedsSave ? (
+        <div
+          onClick={saveProject}
+          className="cursor-pointer shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 text-white bg-yellow-500"
+        >
+          {/*  */}
+          Needs To Save
+          {/*  */}
+        </div>
+      ) : (
+        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white">
+          {/*  */}
+          Saved to Cloud
+          {/*  */}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function NodeExplorer({ project }) {
   if (!project) {
     throw new Error("missing project");
@@ -130,7 +154,7 @@ export function NodeExplorer({ project }) {
     await Project.updateMine({ object: project });
     AutoSaver.showNeedsSave = false;
   };
-  let selfCleanSetup = () => {
+  let autoSetupCleanUp = () => {
     let json = JSON.parse(project.largeString);
 
     ProjectStore._id = project._id;
@@ -185,38 +209,24 @@ export function NodeExplorer({ project }) {
   useEffect(async () => {
     ProjectStore._id = project._id;
     if (project.largeString) {
-      //
-      //
-      return selfCleanSetup();
+      return autoSetupCleanUp();
     } else {
       project.largeString = JSON.stringify(ProjectStore);
       await Project.updateMine({ object: project });
       AutoSaver.showNeedsSave = false;
-      return selfCleanSetup();
+      return autoSetupCleanUp();
     }
   }, []);
-
-  AutoSaver.onChangeKeyRenderUI("showNeedsSave");
 
   return ready ? (
     <div className="w-full h-full">
       <NodeExplorerInternal></NodeExplorerInternal>
-      {AutoSaver.showNeedsSave ? (
-        <div
-          onClick={saveProject}
-          className="cursor-pointer shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 text-white bg-yellow-500"
-        >
-          {/*  */}
-          Needs To Save
-          {/*  */}
-        </div>
-      ) : (
-        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white">
-          {/*  */}
-          Saved to Cloud
-          {/*  */}
-        </div>
-      )}
+      <NeedsToSave
+        project={project}
+        saveProject={() => {
+          saveProject();
+        }}
+      ></NeedsToSave>
     </div>
   ) : (
     <div>Loading....</div>

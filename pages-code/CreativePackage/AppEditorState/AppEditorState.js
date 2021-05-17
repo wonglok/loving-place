@@ -83,6 +83,13 @@ export const makeSimpleShallowStore = (myObject = {}) => {
         return result;
       });
 
+    array.getItemIndexByID =
+      array.getItemIndexByID ||
+      ((_id) => {
+        let result = array.findIndex((a) => a._id === _id);
+        return result;
+      });
+
     array.addItem =
       array.addItem ||
       ((item) => {
