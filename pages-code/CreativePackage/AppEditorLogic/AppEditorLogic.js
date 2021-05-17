@@ -31,8 +31,6 @@ export const addBlocker = ({ point }) => {
 };
 
 export const addConnection = () => {
-  //
-
   if (Hand.pickupPort && Hand.releasePort) {
     if (Hand.pickupPort.type !== Hand.releasePort.type) {
       if (Hand.pickupPort.blockerID !== Hand.releasePort.blockerID) {

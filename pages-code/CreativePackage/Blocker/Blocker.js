@@ -95,7 +95,7 @@ export function Blocker({ blocker, isTemp }) {
     return (
       <group
         key={port._id}
-        scale={1.35}
+        scale={1.75}
         position-x={[size[0] * -0.75 * io]}
         position-z={[size[2] * -0.55 + idx * size[0] * 0.35]}
       >
@@ -362,7 +362,7 @@ export function Blocker({ blocker, isTemp }) {
                 font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
                 anchorX="center"
                 anchorY="middle"
-                position-z={size[2] * 0.75}
+                position-z={size[2] * 1.1}
                 position-y={20}
                 position-x={size[0] * -0.7}
                 rotation-x={Math.PI * -0.25}
@@ -386,7 +386,7 @@ export function Blocker({ blocker, isTemp }) {
                 font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
                 anchorX="center"
                 anchorY="middle"
-                position-z={size[2] * 0.75}
+                position-z={size[2] * 1.1}
                 position-y={20}
                 position-x={size[0] * 0.7}
                 rotation-x={Math.PI * -0.25}

@@ -87,6 +87,82 @@ export function AOCore() {
   );
 }
 
+function RemoveConfirm({ blocker }) {
+  let [name, setName] = useState("");
+  return (
+    <div>
+      <div className={"px-4 pt-4 pb-4  cursor-pointer"}>
+        <div className="  text-2xl text-black ">Remove Code Block</div>
+        <div className={"  text-sm text-red-500  "}>
+          {/*  */}
+          Type in the code name{" "}
+          <span className="bg-red-200 py-1 px-2 rounded-md  inline-block">
+            {blocker.title}
+          </span>{" "}
+          to confirm removal
+        </div>
+
+        <input
+          type="text"
+          className="py-3 my-3 text-2xl placeholder-gray-600 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          placeholder={"mymodule-mycodename"}
+          value={name}
+          onInput={(ev) => {
+            setName(ev.target.value);
+            // ProjectStore.notifyKeyChange("blockers");
+          }}
+        />
+
+        <button
+          className={
+            name !== blocker.title
+              ? "bg-gray-500 text-white p-3 rounded-xl"
+              : "bg-red-500 text-white p-3 rounded-xl"
+          }
+          disabled={name !== blocker.title}
+          onClick={() => {
+            //
+
+            setTimeout(() => {
+              let ports = ProjectStore.ports.filter(
+                (e) => e.blockerID === blocker._id
+              );
+
+              let connections = ProjectStore.connections.filter((e) => {
+                return (
+                  e.input.blockerID === blocker._id ||
+                  e.output.blockerID === blocker._id
+                );
+              });
+
+              ports.forEach((pp) => {
+                ProjectStore.ports.removeItem(pp);
+              });
+
+              connections.forEach((cc) => {
+                ProjectStore.connections.removeItem(cc);
+              });
+
+              ProjectStore.blockers.removeItem(blocker);
+
+              Hand.overlay = "overlay";
+            });
+          }}
+        >
+          {name !== blocker.title
+            ? "Type to Confirm Removal"
+            : "Comfirm Removal"}
+        </button>
+
+        {/*  */}
+
+        {/* {JSON.stringify(blocker)} */}
+      </div>
+      <hr></hr>
+    </div>
+  );
+}
+
 function ConnectionInfo({ connection }) {
   let inputBlock = ProjectStore.blockers.getItemByID(
     connection.input.blockerID
@@ -98,10 +174,50 @@ function ConnectionInfo({ connection }) {
   outputBlock.onChangeKeyRenderUI("title");
 
   return (
-    <td className={"bg-blue-200 p-2"}>
-      From Input: {inputBlock.title || "untitled"} - To Output:{" "}
-      {outputBlock.title || "untitled"}
-    </td>
+    <>
+      <td className={"p-3"}>
+        From Input: {inputBlock.title || "untitled"} - To Output:{" "}
+        {outputBlock.title || "untitled"}
+      </td>
+      <td>
+        <button
+          onClick={() => {
+            if (window.confirm("remove?")) {
+              ProjectStore.connections.removeItem(connection);
+            }
+          }}
+        >
+          Remove
+        </button>
+      </td>
+    </>
+  );
+}
+
+function RemoveConnection() {
+  ProjectStore.onChangeKeyRenderUI("connections");
+
+  return (
+    <div>
+      <div className={"mx-4 mt-4 mb-4"}>
+        <div className="  text-2xl">Remove Connections</div>
+        <div className="  text-sm text-gray-500">
+          You can remove connections of this module.
+        </div>
+        <table>
+          <tbody>
+            {ProjectStore.connections.map((e) => {
+              return (
+                <tr key={e._id}>
+                  <ConnectionInfo connection={e}></ConnectionInfo>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <hr></hr>
+    </div>
   );
 }
 
@@ -110,6 +226,7 @@ export function AOEditBlocker() {
     return ProjectStore.blockers.getItemByID(Hand.currentBlockerID);
   }, [Hand.currentBlockerID]);
   blocker.onChangeKeyRenderUI("title");
+
   return (
     <AO>
       <div className="h-16 w-full  bg-indigo-200 flex items-center">
@@ -123,7 +240,7 @@ export function AOEditBlocker() {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-600 w-full"
+          className="py-3 my-3 text-2xl placeholder-gray-600 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
           placeholder={"mymodule-mycodename"}
           value={blocker.title}
           onInput={(ev) => {
@@ -135,60 +252,8 @@ export function AOEditBlocker() {
         {/* {JSON.stringify(blocker)} */}
       </div>
       <hr></hr>
-      <div className={"mx-4 mt-4 mb-4"}>
-        <div className="  text-2xl">Remove Connections</div>
-        <div className="  text-sm text-gray-500">
-          You can remove connections of this module.
-        </div>
-
-        <table>
-          <tbody>
-            {ProjectStore.connections.map((e) => {
-              return (
-                <tr key={e._id}>
-                  <ConnectionInfo connection={e}></ConnectionInfo>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        {/*  */}
-
-        {/* {JSON.stringify(blocker)} */}
-      </div>
-      <hr></hr>
-      <div className={"px-4 pt-4 pb-4  cursor-pointer"}>
-        <div className="  text-2xl text-black ">Remove Code Block</div>
-        <div className="  text-sm text-gray-500  ">
-          {/*  */}
-          Remove this code block forever.
-        </div>
-
-        <button
-          onClick={() => {
-            //
-            setTimeout(() => {
-              let ports = ProjectStore.ports.filter(
-                (e) => e.blockerID === blocker._id
-              );
-              ports.forEach((p) => {
-                ProjectStore.ports.removeItem(p);
-              });
-              ProjectStore.blockers.removeItem(blocker);
-
-              Hand.overlay = "overlay";
-            });
-          }}
-        >
-          Remove
-        </button>
-
-        {/*  */}
-
-        {/* {JSON.stringify(blocker)} */}
-      </div>
-      <hr></hr>
+      <RemoveConnection blocker={blocker}></RemoveConnection>
+      <RemoveConfirm blocker={blocker}></RemoveConfirm>
     </AO>
   );
 }

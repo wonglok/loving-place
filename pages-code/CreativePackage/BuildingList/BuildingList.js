@@ -180,7 +180,7 @@ export function EditBlock({ ...props }) {
   let envMap = useEnvMap(Building);
 
   let glb = useGLTF("/fixed-buildings/edit-building.glb");
-  // console.log(glb);
+
   return (
     <group rotation-y={Math.PI * -0.5}>
       <mesh

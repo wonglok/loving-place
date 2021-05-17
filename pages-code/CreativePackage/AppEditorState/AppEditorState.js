@@ -179,7 +179,11 @@ export const Hand = makeSimpleShallowStore({
 
 export const AutoSave = makeSimpleShallowStore({
   //
+  inc: 0,
   //
+  latestSnaptime: 0,
+  //
+  trackingJSON: "",
 });
 
 export const RenderTrigger = makeSimpleShallowStore({

@@ -30,6 +30,7 @@ function DisplayBlockers() {
 }
 
 function DisplayConnections() {
+  //
   ProjectStore.onChangeKeyRenderUI("connections");
   ProjectStore.onChangeKeyRenderUI("ports");
 
