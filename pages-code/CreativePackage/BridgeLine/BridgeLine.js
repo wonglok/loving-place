@@ -160,9 +160,13 @@ export function CommunicationBridge({ connection }) {
     let inputMesh = scene.getObjectByName(connection.input._id);
     //
     let outputMesh = scene.getObjectByName(connection.output._id);
+    if (inputMesh) {
+      inputMesh.getWorldPosition(inputPosition);
+    }
 
-    inputMesh.getWorldPosition(inputPosition);
-    outputMesh.getWorldPosition(outputPosition);
+    if (outputMesh) {
+      outputMesh.getWorldPosition(outputPosition);
+    }
 
     let lineGeo = getGeo({ a: inputPosition, b: outputPosition });
 
@@ -188,7 +192,9 @@ export function CommunicationBridge({ connection }) {
   }, [connection._id, lineMat, works.current]);
 
   useFrame(() => {
+    //
     Object.values(works.current).forEach((w) => w());
+    //
   });
 
   return (

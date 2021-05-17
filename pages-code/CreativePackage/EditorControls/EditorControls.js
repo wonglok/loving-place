@@ -19,6 +19,8 @@ export function EditorControls() {
     ctrl.maxDistance = 5000;
     ctrl.minDistance = 500;
 
+    ctrl.minDistance = -1;
+
     camera.near = 0.1;
     camera.far = 10000;
 

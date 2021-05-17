@@ -420,7 +420,7 @@ export function Pylon({ color = "cyan" }) {
 
       <FloatingVertically>
         <Text
-          color={"#1256de"}
+          color={"yellow"}
           fontSize={10}
           maxWidth={200}
           lineHeight={1}
@@ -434,7 +434,7 @@ export function Pylon({ color = "cyan" }) {
           position-y={50}
           rotation-x={Math.PI * -0.3}
           outlineWidth={1}
-          outlineColor="#ffffff"
+          outlineColor="#000000"
           onPointerEnter={({ eventObject }) => {
             document.body.style.cursor = "pointer";
           }}

@@ -1,13 +1,14 @@
 import { useGLTF, useTexture, Sphere, Box } from "@react-three/drei";
 import { useGraph, useThree } from "@react-three/fiber";
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import {
   // EquirectangularReflectionMapping,
   PMREMGenerator,
   Vector3,
   // TextureLoader,
 } from "three";
+import { ImageEnvMap } from "../ImageEnvMap/ImageEnvMap";
 
 let Cache = new Map();
 
@@ -23,7 +24,7 @@ let getFistGeo = (scene) => {
   return res;
 };
 
-export function useEnvMap(url = `/hdr/bubble.png`) {
+export function useEnvMapFromEquirectangular(url = `/hdr/bubble.png`) {
   let { gl } = useThree();
   let texture = useTexture(url);
 
@@ -44,10 +45,36 @@ export function useEnvMap(url = `/hdr/bubble.png`) {
   return output;
 }
 
-export const SharedEnvURL = "/hdr/pexels-pixabay-35016.jpg";
+export function useMatCapEnvMap(url) {
+  let { gl, scene } = useThree();
+
+  let texture = useTexture(url);
+
+  let matcapEnvMap = useMemo(() => {
+    if (Cache.has(url)) {
+      return Cache.get(url);
+    }
+
+    let stuff = new ImageEnvMap({ renderer: gl, url, scene, texture });
+
+    Cache.set(url, stuff.envMap);
+    return stuff.envMap;
+  }, [url]);
+
+  //
+
+  return matcapEnvMap;
+}
+
+export const Building = "/hdr/bubble-center.jpg";
+export const SharedEnvURL = "/hdr/bubble-center-small.jpg";
+
+const useEnvMap = (url) => {
+  return useMatCapEnvMap(url);
+};
 
 export function MainTower({ ...props }) {
-  let envMap = useEnvMap(SharedEnvURL);
+  let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/main-tower.glb");
 
   let firstGeo = getFistGeo(glb.scene);
@@ -84,7 +111,7 @@ export function MainTower({ ...props }) {
 }
 
 export function CodeBuilding({ ...props }) {
-  let envMap = useEnvMap(SharedEnvURL);
+  let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/small-tower.glb");
 
   let firstGeo = getFistGeo(glb.scene);
@@ -126,7 +153,7 @@ export function CodeBuilding({ ...props }) {
 }
 
 export function Antenna({ ...props }) {
-  let envMap = useEnvMap(SharedEnvURL);
+  let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/antenna-4.glb");
 
   return (
@@ -148,7 +175,7 @@ export function Antenna({ ...props }) {
 }
 
 export function EditBlock({ ...props }) {
-  let envMap = useEnvMap(SharedEnvURL);
+  let envMap = useEnvMap(Building);
 
   let glb = useGLTF("/fixed-buildings/edit-building.glb");
   // console.log(glb);

@@ -148,6 +148,25 @@ export function Blocker({ blocker, isTemp }) {
             eventObject.material.color = new Color("#ffffff");
           }}
         ></Antenna>
+
+        <Text
+          color={"yellow"}
+          fontSize={10}
+          maxWidth={200}
+          lineHeight={1}
+          letterSpacing={0.02}
+          textAlign={"left"}
+          font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+          anchorX="center"
+          anchorY="middle"
+          position-x={size[0] * 0.2 * -io}
+          position-y={10}
+          rotation-x={Math.PI * -0.25}
+          outlineWidth={1}
+          outlineColor="#000000"
+        >
+          {idx}
+        </Text>
       </group>
     );
   };
@@ -253,7 +272,8 @@ export function Blocker({ blocker, isTemp }) {
           {makePort({ type: "output", port: 3 })}
           {makePort({ type: "output", port: 4 })} */}
 
-          {/* <RoundedBox
+          {/*
+        <RoundedBox
           position-z={[size[0] * 0.7]}
           args={[size[0] * 0.5, size[1], size[2] * 0.2]}
           radius={2 * scale}
@@ -290,7 +310,9 @@ export function Blocker({ blocker, isTemp }) {
             roughness={0.1}
             flatShading={true}
           ></meshStandardMaterial>
-        </RoundedBox> */}
+        </RoundedBox>
+
+        */}
 
           {inputs && inputs.length > 0 && outputs && outputs.length > 0 && (
             <>
@@ -330,7 +352,7 @@ export function Blocker({ blocker, isTemp }) {
           {inputs && inputs.length > 0 && (
             <FloatingVertically>
               <Text
-                color={"#1256de"}
+                color={"yellow"}
                 fontSize={10}
                 maxWidth={200}
                 lineHeight={1}
@@ -344,7 +366,7 @@ export function Blocker({ blocker, isTemp }) {
                 position-x={size[0] * -0.7}
                 rotation-x={Math.PI * -0.25}
                 outlineWidth={1}
-                outlineColor="#ffffff"
+                outlineColor="#000000"
               >
                 Input
               </Text>
@@ -354,7 +376,7 @@ export function Blocker({ blocker, isTemp }) {
           {inputs && inputs.length > 0 && (
             <FloatingVertically>
               <Text
-                color={"#1256de"}
+                color={"yellow"}
                 fontSize={10}
                 maxWidth={200}
                 lineHeight={1}
@@ -368,7 +390,7 @@ export function Blocker({ blocker, isTemp }) {
                 position-x={size[0] * 0.7}
                 rotation-x={Math.PI * -0.25}
                 outlineWidth={1}
-                outlineColor="#ffffff"
+                outlineColor="#000000"
               >
                 Output
               </Text>
@@ -377,7 +399,7 @@ export function Blocker({ blocker, isTemp }) {
 
           {/* <FloatingVertically>
             <Text
-              color={"#1256de"}
+              color={"yellow"}
               fontSize={10}
               maxWidth={200}
               lineHeight={1}
@@ -390,7 +412,7 @@ export function Blocker({ blocker, isTemp }) {
               position-y={20}
               rotation-x={Math.PI * -0.25}
               outlineWidth={1}
-              outlineColor="#ffffff"
+              outlineColor="#000000"
             >
               Edit
             </Text>
@@ -407,7 +429,7 @@ function RefreshText({ blocker, size }) {
   return (
     <FloatingVertically>
       <Text
-        color={"#1256de"}
+        color={"yellow"}
         fontSize={10}
         maxWidth={200}
         lineHeight={1}
@@ -421,7 +443,7 @@ function RefreshText({ blocker, size }) {
         position-y={20}
         rotation-x={Math.PI * -0.25}
         outlineWidth={1}
-        outlineColor="#ffffff"
+        outlineColor="#000000"
       >
         Edit {blocker.title ? "\n\n" + blocker.title : ""}
       </Text>
