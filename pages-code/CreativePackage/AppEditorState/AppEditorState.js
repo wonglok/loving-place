@@ -175,8 +175,11 @@ export const Hand = makeSimpleShallowStore({
   currentBlockerID: false,
 
   tooltip: "ready",
+});
 
-  autoSave: 0,
+export const AutoSave = makeSimpleShallowStore({
+  //
+  //
 });
 
 export const RenderTrigger = makeSimpleShallowStore({

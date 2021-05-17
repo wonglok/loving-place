@@ -47,16 +47,6 @@ function DisplayConnections() {
   );
 }
 
-function AutoSave() {
-  useEffect(() => {
-    Hand.autoSave = Hand.autoSave + 1;
-  }, []);
-  Hand.onChangeKey("autoSave", () => {
-    console.log(Hand.autoSave);
-  });
-  return null;
-}
-
 function Internal() {
   useFrame((st) => {
     provdeCanvasState(st);
@@ -81,7 +71,6 @@ function Internal() {
       {/* <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
       <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker> */}
       {/* <BridgeLine></BridgeLine> */}
-      <AutoSave></AutoSave>
     </group>
   );
 }

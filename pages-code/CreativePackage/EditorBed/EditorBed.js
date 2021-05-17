@@ -5,10 +5,7 @@ import { useEffect } from "react";
 import { Color, Fog, RepeatWrapping } from "three";
 import { addBlocker } from "../AppEditorLogic/AppEditorLogic";
 import { Hand } from "../AppEditorState/AppEditorState";
-import {
-  SharedEnvURL,
-  useEnvMapFromEquirectangular,
-} from "../BuildingList/BuildingList";
+import { SharedEnvURL, useMatCapEnvMap } from "../BuildingList/BuildingList";
 
 export function MatArmmor() {
   let aoMap = useTexture(
@@ -26,30 +23,28 @@ export function MatArmmor() {
   let normalMap = useTexture(
     "/substance/rough-metal/Sci-fi_Armor_001_normal.jpg"
   );
-  let envMap = useEnvMapFromEquirectangular(SharedEnvURL);
+  let envMap = useMatCapEnvMap(SharedEnvURL);
 
   let makeRepeat = (mapTex) => {
-    mapTex.repeat.set(15, 15);
+    mapTex.repeat.set(35, 35);
     mapTex.wrapS = RepeatWrapping;
     mapTex.wrapT = RepeatWrapping;
   };
 
-  makeRepeat(aoMap);
   makeRepeat(displacementMap);
   makeRepeat(roughnessMap);
   makeRepeat(baseMap);
+  makeRepeat(aoMap);
   makeRepeat(normalMap);
 
   return (
     <meshStandardMaterial
+      roughness={0.3}
+      metalness={0.9}
       envMap={envMap}
-      emissive={"#222"}
-      metalness={0.2}
-      roughness={0.5}
-      aoMap={aoMap}
-      displacementMap={displacementMap}
-      roughnessMap={roughnessMap}
-      map={baseMap}
+      envMapIntensity={5}
+      // aoMap={aoMap}
+      // aoMapIntensity={4}
       normalMap={normalMap}
     ></meshStandardMaterial>
   );
@@ -106,7 +101,14 @@ export function EditorBed() {
 
   return (
     <group>
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <gridHelper
+            position-y={-1}
+            args={[10000, 50, "white", "white"]}
+          ></gridHelper>
+        }
+      >
         <Plane
           name="app-floor"
           rotation-x={Math.PI * -0.5}
@@ -143,10 +145,7 @@ export function EditorBed() {
         </Plane>
       </Suspense>
 
-      {/* <gridHelper
-        position-y={-1}
-        args={[10000, 50, "white", "white"]}
-      ></gridHelper> */}
+      {/*  */}
     </group>
   );
 }

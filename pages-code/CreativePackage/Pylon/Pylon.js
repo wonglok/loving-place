@@ -303,8 +303,9 @@ export function Pylon({ color = "cyan" }) {
   const radius = 13;
 
   return (
-    <Suspense fallback={null}>
-      {/* <Floating
+    <group>
+      <Suspense fallback={null}>
+        {/* <Floating
         floatingOffset={0.0 * Math.PI}
         height={radius}
         rotationY={-0.5}
@@ -317,7 +318,7 @@ export function Pylon({ color = "cyan" }) {
         </group>
       </Floating> */}
 
-      {/* <Orbiting
+        {/* <Orbiting
         orbitSpeed={0.1}
         orbitRadius={radius + radius * 2.5}
         offsetRotationY={((Math.PI * 2) / 3) * 1}
@@ -374,76 +375,31 @@ export function Pylon({ color = "cyan" }) {
         </Floating>
       </Orbiting> */}
 
-      <MainTower
-        onPointerEnter={({ eventObject }) => {
-          document.body.style.cursor = "pointer";
-          eventObject.material.emissive = new Color("#000000").offsetHSL(
-            0,
-            0,
-            0.1
-          );
-        }}
-        onPointerLeave={({ eventObject }) => {
-          eventObject.material.emissive = new Color("#000000").offsetHSL(
-            0,
-            0,
-            0.0
-          );
-          document.body.style.cursor = "";
-        }}
-        onPointerDown={({ eventObject }) => {
-          Hand._isDown = true;
-          Hand._moved = 0;
-          eventObject.material.emissive = new Color("#000000").offsetHSL(
-            0,
-            0,
-            0.1
-          );
-        }}
-        onPointerMove={() => {
-          if (Hand._isDown) {
-            Hand._moved++;
-          }
-        }}
-        onPointerUp={({ eventObject }) => {
-          eventObject.material.emissive = new Color("#000000").offsetHSL(
-            0,
-            0,
-            0.0
-          );
-          if (Hand._moved <= 20) {
-            Hand.overlay = "core";
-          }
-          Hand._moved = 0;
-        }}
-      ></MainTower>
-
-      <FloatingVertically>
-        <Text
-          color={"yellow"}
-          fontSize={10}
-          maxWidth={200}
-          lineHeight={1}
-          letterSpacing={0.02}
-          textAlign={"left"}
-          font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-          anchorX="center"
-          anchorY="middle"
-          textAlign={"center"}
-          position-z={80}
-          position-y={50}
-          rotation-x={Math.PI * -0.3}
-          outlineWidth={1}
-          outlineColor="#000000"
+        <MainTower
           onPointerEnter={({ eventObject }) => {
             document.body.style.cursor = "pointer";
+            eventObject.material.emissive = new Color("#000000").offsetHSL(
+              0,
+              0,
+              0.1
+            );
           }}
           onPointerLeave={({ eventObject }) => {
+            eventObject.material.emissive = new Color("#000000").offsetHSL(
+              0,
+              0,
+              0.0
+            );
             document.body.style.cursor = "";
           }}
           onPointerDown={({ eventObject }) => {
             Hand._isDown = true;
             Hand._moved = 0;
+            eventObject.material.emissive = new Color("#000000").offsetHSL(
+              0,
+              0,
+              0.1
+            );
           }}
           onPointerMove={() => {
             if (Hand._isDown) {
@@ -451,15 +407,61 @@ export function Pylon({ color = "cyan" }) {
             }
           }}
           onPointerUp={({ eventObject }) => {
+            eventObject.material.emissive = new Color("#000000").offsetHSL(
+              0,
+              0,
+              0.0
+            );
             if (Hand._moved <= 20) {
               Hand.overlay = "core";
             }
             Hand._moved = 0;
           }}
-        >
-          {"Core Tower\n\n" + "Click to Start"}
-        </Text>
-      </FloatingVertically>
-    </Suspense>
+        ></MainTower>
+
+        <FloatingVertically>
+          <Text
+            color={"yellow"}
+            fontSize={10}
+            maxWidth={200}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign={"left"}
+            font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+            anchorX="center"
+            anchorY="middle"
+            textAlign={"center"}
+            position-z={80}
+            position-y={50}
+            rotation-x={Math.PI * -0.3}
+            outlineWidth={1}
+            outlineColor="#000000"
+            onPointerEnter={({ eventObject }) => {
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerLeave={({ eventObject }) => {
+              document.body.style.cursor = "";
+            }}
+            onPointerDown={({ eventObject }) => {
+              Hand._isDown = true;
+              Hand._moved = 0;
+            }}
+            onPointerMove={() => {
+              if (Hand._isDown) {
+                Hand._moved++;
+              }
+            }}
+            onPointerUp={({ eventObject }) => {
+              if (Hand._moved <= 20) {
+                Hand.overlay = "core";
+              }
+              Hand._moved = 0;
+            }}
+          >
+            {"Main Core Tower\n\n" + "Click to Star Coding"}
+          </Text>
+        </FloatingVertically>
+      </Suspense>
+    </group>
   );
 }

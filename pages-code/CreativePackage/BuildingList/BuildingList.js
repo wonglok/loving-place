@@ -36,7 +36,6 @@ export function useEnvMapFromEquirectangular(url = `/hdr/bubble.png`) {
     const pmremGenerator = new PMREMGenerator(gl);
     pmremGenerator.compileEquirectangularShader();
     let res = pmremGenerator.fromEquirectangular(texture).texture;
-
     Cache.set(url, res);
 
     return res;
@@ -70,7 +69,7 @@ export const Building = "/hdr/bubble-center-large.jpg";
 export const SharedEnvURL = "/hdr/bubble-center-small.jpg";
 
 const useEnvMap = (url) => {
-  return useMatCapEnvMap(url);
+  return useEnvMapFromEquirectangular(url);
 };
 
 export function MainTower({ ...props }) {
@@ -104,6 +103,7 @@ export function MainTower({ ...props }) {
           metalness={0.9}
           roughness={0.2}
           envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -146,6 +146,7 @@ export function CodeBuilding({ ...props }) {
           metalness={0.9}
           roughness={0.2}
           envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -168,6 +169,7 @@ export function Antenna({ ...props }) {
           metalness={0.9}
           roughness={0.2}
           envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -191,6 +193,7 @@ export function EditBlock({ ...props }) {
           metalness={0.9}
           roughness={0.2}
           envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>

@@ -158,6 +158,37 @@ export function AOEditBlocker() {
         {/* {JSON.stringify(blocker)} */}
       </div>
       <hr></hr>
+      <div className={"px-4 pt-4 pb-4  cursor-pointer"}>
+        <div className="  text-2xl text-black ">Remove Code Block</div>
+        <div className="  text-sm text-gray-500  ">
+          {/*  */}
+          Remove this code block forever.
+        </div>
+
+        <button
+          onClick={() => {
+            //
+            setTimeout(() => {
+              let ports = ProjectStore.ports.filter(
+                (e) => e.blockerID === blocker._id
+              );
+              ports.forEach((p) => {
+                ProjectStore.ports.removeItem(p);
+              });
+              ProjectStore.blockers.removeItem(blocker);
+
+              Hand.overlay = "overlay";
+            });
+          }}
+        >
+          Remove
+        </button>
+
+        {/*  */}
+
+        {/* {JSON.stringify(blocker)} */}
+      </div>
+      <hr></hr>
     </AO>
   );
 }

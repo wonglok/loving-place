@@ -19,14 +19,14 @@ export function EditorControls() {
     ctrl.maxDistance = 5000;
     ctrl.minDistance = 500;
 
-    ctrl.minDistance = -1;
+    // ctrl.minDistance = -1;
 
     camera.near = 0.1;
     camera.far = 10000;
 
     camera.position.x = 0;
-    camera.position.y = 300 * 1.3;
-    camera.position.z = 300 * 1.3;
+    camera.position.y = 300 * 0.5;
+    camera.position.z = 300 * 0.5;
 
     camera.updateProjectionMatrix();
     camera.updateMatrix();
