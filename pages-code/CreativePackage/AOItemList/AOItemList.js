@@ -31,14 +31,17 @@ export function Overlays() {
       {Hand.tooltip === "add-blocker" && (
         <Tooltip>Tap on Floor to Create Code Block</Tooltip>
       )}
+
       {Hand.tooltip === "add-picker" && (
         <Tooltip>Tap on Floor to Create Picker</Tooltip>
       )}
+
       {Hand.addMode === "add-connection" && (
         <Tooltip>
           <span>Drag to input output connect</span>
         </Tooltip>
       )}
+
       {Hand.overlay === "core" && <AOCore></AOCore>}
       {Hand.overlay === "edit-blocker" && <AOEditBlocker></AOEditBlocker>}
       {Hand.overlay === "edit-picker" && <AOEditPicker></AOEditPicker>}
@@ -65,7 +68,7 @@ function CreateJS() {
           <input
             autoFocus={true}
             type="text"
-            className="py-3 my-2 text-2xl placeholder-gray-300 w-full broder-b border-dashed border-gray-600 border-b"
+            className="py-3 my-2 text-2xl placeholder-gray-300 appearance-none rounded-none w-full broder-b border-dashed border-gray-600 border-b"
             placeholder={"myModule"}
             value={inputVal}
             onInput={(ev) => {
@@ -100,7 +103,7 @@ function CreatePicker() {
         <div className="block w-full">
           <input
             type="text"
-            className="py-3 my-2 text-2xl placeholder-gray-300 w-full broder-b border-dashed border-gray-600 border-b"
+            className="py-3 my-2 text-2xl placeholder-gray-300 appearance-none rounded-none w-full broder-b border-dashed border-gray-600 border-b"
             placeholder={"myPicker"}
             value={inputVal}
             onInput={(ev) => {
@@ -143,7 +146,7 @@ function RemoveBlockerConfirm({ blocker }) {
   let [name, setName] = useState("");
   return (
     <div>
-      <div className={"px-4 pt-4 pb-4  cursor-pointer"}>
+      <div className={"px-4 pt-4 pb-4 "}>
         <div className="  text-2xl text-black ">Remove Code Block</div>
         <div className={"  text-sm text-red-500  "}>
           {/*  */}
@@ -156,7 +159,7 @@ function RemoveBlockerConfirm({ blocker }) {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          className="py-3 my-3 text-2xl placeholder-gray-300 appearance-none rounded-none w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
           placeholder={blocker.title}
           value={name}
           onInput={(ev) => {
@@ -233,6 +236,7 @@ function ConnectionInfo({ connection }) {
       </td>
       <td>
         <button
+          className="p-2 m-2 text-red-500 border-red-500 border rounded-lg text-xs"
           onClick={() => {
             if (window.confirm("remove?")) {
               ProjectStore.connections.removeItem(connection);
@@ -292,7 +296,7 @@ export function AOEditBlocker() {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          className="py-3 my-3 text-2xl placeholder-gray-300 appearance-none rounded-none w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
           placeholder={"mymodule-mycodename"}
           value={blocker.title}
           onInput={(ev) => {
@@ -314,12 +318,12 @@ function RemovePickerConfirm({ picker }) {
   let [name, setName] = useState("");
   return (
     <div>
-      <div className={"px-4 pt-4 pb-4  cursor-pointer"}>
+      <div className={"px-4 pt-4 pb-4 "}>
         <div className="  text-2xl text-black ">Remove Picker</div>
         <div className={"  text-sm text-red-500  "}>
           {/*  */}
           Type in the picker name{" "}
-          <span className="bg-red-200 py-1 px-2 rounded-md  inline-block">
+          <span className="bg-red-200 py-1 px-2 rounded-md inline-block">
             {picker.title}
           </span>{" "}
           to confirm removal
@@ -327,7 +331,7 @@ function RemovePickerConfirm({ picker }) {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          className="py-3 my-3 text-2xl placeholder-gray-300 appearance-none rounded-none w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
           placeholder={picker.title}
           value={name}
           onInput={(ev) => {
@@ -377,7 +381,9 @@ function TitleEdit({ info, picker }) {
           info.title = ev.target.value;
           setTitle(ev.target.value);
         }}
-        className={" border-b border-dashed border-black mb-3"}
+        className={
+          " appearance-none rounded-none border-b border-dashed border-black mb-3 w-36"
+        }
       ></input>
       <div
         onClick={() => {
@@ -394,7 +400,7 @@ function TitleEdit({ info, picker }) {
 function ColorPickerEdit({ info, picker }) {
   let [val, setVal] = useState(info.value);
   return (
-    <div className="m-2">
+    <div className="m-1">
       <TitleEdit picker={picker} info={info}></TitleEdit>
       <ChromePicker
         color={val}
@@ -410,7 +416,7 @@ function ColorPickerEdit({ info, picker }) {
 function TextPickerEdit({ info, picker }) {
   let [val, setVal] = useState(info.value);
   return (
-    <div className="m-2 w-full">
+    <div className="m-1 w-full">
       <TitleEdit picker={picker} info={info}></TitleEdit>
       <div>
         <textarea
@@ -429,7 +435,7 @@ function TextPickerEdit({ info, picker }) {
 function FloatPickerEdit({ info, picker }) {
   let [val, setVal] = useState(info.value);
   return (
-    <div className="m-2 w-full">
+    <div className="m-1 w-full">
       <TitleEdit picker={picker} info={info}></TitleEdit>
       <div>
         <input
@@ -450,9 +456,8 @@ function FloatPickerEdit({ info, picker }) {
 }
 
 function Vec4PickerEdit({ info, picker }) {
-  let [val, setVal] = useState(info.value);
-
   let pickAtIdx = ({ idx }) => {
+    let [val, setVal] = useState(info.value[idx]);
     return (
       <input
         type="range"
@@ -462,17 +467,14 @@ function Vec4PickerEdit({ info, picker }) {
         value={val}
         onInput={(ev) => {
           info.value[idx] = Number(ev.target.value);
-          setVal((s) => {
-            s[idx] = Number(ev.target.value);
-            return s;
-          });
+          setVal(Number(ev.target.value));
         }}
         className={" border-b border-dashed border-black mb-3 w-10/12"}
       ></input>
     );
   };
   return (
-    <div className="m-2 w-full">
+    <div className="m-1 w-full">
       <TitleEdit picker={picker} info={info}></TitleEdit>
       <div>
         <div className="text-sm  text-gray-400">vec4[0]:</div>
@@ -612,7 +614,7 @@ export function AOEditPicker() {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          className="py-3 my-3 text-2xl placeholder-gray-300 appearance-none rounded-none w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
           placeholder={"mymodule-mycodename"}
           value={picker.title}
           onInput={(ev) => {

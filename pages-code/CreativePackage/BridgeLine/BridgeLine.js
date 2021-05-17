@@ -130,6 +130,16 @@ export function BridgeLine() {
   );
 }
 
+let waitGet = (gt = () => {}, fnc = () => {}) => {
+  let tt = setInterval(() => {
+    let res = gt();
+    if (res) {
+      clearInterval(tt);
+      fnc(res);
+    }
+  });
+};
+
 export function CommunicationBridge({ connection }) {
   //
   const { scene } = useThree();
@@ -155,31 +165,51 @@ export function CommunicationBridge({ connection }) {
     let inputPosition = new Vector3();
     let outputPosition = new Vector3();
 
-    console.log(connection.input);
-    //
-    let inputMesh = scene.getObjectByName(connection.input._id);
-    //
-    let outputMesh = scene.getObjectByName(connection.output._id);
-    if (inputMesh) {
-      inputMesh.getWorldPosition(inputPosition);
-    }
+    let inputMesh; // = scene.getObjectByName(connection.input._id);
 
-    if (outputMesh) {
-      outputMesh.getWorldPosition(outputPosition);
-    }
+    let outputMesh; // = scene.getObjectByName(connection.output._id);
+
+    waitGet(
+      () => {
+        return scene.getObjectByName(connection.input._id);
+      },
+      (val) => {
+        if (val) {
+          inputMesh = val;
+          inputMesh.getWorldPosition(inputPosition);
+        }
+      }
+    );
+
+    waitGet(
+      () => {
+        return scene.getObjectByName(connection.output._id);
+      },
+      (val) => {
+        if (val) {
+          outputMesh = val;
+          outputMesh.getWorldPosition(outputPosition);
+        }
+      }
+    );
+
+    // if (outputMesh) {
+    //   outputMesh.getWorldPosition(outputPosition);
+    // }
 
     let lineGeo = getGeo({ a: inputPosition, b: outputPosition });
 
     const mesh = new Line2(lineGeo, lineMat);
     mesh.computeLineDistances();
 
-    let needsUpdate = false;
+    let needsUpdate = true;
     Hand.onEventChangeKey("renderConnection", () => {
       needsUpdate = true;
     });
 
     works.current.renderMe = () => {
       if (needsUpdate && inputMesh && outputMesh) {
+        needsUpdate = false;
         inputMesh.getWorldPosition(inputPosition);
         outputMesh.getWorldPosition(outputPosition);
         let lineGeo = getGeo({ a: inputPosition, b: outputPosition });

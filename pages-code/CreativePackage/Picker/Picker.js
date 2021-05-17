@@ -17,11 +17,12 @@ export function Picker({ isTemp, picker }) {
 
   useEffect(() => {
     if (pickerGroup.current) {
-      pickerGroup.current.userData.position = picker.position;
-      pickerGroup.current.position.fromArray(picker.position);
+      let pos = [picker.position[0], picker.position[1], picker.position[2]];
+      pickerGroup.current.userData.position = pos;
+      pickerGroup.current.position.fromArray(pos);
       pickerGroup.current.visible = true;
     }
-  }, [picker._id]);
+  });
 
   Hand.onChangeKey("floor", () => {
     if (pickerGroup.current) {
@@ -51,7 +52,7 @@ export function Picker({ isTemp, picker }) {
   return (
     <Suspense fallback={null}>
       <group>
-        <group ref={pickerGroup}>
+        <group position={picker.position} ref={pickerGroup}>
           <group>
             <PickerBuilding
               onPointerDown={(ev) => {

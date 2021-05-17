@@ -101,14 +101,11 @@ export function EditorBed() {
 
   return (
     <group>
-      <Suspense
-        fallback={
-          <gridHelper
-            position-y={-1}
-            args={[10000, 50, "white", "white"]}
-          ></gridHelper>
-        }
-      >
+      <gridHelper
+        position-y={-1}
+        args={[10000, 50, "white", "white"]}
+      ></gridHelper>
+      <Suspense fallback={null}>
         <Plane
           name="app-floor"
           rotation-x={Math.PI * -0.5}
@@ -140,14 +137,14 @@ export function EditorBed() {
             }
           }}
         >
-          <MatArmmor attach="material"></MatArmmor>
-          {/* <shaderMaterial
-          fragmentShader={`
+          {/* <MatArmmor attach="material"></MatArmmor> */}
+          <shaderMaterial
+            fragmentShader={`
             void main (void) {
               discard;
             }
         `}
-        ></shaderMaterial> */}
+          ></shaderMaterial>
         </Plane>
       </Suspense>
 

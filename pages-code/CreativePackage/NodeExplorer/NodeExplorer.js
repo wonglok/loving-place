@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { EditorBed } from "../EditorBed/EditorBed";
 import { EditorControls } from "../EditorControls/EditorControls";
@@ -12,10 +13,15 @@ import {
   // Hand,
   ProjectStore,
   provdeCanvasState,
+  AutoSaver,
+  SnapsDB,
+  getID,
 } from "../AppEditorState/AppEditorState";
 // import { useEffect } from "react";
 import { CommunicationBridge } from "../BridgeLine/BridgeLine";
 import { Picker } from "../Picker/Picker";
+import { useEffect, useState } from "react";
+import { Project } from "../../api/Project";
 // import { useEffect } from "react";
 
 function DisplayBlockers() {
@@ -44,12 +50,14 @@ function DisplayPickers() {
 
 function DisplayConnections() {
   //
+  ProjectStore.onChangeKeyRenderUI("blockers");
   ProjectStore.onChangeKeyRenderUI("connections");
   ProjectStore.onChangeKeyRenderUI("ports");
 
   return (
     <group>
       {ProjectStore.connections.map((conn) => {
+        console.log(conn);
         return (
           <CommunicationBridge
             key={conn._id}
@@ -60,6 +68,26 @@ function DisplayConnections() {
     </group>
   );
 }
+
+// function AutoSaveCompo({ projectID = "demo" }) {
+//   useEffect(() => {
+//     //
+//     //
+//     let tt = setInterval(() => {
+//       let latest = JSON.stringify(ProjectStore);
+//       if (AutoSaver.trackingJSON !== latest) {
+//         AutoSaver.trackingJSON = latest;
+
+//         // SnapsDB({ projectID }).setItem(getID(), JSON.parse(latest));
+//       }
+//     }, 1500);
+//     return () => {
+//       clearInterval(tt);
+//     };
+//   }, []);
+//   //
+//   return <group></group>;
+// }
 
 function Internal() {
   useFrame((st) => {
@@ -90,13 +118,85 @@ function Internal() {
   );
 }
 
-export function NodeExplorer() {
+export function NodeExplorer({ project }) {
+  if (!project) {
+    throw new Error("missing project");
+  }
+  let [ready, setReady] = useState(false);
+
+  let selfCleanSetup = () => {
+    let json = JSON.parse(project.largeString);
+
+    ProjectStore._id = project._id;
+    ProjectStore.pickers = [];
+    ProjectStore.blockers = [];
+    ProjectStore.ports = [];
+    ProjectStore.connections = [];
+
+    json.blockers.forEach((e) => {
+      ProjectStore.blockers.addItem(e);
+    });
+
+    json.ports.forEach((e) => {
+      ProjectStore.ports.addItem(e);
+    });
+
+    json.connections.forEach((e) => {
+      ProjectStore.connections.addItem(e);
+    });
+
+    json.pickers.forEach((e) => {
+      ProjectStore.pickers.addItem(e);
+    });
+
+    let fnc = (ev) => {
+      let { metaKey, key } = ev;
+      // if (metaKey + )
+      if (metaKey && key === "s") {
+        ev.preventDefault();
+
+        console.log(project);
+        project.largeString = JSON.stringify(ProjectStore);
+
+        Project.updateMine({ object: project });
+      }
+    };
+    window.addEventListener("keydown", fnc);
+
+    setReady(true);
+    return () => {
+      window.removeEventListener("keydown", fnc);
+    };
+  };
+
+  useEffect(async () => {
+    ProjectStore._id = project._id;
+    if (project.largeString) {
+      //
+      //
+      return selfCleanSetup();
+    } else {
+      project.largeString = JSON.stringify(ProjectStore);
+      await Project.updateMine({ object: project });
+      return selfCleanSetup();
+    }
+  }, []);
+
+  return ready ? (
+    <NodeExplorerInternal project={project}></NodeExplorerInternal>
+  ) : (
+    <div>Loading....</div>
+  );
+}
+
+export function NodeExplorerInternal() {
   return (
     <div className="w-full h-full">
       <Canvas
         dpr={(typeof window !== "undefined" && window.devicePixelRatio) || 1.0}
       >
         <Internal></Internal>
+        {/* <AutoSaveCompo></AutoSaveCompo> */}
       </Canvas>
       <Overlays></Overlays>
     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import localforage from "localforage";
 export const getID = function () {
   return (
     "_" +
@@ -52,7 +52,7 @@ export const makeSimpleShallowStore = (myObject = {}) => {
     },
 
     onChangeKeyRenderUI: (key) => {
-      let [st, setSt] = useState(0);
+      let [, setSt] = useState(0);
       useEffect(() => {
         let evName = `${___NameSpaceID}`;
 
@@ -66,26 +66,13 @@ export const makeSimpleShallowStore = (myObject = {}) => {
         return () => {
           window.removeEventListener(`${evName}-${key}`, hh);
         };
-      }, [key, st]);
+      }, []);
     },
     notifyKeyChange: (key) => {
       window.dispatchEvent(
         new CustomEvent(`${___NameSpaceID}-${key}`, { detail: {} })
       );
     },
-    // onChangeAny: (key, func) => {
-    //   useEffect(() => {
-    //     let evName = `${___NameSpaceID}`;
-    //     let hh = () => {
-    //       func(myObject);
-    //     };
-
-    //     window.addEventListener(`${evName}`, hh);
-    //     return () => {
-    //       window.removeEventListener(`${evName}`, hh);
-    //     };
-    //   }, []);
-    // },
   };
 
   let setupArray = (array, key, Utils) => {
@@ -158,6 +145,20 @@ export const makeSimpleShallowStore = (myObject = {}) => {
   return proxy;
 };
 
+let DBCache = new Map();
+
+let obtainDB = (projectID) => {
+  if (DBCache.has(projectID)) {
+    return DBCache.get(projectID);
+  }
+
+  var store = localforage.createInstance({
+    name: "SnapsOfProjectID_" + projectID,
+  });
+  DBCache.set(projectID, store);
+  return store;
+};
+
 export const Hand = makeSimpleShallowStore({
   _isDown: false,
   _moved: 0,
@@ -179,14 +180,13 @@ export const Hand = makeSimpleShallowStore({
   tooltip: "ready",
 });
 
-export const AutoSave = makeSimpleShallowStore({
+export const AutoSaver = makeSimpleShallowStore({
   //
   inc: 0,
-  //
-  latestSnaptime: 0,
-  //
   trackingJSON: "",
 });
+
+export const SnapsDB = (v) => obtainDB(v);
 
 export const RenderTrigger = makeSimpleShallowStore({
   renderConnection: 0,

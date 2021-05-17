@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Hand, makeSimpleShallowStore } from "../AppEditorState/AppEditorState";
 import { Blocker } from "../Blocker/Blocker";
 import { BridgeLine } from "../BridgeLine/BridgeLine";
@@ -20,13 +21,24 @@ function TempBridgeLine() {
 }
 
 export function TempAdd() {
+  let [show, setShow] = useState(true);
+  useEffect(() => {
+    window.addEventListener("touchstart", () => {
+      //
+      setShow(false);
+    });
+  }, []);
+
   Hand.onChangeKeyRenderUI("addMode");
   return (
     <>
       {/*  */}
       {/*  */}
-      {Hand.addMode === "add-picker" && <TempPicker></TempPicker>}
-      {Hand.addMode === "add-blocker" && <TempBlocker></TempBlocker>}
+      <group visible={show}>
+        {Hand.addMode === "add-picker" && <TempPicker></TempPicker>}
+        {Hand.addMode === "add-blocker" && <TempBlocker></TempBlocker>}
+      </group>
+
       {Hand.addMode === "add-connection" && <TempBridgeLine></TempBridgeLine>}
     </>
   );

@@ -1,24 +1,21 @@
-import { createState, useState } from "@hookstate/core";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Project } from "../../pages-code/api/Project";
 import { AuthState } from "../api/realtime";
 // import { Konva } from "./Konva";
 
 import { NodeExplorer } from "../../pages-code/CreativePackage";
 
-export const ProjectState = createState(null);
-
 export function ProjectEditorRoot() {
-  let proj = useState(ProjectState);
+  let [proj, setProject] = useState(false);
   let { query } = useRouter();
 
   useEffect(async () => {
     let newItem = await Project.getOneOfMine({ _id: query.projectID });
-    ProjectState.set(newItem);
-  }, [query.projectID, proj.value?._id]);
+    setProject(newItem);
+  }, [query.projectID]);
 
-  return proj.value ? (
+  return proj ? (
     <ProjectEditorProtected project={proj}></ProjectEditorProtected>
   ) : null;
 }
@@ -32,7 +29,7 @@ export const ProjectEditorProtected = ({ project }) => {
       {/* <OrbitGraph project={proj}></OrbitGraph> */}
       {/* <Konva project={proj.value}></Konva> */}
       {/* <div>{JSON.stringify(proj.value)}</div> */}
-      <NodeExplorer ProjectState={project}></NodeExplorer>
+      <NodeExplorer project={project}></NodeExplorer>
     </div>
   );
 };
