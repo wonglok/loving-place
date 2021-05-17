@@ -30,6 +30,17 @@ export const addBlocker = ({ point }) => {
   ProjectStore.ports.addItem(makePort("output"));
 };
 
+export const addPicker = ({ point }) => {
+  let newObj = {
+    _id: getID(),
+    position: [point.x, point.y, point.z],
+    title: Hand.newPickerTitleName,
+    pickers: [],
+  };
+
+  ProjectStore.pickers.addItem(newObj);
+};
+
 export const addConnection = () => {
   if (Hand.pickupPort && Hand.releasePort) {
     if (Hand.pickupPort.type !== Hand.releasePort.type) {

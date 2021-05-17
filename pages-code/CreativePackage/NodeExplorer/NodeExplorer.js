@@ -9,12 +9,13 @@ import { Blocker } from "../Blocker/Blocker";
 import { Overlays } from "../AOItemList/AOItemList";
 import { TempAdd } from "../TempAdd/TempAdd";
 import {
-  Hand,
+  // Hand,
   ProjectStore,
   provdeCanvasState,
 } from "../AppEditorState/AppEditorState";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { CommunicationBridge } from "../BridgeLine/BridgeLine";
+import { Picker } from "../Picker/Picker";
 // import { useEffect } from "react";
 
 function DisplayBlockers() {
@@ -24,6 +25,18 @@ function DisplayBlockers() {
     <group>
       {ProjectStore.blockers.map((blocker) => {
         return <Blocker key={blocker._id} blocker={blocker}></Blocker>;
+      })}
+    </group>
+  );
+}
+
+function DisplayPickers() {
+  ProjectStore.onChangeKeyRenderUI("pickers");
+
+  return (
+    <group>
+      {ProjectStore.pickers.map((picker) => {
+        return <Picker key={picker._id} picker={picker}></Picker>;
       })}
     </group>
   );
@@ -68,6 +81,7 @@ function Internal() {
       <TempAdd></TempAdd>
       <DisplayBlockers></DisplayBlockers>
       <DisplayConnections></DisplayConnections>
+      <DisplayPickers></DisplayPickers>
 
       {/* <Blocker blocker={{ _id: "blocker1", position: [200, 0, 0] }}></Blocker>
       <Blocker blocker={{ _id: "blocker2", position: [-200, 0, 0] }}></Blocker> */}

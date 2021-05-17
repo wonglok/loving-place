@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Suspense } from "react";
 import { useEffect } from "react";
 import { Color, Fog, RepeatWrapping } from "three";
-import { addBlocker } from "../AppEditorLogic/AppEditorLogic";
+import { addBlocker, addPicker } from "../AppEditorLogic/AppEditorLogic";
 import { Hand } from "../AppEditorState/AppEditorState";
 import { SharedEnvURL, useMatCapEnvMap } from "../BuildingList/BuildingList";
 
@@ -125,6 +125,12 @@ export function EditorBed() {
               Hand.addMode = "ready";
               Hand.tooltip = "ready";
               addBlocker({ point });
+            }
+
+            if (Hand.addMode === "add-picker") {
+              Hand.addMode = "ready";
+              Hand.tooltip = "ready";
+              addPicker({ point });
             }
 
             if (Hand.addMode === "add-connection") {

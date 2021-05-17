@@ -22,7 +22,10 @@ export function Overlays() {
     <>
       {/*  */}
       {Hand.tooltip === "add-blocker" && (
-        <Tooltip>Tap on Floor to Create Item</Tooltip>
+        <Tooltip>Tap on Floor to Create Code Block</Tooltip>
+      )}
+      {Hand.tooltip === "add-picker" && (
+        <Tooltip>Tap on Floor to Create Picker</Tooltip>
       )}
       {Hand.addMode === "add-connection" && (
         <Tooltip>
@@ -31,6 +34,7 @@ export function Overlays() {
       )}
       {Hand.overlay === "core" && <AOCore></AOCore>}
       {Hand.overlay === "edit-blocker" && <AOEditBlocker></AOEditBlocker>}
+      {Hand.overlay === "edit-picker" && <AOEditPicker></AOEditPicker>}
       {/*  */}
     </>
   );
@@ -44,50 +48,91 @@ function Tooltip({ children }) {
   );
 }
 
-export function AOCore() {
-  let [inputVal, setInput] = useState("my-new-codename");
+function CreateJS() {
+  let [inputVal, setInput] = useState("myCodeModule");
   Hand.newModuleTitleName = inputVal;
+  return (
+    <div className={"mx-4 mt-4 mb-4"}>
+      <div className=" flex">
+        <div className="block w-full">
+          <input
+            autoFocus={true}
+            type="text"
+            className="py-3 my-2 text-2xl placeholder-gray-300 w-full broder-b border-dashed border-gray-600 border-b"
+            placeholder={"myModule"}
+            value={inputVal}
+            onInput={(ev) => {
+              setInput(ev.target.value);
+              Hand.newModuleTitleName = ev.target.value;
+              // ProjectStore.notifyKeyChange("blockers");
+            }}
+          />
+          <div className="text-left">
+            <button
+              className="p-3 my-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-2xl"
+              onClick={() => {
+                Hand.addMode = "add-blocker";
+                Hand.tooltip = "add-blocker";
+                Hand.overlay = "";
+              }}
+            >
+              Create JS Code Block
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+function CreatePicker() {
+  let [inputVal, setInput] = useState("myPicker");
+  Hand.newPickerTitleName = inputVal;
+  return (
+    <div className={"mx-4 mt-4 mb-4"}>
+      <div className=" flex">
+        <div className="block w-full">
+          <input
+            type="text"
+            className="py-3 my-2 text-2xl placeholder-gray-300 w-full broder-b border-dashed border-gray-600 border-b"
+            placeholder={"myPicker"}
+            value={inputVal}
+            onInput={(ev) => {
+              setInput(ev.target.value);
+              Hand.newPickerTitleName = ev.target.value;
+              // ProjectStore.notifyKeyChange("blockers");
+            }}
+          />
+          <div className="text-left">
+            <button
+              className="p-3 my-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-2xl"
+              onClick={() => {
+                Hand.addMode = "add-picker";
+                Hand.tooltip = "add-picker";
+                Hand.overlay = "";
+              }}
+            >
+              Create Color Pickers and etc...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function AOCore() {
   return (
     <AO>
       <div className="h-16 w-full  bg-yellow-200 flex items-center">
         <div className="mx-4 text-2xl ">Create Items</div>
       </div>
-      <div className={"mx-4 mt-4 mb-4"}>
-        <div className=" ">
-          <div className="inline-block  ">
-            <img className="rounded-2xl h-60" src="/scene-items/blocker.png" />
-
-            <input
-              type="text"
-              className="py-3 my-2 text-2xl placeholder-gray-600 w-full broder-b border-dashed border-gray-600 border-b"
-              placeholder={"myname-myNewModule-codename"}
-              value={inputVal}
-              onInput={(ev) => {
-                setInput(ev.target.value);
-                Hand.newModuleTitleName = ev.target.value;
-                // ProjectStore.notifyKeyChange("blockers");
-              }}
-            />
-            <div className="text-center">
-              <button
-                className="p-3 m-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-2xl"
-                onClick={() => {
-                  Hand.addMode = "add-blocker";
-                  Hand.tooltip = "add-blocker";
-                  Hand.overlay = "";
-                }}
-              >
-                Create JS Code Block
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CreateJS></CreateJS>
+      <CreatePicker></CreatePicker>
     </AO>
   );
 }
 
-function RemoveConfirm({ blocker }) {
+function RemoveBlockerConfirm({ blocker }) {
   let [name, setName] = useState("");
   return (
     <div>
@@ -104,8 +149,8 @@ function RemoveConfirm({ blocker }) {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-600 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
-          placeholder={"mymodule-mycodename"}
+          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          placeholder={blocker.title}
           value={name}
           onInput={(ev) => {
             setName(ev.target.value);
@@ -240,7 +285,7 @@ export function AOEditBlocker() {
 
         <input
           type="text"
-          className="py-3 my-3 text-2xl placeholder-gray-600 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
           placeholder={"mymodule-mycodename"}
           value={blocker.title}
           onInput={(ev) => {
@@ -253,7 +298,102 @@ export function AOEditBlocker() {
       </div>
       <hr></hr>
       <RemoveConnection blocker={blocker}></RemoveConnection>
-      <RemoveConfirm blocker={blocker}></RemoveConfirm>
+      <RemoveBlockerConfirm blocker={blocker}></RemoveBlockerConfirm>
+    </AO>
+  );
+}
+
+function RemovePickerConfirm({ picker }) {
+  let [name, setName] = useState("");
+  return (
+    <div>
+      <div className={"px-4 pt-4 pb-4  cursor-pointer"}>
+        <div className="  text-2xl text-black ">Remove Picker</div>
+        <div className={"  text-sm text-red-500  "}>
+          {/*  */}
+          Type in the picker name{" "}
+          <span className="bg-red-200 py-1 px-2 rounded-md  inline-block">
+            {picker.title}
+          </span>{" "}
+          to confirm removal
+        </div>
+
+        <input
+          type="text"
+          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          placeholder={picker.title}
+          value={name}
+          onInput={(ev) => {
+            setName(ev.target.value);
+            // ProjectStore.notifyKeyChange("pickers");
+          }}
+        />
+
+        <button
+          className={
+            name !== picker.title
+              ? "bg-gray-500 text-white p-3 rounded-xl"
+              : "bg-red-500 text-white p-3 rounded-xl"
+          }
+          disabled={name !== picker.title}
+          onClick={() => {
+            //
+
+            setTimeout(() => {
+              ProjectStore.pickers.removeItem(picker);
+
+              Hand.overlay = "overlay";
+            });
+          }}
+        >
+          {name !== picker.title
+            ? "Type to Confirm Removal"
+            : "Comfirm Removal"}
+        </button>
+
+        {/*  */}
+
+        {/* {JSON.stringify(blocker)} */}
+      </div>
+      <hr></hr>
+    </div>
+  );
+}
+
+export function AOEditPicker() {
+  let picker = useMemo(() => {
+    return ProjectStore.pickers.getItemByID(Hand.currentPickerID);
+  }, [Hand.currentPickerID]);
+  picker.onChangeKeyRenderUI("title");
+
+  return (
+    <AO>
+      <div className="h-16 w-full  bg-indigo-200 flex items-center">
+        <div className="mx-4 text-2xl">Edit JS Code Block</div>
+      </div>
+      <div className={"mx-4 mt-4 mb-4"}>
+        <div className="  text-2xl">Change code name</div>
+        <div className="  text-sm text-gray-500">
+          This name is mapped to JS modules in your project.
+        </div>
+
+        <input
+          type="text"
+          className="py-3 my-3 text-2xl placeholder-gray-300 w-full lg:w-1/2 border-dashed border-b-2 border-gray-600"
+          placeholder={"mymodule-mycodename"}
+          value={picker.title}
+          onInput={(ev) => {
+            picker.title = ev.target.value;
+            // ProjectStore.notifyKeyChange("pickers");
+          }}
+        />
+
+        {/* {JSON.stringify(picker)} */}
+      </div>
+      <hr></hr>
+      <RemovePickerConfirm picker={picker}></RemovePickerConfirm>
+      {/* <RemoveConnection picker={picker}></RemoveConnection> */}
+      {/* <RemoveBlockerConfirm picker={picker}></RemoveBlockerConfirm> */}
     </AO>
   );
 }

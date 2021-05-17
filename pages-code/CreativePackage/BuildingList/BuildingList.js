@@ -153,6 +153,49 @@ export function CodeBuilding({ ...props }) {
   );
 }
 
+export function PickerBuilding({ ...props }) {
+  let envMap = useEnvMap(Building);
+  let glb = useGLTF("/fixed-buildings/picker-01.glb");
+
+  let firstGeo = getFistGeo(glb.scene);
+  firstGeo.computeBoundingBox();
+  let rect = firstGeo.boundingBox.max.clone().sub(firstGeo.boundingBox.min);
+  rect.multiplyScalar(0.02);
+  rect.applyAxisAngle(new Vector3(1, 0, 0), Math.PI * 0.5);
+
+  return (
+    <group position-x={-10 * 0.0} rotation-y={Math.PI * -0.5}>
+      <Box
+        {...props}
+        args={[rect.x, rect.y * 0.5, rect.z]}
+        position-y={rect.y * -0.25}
+      >
+        <shaderMaterial
+          fragmentShader={
+            /* glsl */ `
+            void main (void) {
+              discard;
+            }
+          `
+          }
+        ></shaderMaterial>
+      </Box>
+      <mesh
+        scale={0.02}
+        geometry={getFistGeo(glb.scene)}
+        rotation-x={Math.PI * 0.5}
+      >
+        <meshStandardMaterial
+          metalness={0.9}
+          roughness={0.2}
+          envMap={envMap}
+          envMapIntensity={3}
+        ></meshStandardMaterial>
+      </mesh>
+    </group>
+  );
+}
+
 export function Antenna({ ...props }) {
   let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/antenna-4.glb");

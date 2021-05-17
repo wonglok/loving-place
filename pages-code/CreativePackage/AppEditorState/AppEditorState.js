@@ -164,6 +164,7 @@ export const Hand = makeSimpleShallowStore({
 
   addMode: "ready",
   newModuleTitleName: "my new code",
+  newPickerTitleName: "my new code",
 
   pickupPort: false,
   releasePort: false,
@@ -173,6 +174,7 @@ export const Hand = makeSimpleShallowStore({
 
   overlay: "overlay",
   currentBlockerID: false,
+  currentPickerID: false,
 
   tooltip: "ready",
 });
@@ -195,7 +197,7 @@ export const ProjectStore = makeSimpleShallowStore({
   blockers: [],
   ports: [],
   connections: [],
-  organics: [],
+  pickers: [],
 });
 
 export const TempData = {
@@ -216,3 +218,5 @@ export const queryCanvasState = (fnc) => {
     }
   });
 };
+
+//
