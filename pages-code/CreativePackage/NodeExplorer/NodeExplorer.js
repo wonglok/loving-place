@@ -201,10 +201,19 @@ export function NodeExplorer({ project }) {
   return ready ? (
     <div className="w-full h-full">
       <NodeExplorerInternal></NodeExplorerInternal>
-      {AutoSaver.showNeedsSave && (
-        <div className="absolute top-0 right-0 m-3 p-3 bg-yellow-500">
+      {AutoSaver.showNeedsSave ? (
+        <div
+          onClick={saveProject}
+          className="cursor-pointer absolute top-0 right-0 rounded-xl m-3 p-3 text-white bg-yellow-400"
+        >
           {/*  */}
           Needs To Save
+          {/*  */}
+        </div>
+      ) : (
+        <div className=" absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white">
+          {/*  */}
+          Saved to Cloud
           {/*  */}
         </div>
       )}
