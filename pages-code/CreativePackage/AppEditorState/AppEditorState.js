@@ -181,9 +181,7 @@ export const Hand = makeSimpleShallowStore({
 });
 
 export const AutoSaver = makeSimpleShallowStore({
-  //
-  inc: 0,
-  trackingJSON: "",
+  showNeedsSave: false,
 });
 
 export const SnapsDB = (v) => obtainDB(v);
