@@ -4,7 +4,7 @@ export const addBlocker = ({ point }) => {
   let newObj = {
     _id: getID(),
     position: [point.x, point.y, point.z],
-    title: "",
+    title: Hand.newModuleTitleName,
   };
 
   let makePort = (type = "input") => {

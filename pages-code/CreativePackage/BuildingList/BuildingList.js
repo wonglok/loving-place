@@ -66,7 +66,7 @@ export function useMatCapEnvMap(url) {
   return matcapEnvMap;
 }
 
-export const Building = "/hdr/bubble-center.jpg";
+export const Building = "/hdr/bubble-center-large.jpg";
 export const SharedEnvURL = "/hdr/bubble-center-small.jpg";
 
 const useEnvMap = (url) => {

@@ -163,6 +163,7 @@ export const Hand = makeSimpleShallowStore({
   _moved: 0,
 
   addMode: "ready",
+  newModuleTitleName: "my new code",
 
   pickupPort: false,
   releasePort: false,
@@ -187,7 +188,7 @@ export const ProjectStore = makeSimpleShallowStore({
   blockers: [],
   ports: [],
   connections: [],
-  tunes: [],
+  organics: [],
 });
 
 export const TempData = {

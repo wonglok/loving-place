@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AO } from "../AO/AO";
 import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 
@@ -45,8 +45,8 @@ function Tooltip({ children }) {
 }
 
 export function AOCore() {
-  //
-
+  let [inputVal, setInput] = useState("my-new-codename");
+  Hand.newModuleTitleName = inputVal;
   return (
     <AO>
       <div className="h-16 w-full  bg-yellow-200 flex items-center">
@@ -54,17 +54,32 @@ export function AOCore() {
       </div>
       <div className={"mx-4 mt-4 mb-4"}>
         <div className=" ">
-          <div className="inline-block w-10/12 mx-auto lg:w-1/2 lg:mx-0 ">
-            <img
-              className="rounded-2xl cursor-pointer"
-              src="/scene-items/blocker.png"
-              onClick={() => {
-                Hand.addMode = "add-blocker";
-                Hand.tooltip = "add-blocker";
-                Hand.overlay = "";
+          <div className="inline-block  ">
+            <img className="rounded-2xl h-60" src="/scene-items/blocker.png" />
+
+            <input
+              type="text"
+              className="py-3 my-2 text-2xl placeholder-gray-600 w-full broder-b border-dashed border-gray-600 border-b"
+              placeholder={"myname-myNewModule-codename"}
+              value={inputVal}
+              onInput={(ev) => {
+                setInput(ev.target.value);
+                Hand.newModuleTitleName = ev.target.value;
+                // ProjectStore.notifyKeyChange("blockers");
               }}
             />
-            <div className="text-center">JS Code Block</div>
+            <div className="text-center">
+              <button
+                className="p-3 m-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-2xl"
+                onClick={() => {
+                  Hand.addMode = "add-blocker";
+                  Hand.tooltip = "add-blocker";
+                  Hand.overlay = "";
+                }}
+              >
+                Create JS Code Block
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -108,7 +123,8 @@ export function AOEditBlocker() {
 
         <input
           type="text"
-          placeholder={"my-title-name"}
+          className="py-3 my-3 text-2xl placeholder-gray-600 w-full"
+          placeholder={"mymodule-mycodename"}
           value={blocker.title}
           onInput={(ev) => {
             blocker.title = ev.target.value;
