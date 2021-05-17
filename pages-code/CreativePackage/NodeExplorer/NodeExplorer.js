@@ -124,6 +124,12 @@ export function NodeExplorer({ project }) {
   }
   let [ready, setReady] = useState(false);
 
+  let saveProject = async () => {
+    console.log(project);
+    project.largeString = JSON.stringify(ProjectStore);
+    await Project.updateMine({ object: project });
+    AutoSaver.showNeedsSave = false;
+  };
   let selfCleanSetup = () => {
     let json = JSON.parse(project.largeString);
 
@@ -155,16 +161,23 @@ export function NodeExplorer({ project }) {
       if (metaKey && key === "s") {
         ev.preventDefault();
 
-        console.log(project);
-        project.largeString = JSON.stringify(ProjectStore);
-
-        Project.updateMine({ object: project });
+        saveProject();
       }
     };
     window.addEventListener("keydown", fnc);
 
+    let tracker = JSON.stringify(ProjectStore);
+    let autoSaveChecker = setInterval(() => {
+      let latest = JSON.stringify(ProjectStore);
+      if (latest !== tracker) {
+        AutoSaver.showNeedsSave = true;
+      }
+      tracker = latest;
+    }, 1000);
+
     setReady(true);
     return () => {
+      clearInterval(autoSaveChecker);
       window.removeEventListener("keydown", fnc);
     };
   };
@@ -178,12 +191,24 @@ export function NodeExplorer({ project }) {
     } else {
       project.largeString = JSON.stringify(ProjectStore);
       await Project.updateMine({ object: project });
+      AutoSaver.showNeedsSave = false;
       return selfCleanSetup();
     }
   }, []);
 
+  AutoSaver.onChangeKeyRenderUI("showNeedsSave");
+
   return ready ? (
-    <NodeExplorerInternal project={project}></NodeExplorerInternal>
+    <div className="w-full h-full">
+      <NodeExplorerInternal></NodeExplorerInternal>
+      {AutoSaver.showNeedsSave && (
+        <div className="absolute top-0 right-0 m-3 p-3 bg-yellow-500">
+          {/*  */}
+          Needs To Save
+          {/*  */}
+        </div>
+      )}
+    </div>
   ) : (
     <div>Loading....</div>
   );
