@@ -95,8 +95,9 @@ export function Blocker({ blocker, isTemp }) {
     return (
       <group
         key={port._id}
-        position-x={[size[0] * -0.7 * io]}
-        position-z={[size[2] * -0.5 + idx * size[0] * 0.25]}
+        scale={1.35}
+        position-x={[size[0] * -0.75 * io]}
+        position-z={[size[2] * -0.55 + idx * size[0] * 0.35]}
       >
         <Antenna
           name={port._id}
