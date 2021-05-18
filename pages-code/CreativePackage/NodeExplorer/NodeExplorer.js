@@ -146,7 +146,7 @@ export function NodeExplorer({ project }) {
   if (!project) {
     throw new Error("missing project");
   }
-  let [ready, setReady] = useState(false);
+  let [ready, setReady] = useState(true);
 
   let saveProject = async () => {
     console.log(project);
