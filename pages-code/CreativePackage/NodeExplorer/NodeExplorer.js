@@ -20,8 +20,9 @@ import {
 // import { useEffect } from "react";
 import { CommunicationBridge } from "../BridgeLine/BridgeLine";
 import { Picker } from "../Picker/Picker";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Project } from "../../api/Project";
+import { AuthState, EnvConfig, LambdaClient } from "../../api/realtime";
 // import { useEffect } from "react";
 
 function DisplayBlockers() {
@@ -148,8 +149,44 @@ export function NodeExplorer({ project }) {
   }
   let [ready, setReady] = useState(true);
 
+  let socket = useMemo(() => {
+    //bridge-project-room
+    let socket = new LambdaClient({
+      url: EnvConfig.ws,
+    });
+
+    let user = AuthState.user.get();
+
+    socket.send({
+      action: "join-room",
+      roomID: project._id,
+      userID: `${user.userID}_____${user.username}`,
+    });
+
+    socket.on("join-room", (e) => {
+      // console.log(e.connectionID);
+      socket.connID = e.connectionID;
+      console.log("joined-room", socket.connID, user.username, user.userID);
+    });
+
+    socket.on("bridge-project-room", (ev) => {
+      console.log("bridge-project-room", ev);
+    });
+
+    return socket;
+  }, []);
+
   let saveProject = async () => {
     console.log(project);
+    let user = AuthState.user.get();
+
+    socket.send({
+      action: "bridge-project-room",
+      roomID: project._id,
+      userID: `${user.userID}_____${user.username}`,
+      project: project,
+    });
+
     project.largeString = JSON.stringify(ProjectStore);
     await Project.updateMine({ object: project });
     AutoSaver.showNeedsSave = false;
