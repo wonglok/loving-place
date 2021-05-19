@@ -2,7 +2,6 @@ import { createState, useState } from "@hookstate/core";
 import { useEffect } from "react";
 import * as RT from "../../pages-code/api/realtime";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { Project } from "../../pages-code/api/Project";
 import { StackedLayout } from "../../pages-code/Layouts/StackedLayout";
 
@@ -265,8 +264,8 @@ function TableRecord({ project }) {
   };
 
   let onEdit = ({ object }) => {
-    console.log("on edit");
-    router.push(`/project-editor/${object._id}`);
+    // router.push(`/project-editor/${object._id}`);
+    window.location.assign(`/project-editor/${object._id}`);
   };
   let onPreview = () => {
     console.log("on preview");

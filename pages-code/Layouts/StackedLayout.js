@@ -8,7 +8,7 @@ export function StackedLayout({ children, title = "Dashboard" }) {
   let name = useHookState("");
   let [openNav, setOpenNav] = useState(false);
   let [openProfile, setOpenProfile] = useState(false);
-  let { router } = useRouter();
+  let router = useRouter();
 
   let tabs = [
     {
