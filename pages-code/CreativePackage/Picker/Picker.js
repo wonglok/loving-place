@@ -159,7 +159,7 @@ export function Picker({ isTemp, picker }) {
 }
 
 function AutoChangeText({ size, picker }) {
-  picker.onChangeKeyRenderUI("title");
+  picker.makeKeyReactive("title");
   return (
     <Text
       color={"yellow"}

@@ -51,7 +51,7 @@ export const makeSimpleShallowStore = (myObject = {}) => {
       }, []);
     },
 
-    onChangeKeyRenderUI: (key) => {
+    makeKeyReactive: (key) => {
       let [, setSt] = useState(0);
       useEffect(() => {
         let evName = `${___NameSpaceID}`;

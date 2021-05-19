@@ -14,8 +14,6 @@ import {
   ProjectStore,
   provdeCanvasState,
   AutoSaver,
-  SnapsDB,
-  getID,
 } from "../AppEditorState/AppEditorState";
 // import { useEffect } from "react";
 import { CommunicationBridge } from "../BridgeLine/BridgeLine";
@@ -24,10 +22,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Project } from "../../api/Project";
 import { AuthState, EnvConfig, LambdaClient } from "../../api/realtime";
 // import { useEffect } from "react";
+//
 
 function DisplayBlockers() {
-  ProjectStore.onChangeKeyRenderUI("blockers");
-
+  ProjectStore.makeKeyReactive("blockers");
   return (
     <group>
       {ProjectStore.blockers.map((blocker) => {
@@ -38,7 +36,8 @@ function DisplayBlockers() {
 }
 
 function DisplayPickers() {
-  ProjectStore.onChangeKeyRenderUI("pickers");
+  //
+  ProjectStore.makeKeyReactive("pickers");
 
   return (
     <group>
@@ -51,9 +50,9 @@ function DisplayPickers() {
 
 function DisplayConnections() {
   //
-  ProjectStore.onChangeKeyRenderUI("blockers");
-  ProjectStore.onChangeKeyRenderUI("connections");
-  ProjectStore.onChangeKeyRenderUI("ports");
+  ProjectStore.makeKeyReactive("blockers");
+  ProjectStore.makeKeyReactive("connections");
+  ProjectStore.makeKeyReactive("ports");
 
   return (
     <group>
@@ -119,21 +118,24 @@ function Internal() {
 }
 
 function NeedsToSave({ project, saveProject }) {
-  AutoSaver.onChangeKeyRenderUI("showNeedsSave");
-
+  AutoSaver.makeKeyReactive("showNeedsSave");
+  let saveJSON = () => {
+    //
+  };
+  //
   return (
     <>
       {AutoSaver.showNeedsSave ? (
         <div
           onClick={saveProject}
-          className="cursor-pointer shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 text-white bg-yellow-500"
+          className="cursor-pointer shadow-lg absolute top-0 right-0 rounded-xl m-2 p-3 text-white bg-yellow-500"
         >
           {/*  */}
           CMD + S to Save
           {/*  */}
         </div>
       ) : (
-        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white ">
+        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-2 p-3 bg-green-500 text-white ">
           {/*  */}
           Saved to Cloud
           {/*  */}
@@ -277,7 +279,7 @@ function BackButton() {
       onClick={() => {
         window.location.assign("/home");
       }}
-      className="cursor-pointer shadow-lg absolute top-0 left-0 rounded-xl m-3 p-3 text-white bg-gray-500"
+      className="cursor-pointer shadow-lg absolute top-0 left-0 rounded-xl m-2 p-3 text-white bg-gray-500"
     >
       Back
     </div>
@@ -291,7 +293,6 @@ export function NodeExplorerInternal() {
         dpr={(typeof window !== "undefined" && window.devicePixelRatio) || 1.0}
       >
         <Internal></Internal>
-        {/* <AutoSaveCompo></AutoSaveCompo> */}
       </Canvas>
       <Overlays></Overlays>
     </div>

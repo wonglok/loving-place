@@ -17,7 +17,7 @@ export function AO({ children }) {
   return (
     <>
       <div
-        className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-80 flex items-center justify-center cursor-pointer"
+        className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-80 flex items-center justify-center cursor-pointer z-10"
         onClick={() => {
           Hand.overlay = "";
         }}
@@ -25,11 +25,11 @@ export function AO({ children }) {
 
       {size && (
         <div
-          className="block lg:block absolute bg-white lg:rounded-2xl overflow-scroll transition-opacity opacity-100"
+          className="fadeIn block lg:block absolute bg-white lg:rounded-2xl overflow-scroll transition-opacity opacity-100 z-10"
           style={
             size[0] <= 500
               ? {
-                  top: "calc(0%)",
+                  top: "calc(0px)",
                   left: "calc(0%)",
                   width: "calc(100% - 0% * 2)",
                   height: "calc(100% - 0% * 2)",
@@ -47,7 +47,7 @@ export function AO({ children }) {
       )}
 
       <div
-        className=" absolute top-0 right-0 bg-white p-3 rounded-full m-3 cursor-pointer  shadow-lg"
+        className="fadeIn absolute top-0 right-0 bg-white p-3 rounded-full m-2 cursor-pointer  shadow-lg  z-10"
         onClick={() => {
           Hand.overlay = "";
         }}

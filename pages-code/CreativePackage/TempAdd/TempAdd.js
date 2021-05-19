@@ -29,7 +29,7 @@ export function TempAdd() {
     });
   }, []);
 
-  Hand.onChangeKeyRenderUI("addMode");
+  Hand.makeKeyReactive("addMode");
   return (
     <>
       {/*  */}

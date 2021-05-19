@@ -1,10 +1,18 @@
 /* ./styles/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 body,
 html,
 #__next {
   height: 100%;
 }
+/*
+.fadeIn {
+  animation: fadeIn 0.05s;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+} */

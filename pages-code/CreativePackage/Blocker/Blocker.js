@@ -425,7 +425,7 @@ export function Blocker({ blocker, isTemp }) {
 }
 
 function RefreshText({ blocker, size }) {
-  blocker.onChangeKeyRenderUI("title");
+  blocker.makeKeyReactive("title");
 
   return (
     <FloatingVertically>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChromePicker } from "react-color";
+import { ProjectAPI } from "../../api/Project";
 import { AO } from "../AO/AO";
 import {
   getColorPicker,
@@ -8,11 +9,12 @@ import {
   getTextInput,
 } from "../AppEditorLogic/AppEditorLogic";
 import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
+import copy from "copy-to-clipboard";
 
 export function Overlays() {
-  Hand.onChangeKeyRenderUI("overlay");
-  Hand.onChangeKeyRenderUI("tooltip");
-  Hand.onChangeKeyRenderUI("addMode");
+  Hand.makeKeyReactive("overlay");
+  Hand.makeKeyReactive("tooltip");
+  Hand.makeKeyReactive("addMode");
 
   useEffect(() => {
     let hh = ({ key }) => {
@@ -50,7 +52,7 @@ export function Overlays() {
 
 function Tooltip({ children }) {
   return (
-    <div className=" absolute top-0 left-0 h-16 w-full  bg-yellow-200 flex items-center justify-center">
+    <div className="fadeIn absolute top-0 left-0 h-16 w-full  bg-yellow-200 flex items-center justify-center z-10">
       <div className="mx-4 text-2xl text-center ">{children}</div>
     </div>
   );
@@ -60,7 +62,7 @@ function CreateJS() {
   let [inputVal, setInput] = useState("myCodeModule");
   Hand.newModuleTitleName = inputVal;
   return (
-    <div className={"mx-4 mt-4 mb-4"}>
+    <div className={"mx-4 mb-4"}>
       <div className=" flex">
         <div className="block w-full">
           <input
@@ -77,7 +79,7 @@ function CreateJS() {
           />
           <div className="text-left">
             <button
-              className="p-3 my-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-2xl"
+              className="p-3 my-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-md"
               onClick={() => {
                 Hand.addMode = "add-blocker";
                 Hand.tooltip = "add-blocker";
@@ -96,7 +98,7 @@ function CreatePicker() {
   let [inputVal, setInput] = useState("myPicker");
   Hand.newPickerTitleName = inputVal;
   return (
-    <div className={"mx-4 mt-4 mb-4"}>
+    <div className={"mx-4 mb-4"}>
       <div className=" flex">
         <div className="block w-full">
           <input
@@ -112,7 +114,7 @@ function CreatePicker() {
           />
           <div className="text-left">
             <button
-              className="p-3 my-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-2xl"
+              className="p-3 my-3 bg-yellow-500 text-white rounded-xl shadow-lg hover:shadow-md"
               onClick={() => {
                 Hand.addMode = "add-picker";
                 Hand.tooltip = "add-picker";
@@ -128,14 +130,64 @@ function CreatePicker() {
   );
 }
 
+function CopyJSON() {
+  let [st, setSt] = useState("Click to Copy JSON");
+  let [textArea, setTA] = useState("");
+  return (
+    ProjectStore._id && (
+      <>
+        <div className="h-16 w-full mt-10 bg-green-500 flex text-white items-center">
+          <div className="mx-4 text-2xl ">Export Project JSON</div>
+        </div>
+
+        <div className={"mx-4 mt-4 mb-4"}>
+          <div className="block w-full">
+            <button
+              className="p-3 my-3 bg-green-500 text-white rounded-xl shadow-lg hover:shadow-md"
+              onClick={() => {
+                setSt("Download JSON...");
+
+                ProjectAPI.getOneOfMine({ _id: ProjectStore._id }).then(
+                  (item) => {
+                    let str = JSON.stringify(item, null, "  ");
+                    copy(str);
+                    setTA(str);
+                    setSt("JSON Copied");
+                    setTimeout(() => {
+                      setSt("Click to Copy JSON");
+                    }, 1000);
+                  }
+                );
+              }}
+            >
+              {st}
+            </button>
+            <br />
+            {textArea && (
+              <textarea
+                rows={6}
+                className="w-full lg:w-1/3 mx-3 rounded-lg bg-gray-100"
+                defaultValue={textArea}
+              ></textarea>
+            )}
+          </div>
+        </div>
+      </>
+    )
+  );
+}
+
 export function AOCore() {
+  ProjectStore.makeKeyReactive("_id");
   return (
     <AO>
-      <div className="h-16 w-full  bg-yellow-200 flex items-center">
-        <div className="mx-4 text-2xl ">Create Items</div>
+      <div className="h-16 w-full  bg-yellow-300 flex items-center">
+        <div className="mx-4 text-2xl ">Main Core Tower</div>
       </div>
       <CreateJS></CreateJS>
       <CreatePicker></CreatePicker>
+
+      <CopyJSON></CopyJSON>
     </AO>
   );
 }
@@ -231,8 +283,8 @@ function ConnectionInfo({ connection }) {
     connection.output.blockerID
   );
 
-  inputBlock.onChangeKeyRenderUI("title");
-  outputBlock.onChangeKeyRenderUI("title");
+  inputBlock.makeKeyReactive("title");
+  outputBlock.makeKeyReactive("title");
 
   return (
     <>
@@ -255,7 +307,7 @@ function ConnectionInfo({ connection }) {
 }
 
 function RemoveConnection({ blocker }) {
-  ProjectStore.onChangeKeyRenderUI("connections");
+  ProjectStore.makeKeyReactive("connections");
 
   return (
     <div>
@@ -295,7 +347,7 @@ export function AOEditBlocker() {
   let blocker = useMemo(() => {
     return ProjectStore.blockers.getItemByID(Hand.currentBlockerID);
   }, [Hand.currentBlockerID]);
-  blocker.onChangeKeyRenderUI("title");
+  blocker.makeKeyReactive("title");
 
   return (
     <AO>
@@ -551,7 +603,7 @@ function AddNewPickers({ picker }) {
 
 function UserTunes({ picker }) {
   let pickers = picker.pickers;
-  picker.onChangeKeyRenderUI("pickers");
+  picker.makeKeyReactive("pickers");
   let hexList = pickers.filter((e) => e.type === "hex");
   let floatList = pickers.filter((e) => e.type === "float");
   let textList = pickers.filter((e) => e.type === "text");
@@ -613,7 +665,7 @@ export function AOEditPicker() {
   let picker = useMemo(() => {
     return ProjectStore.pickers.getItemByID(Hand.currentPickerID);
   }, [Hand.currentPickerID]);
-  picker.onChangeKeyRenderUI("title");
+  picker.makeKeyReactive("title");
 
   return (
     <AO>
