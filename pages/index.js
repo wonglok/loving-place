@@ -348,6 +348,9 @@ export default function Home({ host, query }) {
   if (open === "cloud.effectnode.com") {
     return <EffectNodeCloud site={open}></EffectNodeCloud>;
   }
+  if (open === "wonglok.local") {
+    return <EffectNodeCloud site={open}></EffectNodeCloud>;
+  }
   // //
   // if (open === "church.effectnode.com") {
   //   return <EffectNodeChurch></EffectNodeChurch>;
