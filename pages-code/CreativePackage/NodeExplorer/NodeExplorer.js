@@ -289,6 +289,7 @@ export function NodeExplorerInternal() {
   return (
     <div className="w-full h-full">
       <Canvas
+        mode="legacy"
         dpr={(typeof window !== "undefined" && window.devicePixelRatio) || 1.0}
       >
         <Internal></Internal>

@@ -7,17 +7,30 @@ import { AuthState } from "../api/realtime";
 import { NodeExplorer } from "../../pages-code/CreativePackage";
 
 export function ProjectEditorRoot() {
-  let [proj, setProject] = useState(false);
+  let [proj, setProject] = useState(null);
   let { query } = useRouter();
 
   useEffect(async () => {
-    let newItem = await Project.getOneOfMine({ _id: query.projectID });
-    setProject(newItem);
+    try {
+      let newItem = await Project.getOneOfMine({ _id: query.projectID });
+      if (newItem) {
+        setProject(newItem);
+      } else {
+        setProject(false);
+      }
+    } catch (e) {
+      setProject(false);
+      console.log(e);
+    }
   }, [query.projectID]);
 
-  return proj ? (
-    <ProjectEditorProtected project={proj}></ProjectEditorProtected>
-  ) : null;
+  if (proj === null) {
+    return <div>Loading</div>;
+  } else if (proj === false) {
+    return <div>Failed Loading Project Data</div>;
+  } else {
+    return <ProjectEditorProtected project={proj}></ProjectEditorProtected>;
+  }
 }
 
 export const ProjectEditorProtected = ({ project }) => {
@@ -34,30 +47,30 @@ export const ProjectEditorProtected = ({ project }) => {
   );
 };
 
-export default function HomePage() {
-  const router = useRouter();
+// export function ProjectEditorRoot() {
+//   const router = useRouter();
 
-  const loggedin = useState(null);
+//   const loggedin = useState(null);
 
-  useEffect(async () => {
-    AuthState.isLoggedInResolveBoolean().then((value) => {
-      loggedin.set(value);
+//   useEffect(async () => {
+//     AuthState.isLoggedInResolveBoolean().then((value) => {
+//       loggedin.set(value);
 
-      if (value === false) {
-        router.push("/login");
-      }
-    });
-  }, []);
+//       if (value === false) {
+//         router.push("/login");
+//       }
+//     });
+//   }, []);
 
-  if (loggedin.value === null) {
-    return <div>Checking Login</div>;
-  }
+//   if (loggedin.value === null) {
+//     return <div>Checking Login</div>;
+//   }
 
-  if (loggedin.value === true) {
-    return <ProjectEditorProtected></ProjectEditorProtected>;
-  }
+//   if (loggedin.value === true) {
+//     return <ProjectEditorLoader></ProjectEditorLoader>;
+//   }
 
-  if (loggedin.value === false) {
-    return <div>Cannot Access Page</div>;
-  }
-}
+//   if (loggedin.value === false) {
+//     return <div>Cannot Access Page</div>;
+//   }
+// }
