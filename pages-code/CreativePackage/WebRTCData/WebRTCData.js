@@ -57,7 +57,9 @@ let makeReceiverLogic = ({ project }) => {
 
         window.addEventListener("sync-to-ARClient", () => {
           project.largeString = JSON.stringify(ProjectStore);
-          peer.send(JSON.stringify(project));
+          if (!peer.destroyed) {
+            peer.send(JSON.stringify(project));
+          }
         });
       }
     });
