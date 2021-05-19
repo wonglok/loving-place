@@ -473,6 +473,9 @@ function ColorPickerEdit({ info, picker }) {
         onChange={(v) => {
           info.value = v.hex;
           setVal(v.hex);
+          window.dispatchEvent(
+            new CustomEvent("sync-to-ARClient", { detail: {} })
+          );
         }}
       ></ChromePicker>
     </div>
@@ -490,6 +493,9 @@ function TextPickerEdit({ info, picker }) {
           onInput={(ev) => {
             info.value = ev.target.value;
             setVal(ev.target.value);
+            window.dispatchEvent(
+              new CustomEvent("sync-to-ARClient", { detail: {} })
+            );
           }}
           className={" border p-3 border-dashed border-black w-10/12"}
         ></textarea>
@@ -513,6 +519,9 @@ function FloatPickerEdit({ info, picker }) {
           onInput={(ev) => {
             info.value = Number(ev.target.value);
             setVal(Number(ev.target.value));
+            window.dispatchEvent(
+              new CustomEvent("sync-to-ARClient", { detail: {} })
+            );
           }}
           className={" border-b border-dashed border-black mb-3 w-10/12"}
         ></input>
@@ -534,6 +543,9 @@ function Vec4PickerEdit({ info, picker }) {
         onInput={(ev) => {
           info.value[idx] = Number(ev.target.value);
           setVal(Number(ev.target.value));
+          window.dispatchEvent(
+            new CustomEvent("sync-to-ARClient", { detail: {} })
+          );
         }}
         className={" border-b border-dashed border-black mb-3 w-10/12"}
       ></input>
