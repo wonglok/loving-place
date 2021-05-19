@@ -11,6 +11,10 @@ export function ProjectEditorRoot() {
   let { query } = useRouter();
 
   useEffect(async () => {
+    if (!query.projectID) {
+      return;
+    }
+
     try {
       let newItem = await Project.getOneOfMine({ _id: query.projectID });
       if (newItem) {
