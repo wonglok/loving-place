@@ -441,9 +441,11 @@ function ProjectsInTable() {
   }, [pageAt.value]);
 
   return (
-    <div>
+    <div className="">
       <h1 className="text-3xl font-bold">My Projects</h1>
-      <div className="mb-3 py-2 flex items-center">
+      {/*  */}
+      <div className="mb-3 py-2 flex items-center overflow-x-auto">
+        {/*  */}
         <input
           type="text"
           value={search.value}
