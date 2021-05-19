@@ -34,7 +34,7 @@ export const ProjectEditorProtected = ({ project }) => {
   );
 };
 
-export default function HomePagee() {
+export default function HomePage() {
   const router = useRouter();
 
   const loggedin = useState(null);

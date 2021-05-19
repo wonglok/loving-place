@@ -31,11 +31,9 @@ export function Overlays() {
       {Hand.tooltip === "add-blocker" && (
         <Tooltip>Tap on Floor to Create Code Block</Tooltip>
       )}
-
       {Hand.tooltip === "add-picker" && (
         <Tooltip>Tap on Floor to Create Picker</Tooltip>
       )}
-
       {Hand.addMode === "add-connection" && (
         <Tooltip>
           <span>Drag to input output connect</span>

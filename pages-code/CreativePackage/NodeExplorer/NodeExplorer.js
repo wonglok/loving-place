@@ -133,7 +133,7 @@ function NeedsToSave({ project, saveProject }) {
           {/*  */}
         </div>
       ) : (
-        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white">
+        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-3 p-3 bg-green-500 text-white ">
           {/*  */}
           Saved to Cloud
           {/*  */}
@@ -264,9 +264,23 @@ export function NodeExplorer({ project }) {
           saveProject();
         }}
       ></NeedsToSave>
+      <BackButton></BackButton>
     </div>
   ) : (
     <div>Loading....</div>
+  );
+}
+
+function BackButton() {
+  return (
+    <div
+      onClick={() => {
+        window.location.assign("/home");
+      }}
+      className="cursor-pointer shadow-lg absolute top-0 left-0 rounded-xl m-3 p-3 text-white bg-gray-500"
+    >
+      Back
+    </div>
   );
 }
 

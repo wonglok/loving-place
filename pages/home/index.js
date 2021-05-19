@@ -1,9 +1,10 @@
 import { createState, useState } from "@hookstate/core";
-import { useEffect } from "react";
+import { useEffect, useState as useReactState } from "react";
 import * as RT from "../../pages-code/api/realtime";
 import { useRouter } from "next/router";
 import { Project } from "../../pages-code/api/Project";
 import { StackedLayout } from "../../pages-code/Layouts/StackedLayout";
+import copy from "copy-to-clipboard";
 
 const ProjectsState = createState([]);
 const PopupRemove = createState(false);
@@ -84,6 +85,7 @@ export default function HomePagee() {
 }
 
 function RemoveItemPopup() {
+  const [slug, setSlug] = useReactState("");
   const config = useState(PopupRemove);
 
   return (
@@ -97,6 +99,24 @@ function RemoveItemPopup() {
           {config.value?.object?.slug}
         </div>
       </div>
+      <div className="px-4 bg-gray-200 pb-4 whitespace-nowrap max-w-xs overflow-x-auto">
+        <div className="text-base text-gray-900">
+          <span className="text-xs text-red-600">
+            Plase enter the slug: "{config.value?.object?.slug}"
+            <br /> to confirm removal.
+            <br />
+          </span>
+          <div>
+            <input
+              value={slug}
+              onInput={(ev) => {
+                //
+                setSlug(ev.target.value);
+              }}
+            ></input>
+          </div>
+        </div>
+      </div>
       <div>
         <button
           className="p-2 px-4 m-3 text-sm text-grey-600 bg-grey-100 border-grey-600 border rounded-lg mr-3"
@@ -106,14 +126,21 @@ function RemoveItemPopup() {
         >
           Cancel
         </button>
-        <button
-          className="p-2 px-4 m-3 text-sm text-red-600 bg-red-100 border-red-600 border rounded-lg mr-3"
-          onClick={() => {
-            config.value.confirm();
-          }}
+
+        <span
+          style={{ opacity: slug === config.value?.object?.slug ? 1.0 : 0.4 }}
         >
-          Remove
-        </button>
+          <button
+            className="p-2 px-4 m-3 text-sm text-red-600 bg-red-100 border-red-600 border rounded-lg mr-3"
+            onClick={() => {
+              if (slug === config.value?.object?.slug) {
+                config.value.confirm();
+              }
+            }}
+          >
+            Remove
+          </button>
+        </span>
       </div>
     </PopupUI>
   );
@@ -267,8 +294,11 @@ function TableRecord({ project }) {
     // router.push(`/project-editor/${object._id}`);
     window.location.assign(`/project-editor/${object._id}`);
   };
-  let onPreview = () => {
-    console.log("on preview");
+  let onCopyJSON = ({ object }) => {
+    Project.getOneOfMine({ _id: object._id }).then((data) => {
+      copy(JSON.stringify(data, null, "  "));
+      window.alert("Project JSON Copied");
+    });
   };
 
   //
@@ -349,10 +379,10 @@ function TableRecord({ project }) {
         <button
           className="p-2 px-4 text-sm text-yellow-600 border-yellow-600 border rounded-lg mr-3"
           onClick={() => {
-            onPreview({ object: row.vaue });
+            onCopyJSON({ object: row.value });
           }}
         >
-          Preview
+          Copy Project JSON
         </button>
         <button
           className="p-2 px-4 text-sm text-blue-600 bg-blue-100 border-blue-600 border rounded-lg mr-3"
