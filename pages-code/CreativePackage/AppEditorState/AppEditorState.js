@@ -188,7 +188,7 @@ export const Hand = makeSimpleShallowStore({
 });
 
 export const AutoSaver = makeSimpleShallowStore({
-  showNeedsSave: false,
+  showNeedsSave: "saved",
 });
 
 export const SnapsDB = (v) => obtainDB(v);

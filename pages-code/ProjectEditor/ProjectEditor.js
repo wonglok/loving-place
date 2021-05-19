@@ -29,7 +29,7 @@ export function ProjectEditorRoot() {
   }, [query.projectID]);
 
   if (proj === null) {
-    return <div>Loading</div>;
+    return <div className="p-4">Loading...</div>;
   } else if (proj === false) {
     return <div>Failed Loading Project Data</div>;
   } else {
@@ -53,13 +53,11 @@ export const ProjectEditorProtected = ({ project }) => {
 
 // export function ProjectEditorRoot() {
 //   const router = useRouter();
-
 //   const loggedin = useState(null);
 
 //   useEffect(async () => {
 //     AuthState.isLoggedInResolveBoolean().then((value) => {
 //       loggedin.set(value);
-
 //       if (value === false) {
 //         router.push("/login");
 //       }

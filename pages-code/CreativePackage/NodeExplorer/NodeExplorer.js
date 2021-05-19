@@ -123,17 +123,34 @@ function NeedsToSave({ project, saveProject }) {
 
   return (
     <>
-      {AutoSaver.showNeedsSave ? (
+      {AutoSaver.showNeedsSave === "dirty" && (
         <div
           onClick={saveProject}
-          className="cursor-pointer shadow-lg absolute top-0 right-0 rounded-xl m-2 p-3 text-white bg-yellow-500"
+          // style={{ top: "calc(50% - 150px * 0.5)", width: `150px` }}
+          className="cursor-pointer shadow-lg text-center absolute right-0 top-0 rounded-xl m-2 p-3 text-white bg-yellow-500"
         >
           {/*  */}
           CMD + S to Save
           {/*  */}
         </div>
-      ) : (
-        <div className=" shadow-lg absolute top-0 right-0 rounded-xl m-2 p-3 bg-green-500 text-white ">
+      )}
+
+      {AutoSaver.showNeedsSave === "saving" && (
+        <div
+          // style={{ left: "calc(50% - 150px * 0.5)", width: `150px` }}
+          className=" shadow-lg text-center absolute right-0 top-0 rounded-xl m-2 p-3 bg-blue-500 text-white "
+        >
+          {/*  */}
+          Saving...
+          {/*  */}
+        </div>
+      )}
+
+      {AutoSaver.showNeedsSave === "saved" && (
+        <div
+          // style={{ left: "calc(50% - 150px * 0.5)", width: `150px` }}
+          className=" shadow-lg text-center absolute right-0 top-0 rounded-xl m-2 p-3 bg-green-500 text-white "
+        >
           {/*  */}
           Saved to Cloud
           {/*  */}
@@ -177,6 +194,7 @@ export function NodeExplorer({ project }) {
   }, []);
 
   let saveProject = async () => {
+    AutoSaver.showNeedsSave = "saving";
     console.log(project);
     let user = AuthState.user.get();
 
@@ -189,7 +207,7 @@ export function NodeExplorer({ project }) {
 
     project.largeString = JSON.stringify(ProjectStore);
     await Project.updateMine({ object: project });
-    AutoSaver.showNeedsSave = false;
+    AutoSaver.showNeedsSave = "saved";
   };
   let autoSetupCleanUp = () => {
     let json = JSON.parse(project.largeString);
@@ -231,13 +249,22 @@ export function NodeExplorer({ project }) {
     let autoSaveChecker = setInterval(() => {
       let latest = JSON.stringify(ProjectStore);
       if (latest !== tracker) {
-        AutoSaver.showNeedsSave = true;
+        AutoSaver.showNeedsSave = "dirty";
       }
       tracker = latest;
     }, 1000);
 
+    let saveForDirty = setInterval(() => {
+      if (AutoSaver.showNeedsSave === "dirty") {
+        // AutoSaver.showNeedsSave = "dirty";
+        //
+        saveProject();
+      }
+    }, 1000);
+
     setReady(true);
     return () => {
+      clearInterval(saveForDirty);
       clearInterval(autoSaveChecker);
       window.removeEventListener("keydown", fnc);
     };
