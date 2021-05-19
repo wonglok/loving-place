@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 // import dynamic from "next/dynamic";
 // import LandingPage from "../pages-code/LandingPage/LandingPage.js";
@@ -282,7 +283,7 @@ export async function getServerSideProps({ req, res, query }) {
 }
 
 //
-function EffectNodeCloud({}) {
+function EffectNodeCloud({ site }) {
   return (
     <div>
       <Head>
@@ -305,6 +306,10 @@ function EffectNodeCloud({}) {
             </a>
           </div>
         </div>
+        <div className="px-3">
+          <div className="text-xs text-gray-500 ">Hosted on Domain: {site}</div>
+        </div>
+
         <div className="p-3">
           <div className="text-sm mb-3 lg:text-lg ">
             <Link href="/login">
@@ -322,9 +327,9 @@ function EffectNodeCloud({}) {
   );
 }
 
-function EffectNodeChurch({}) {
-  return <div>Church</div>;
-}
+// function EffectNodeChurch({}) {
+//   return <div>Church</div>;
+// }
 
 export default function Home({ host, query }) {
   let open = host.split(":")[0];
@@ -338,10 +343,10 @@ export default function Home({ host, query }) {
 
   //
   if (open === "loving.place") {
-    return <EffectNodeCloud></EffectNodeCloud>;
+    return <EffectNodeCloud site={open}></EffectNodeCloud>;
   }
   if (open === "cloud.effectnode.com") {
-    return <EffectNodeCloud></EffectNodeCloud>;
+    return <EffectNodeCloud site={open}></EffectNodeCloud>;
   }
   // //
   // if (open === "church.effectnode.com") {
