@@ -21,6 +21,7 @@ import { Picker } from "../Picker/Picker";
 import { useEffect, useMemo, useState } from "react";
 import { Project } from "../../api/Project";
 import { AuthState, EnvConfig, LambdaClient } from "../../api/realtime";
+import { WebRTCData } from "../WebRTCData/WebRTCData";
 // import { useEffect } from "react";
 //
 
@@ -119,10 +120,7 @@ function Internal() {
 
 function NeedsToSave({ project, saveProject }) {
   AutoSaver.makeKeyReactive("showNeedsSave");
-  let saveJSON = () => {
-    //
-  };
-  //
+
   return (
     <>
       {AutoSaver.showNeedsSave ? (
@@ -267,6 +265,7 @@ export function NodeExplorer({ project }) {
         }}
       ></NeedsToSave>
       <BackButton></BackButton>
+      <WebRTCData project={project}></WebRTCData>
     </div>
   ) : (
     <div>Loading....</div>
