@@ -29,6 +29,11 @@ let makeReceiverLogic = ({ project }) => {
   });
 
   socket.on("join-room", (resp) => {
+    socket.send({
+      action: "encloud-ready",
+      roomID: projectID,
+      userID: "ENCloud",
+    });
     socket.connID = resp.connectionID;
 
     socket.on("signal", (req) => {
@@ -65,8 +70,6 @@ let makeReceiverLogic = ({ project }) => {
       }
     });
   });
-
-  socket.on("latest-client", () => {});
 
   return () => {
     socket.dispose();
