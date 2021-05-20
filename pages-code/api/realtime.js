@@ -204,8 +204,8 @@ let envs = {
     }:3333`,
   },
   production: {
-    rest: `https://awbah4vhil.execute-api.us-west-2.amazonaws.com`,
-    ws: `wss://lpminytf73.execute-api.us-west-2.amazonaws.com/production`,
+    rest: "https://prod-rest.realtime.effectnode.com",
+    ws: `wss://prod-ws.realtime.effectnode.com`,
   },
   staging: {
     rest: `https://ogvqtgaps5.execute-api.us-west-2.amazonaws.com`,
