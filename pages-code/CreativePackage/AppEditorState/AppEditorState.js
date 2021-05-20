@@ -207,6 +207,7 @@ export const ProjectStore = makeSimpleShallowStore({
 });
 
 export const ProjectBackupStore = makeSimpleShallowStore({
+  currentProjectObj: false,
   snaps: [],
 });
 

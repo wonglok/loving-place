@@ -2,6 +2,7 @@ import moment from "moment";
 import { makePublicRouterInstance } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { ProjectBackupAPI } from "../../../pages-code/api/ProjectBackup.js";
+import { ProjectAPI } from "../../api/Project.js";
 import {
   ProjectBackupStore,
   ProjectStore,
@@ -65,11 +66,17 @@ function Entry({ direction = "right", children }) {
 function BackupEntry({ backup }) {
   let date = moment(backup.created_at).format("MMMM Do YYYY, h:mm:ss a");
   let relativeTime = moment(backup.created_at).fromNow();
-
+  let [st, setSt] = useState("");
   return (
-    <Entry direction={"left"}>
+    <Entry
+      direction={
+        (backup.note + "").indexOf("#restore") !== -1 ? "right" : "left"
+      }
+    >
       <h3 className="font-semibold text-lg mb-1">{date}</h3>
-      <div className="text-xs mb-4">{relativeTime}</div>
+      <div className="text-xs mb-2">
+        Time: {relativeTime}, File Size: {backup.size}
+      </div>
       <div className="text-xs mb-5">
         <button
           className="underline text-red-500 mr-3"
@@ -92,6 +99,58 @@ function BackupEntry({ backup }) {
         >
           Update Note
         </button>
+        {/*  */}
+        <button
+          className="underline text-blue-500 mr-3"
+          onClick={async () => {
+            if (
+              window.confirm(
+                "are you sure to restore backupi? it backup once and reloads the page."
+              )
+            ) {
+              setSt("backing up latest snapshot");
+              await ProjectBackupAPI.create({
+                note: "backup before #restore",
+                projectID: ProjectStore._id,
+                largeString: JSON.stringify(ProjectStore),
+              });
+              //
+              setSt("getting current project data");
+              // ProjectBackupStore.snaps.addItem(newItem);
+              let oldBackup = await ProjectBackupAPI.getOneOfMine({
+                _id: backup._id,
+              });
+              console.log(oldBackup);
+              setSt("getting old project state");
+              let projectBaseSettings = await ProjectAPI.getOneOfMine({
+                _id: ProjectStore._id,
+              });
+
+              setSt("restoring project");
+              await ProjectAPI.updateMine({
+                object: {
+                  ...projectBaseSettings,
+                  largeString: oldBackup.largeString,
+                  _id: ProjectStore._id,
+                },
+              }).then(() => {
+                // console.log(oldBackup.largeString);
+                setSt("reloading project");
+                window.location.reload();
+              });
+            }
+
+            // let newItem = await ProjectBackupAPI.updateMine({
+            //   object: backup,
+            // });
+            // console.log(newItem);
+          }}
+        >
+          Restore Snapshot (Reloads page)
+        </button>
+
+        <br />
+        <div className="text-sm text-gray-600">{st}</div>
       </div>
       <textarea
         className="leading-tight text-gray-700 border-gray-300 border p-4 rounded-xl "
@@ -116,7 +175,7 @@ function CreateBackup() {
       largeString: JSON.stringify(ProjectStore),
     });
     ProjectBackupStore.snaps.addItem(newItem);
-  }, [note]);
+  }, [note, ProjectStore]);
 
   return (
     <Entry direction="right">
@@ -139,11 +198,13 @@ function CreateBackup() {
   );
 }
 
-function BacupLoader() {
+function BackupLoader() {
   ProjectBackupStore.makeKeyReactive("snaps");
   useEffect(() => {
     if (ProjectStore._id) {
-      ProjectBackupAPI.listMine({ projectID: ProjectStore._id }).then((v) => {
+      ProjectBackupAPI.listMine({
+        projectID: ProjectStore._id,
+      }).then((v) => {
         ProjectBackupStore.snaps = [];
         v.forEach((ee) => {
           ProjectBackupStore.snaps.addItem(ee);
@@ -179,7 +240,7 @@ function BacupLoader() {
 export function Timeline() {
   return (
     <div className="mx-6">
-      <BacupLoader></BacupLoader>
+      <BackupLoader></BackupLoader>
     </div>
   );
 }

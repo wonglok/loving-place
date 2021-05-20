@@ -14,6 +14,7 @@ import {
   ProjectStore,
   provdeCanvasState,
   AutoSaver,
+  ProjectBackupStore,
 } from "../AppEditorState/AppEditorState";
 // import { useEffect } from "react";
 import { CommunicationBridge } from "../BridgeLine/BridgeLine";
@@ -233,6 +234,8 @@ export function NodeExplorer({ project }) {
     json.pickers.forEach((e) => {
       ProjectStore.pickers.addItem(e);
     });
+
+    ProjectBackupStore.currentProjectObj = project;
 
     let fnc = (ev) => {
       let { metaKey, key } = ev;

@@ -7,7 +7,7 @@ export const URLBASE = "snapshot";
 export const create = async ({
   note = "regular backup",
   projectID,
-  largeStr,
+  largeString,
 }) => {
   let res = await axios({
     method: "POST",
@@ -15,7 +15,7 @@ export const create = async ({
     url: "/" + URLBASE + "?action=create",
     data: {
       projectID,
-      largeStr,
+      largeString,
       note,
     },
     headers: {
