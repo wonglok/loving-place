@@ -2,33 +2,38 @@ import { useState } from "@hookstate/core";
 import * as RT from "../../pages-code/api/realtime";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState as useReactState } from "react";
 
 export default function Login() {
   const router = useRouter();
   const identity = useState("");
   const password = useState("");
   const errorMsg = useState("");
-
+  const [labelLogin, setLoginLabel] = useReactState("Login");
   const onSubmit = () => {
     errorMsg.set("");
 
+    setLoginLabel("Loading....");
     RT.login({
       identity: identity.value,
       password: password.value,
     }).then(
       (res) => {
-        console.log(res.user, res.jwt);
+        // console.log(res.user, res.jwt);
         RT.AuthState.user.set(res.user);
         RT.AuthState.jwt.set(res.jwt);
         RT.AuthState.flush();
+        setLoginLabel("Logging you in...");
 
         setTimeout(() => {
           router.push("/home");
-        }, 300);
+        }, 100);
       },
       (err) => {
         RT.AuthState.clean();
         errorMsg.set(err.message);
+
+        setLoginLabel("Login");
       }
     );
   };
@@ -36,6 +41,7 @@ export default function Login() {
   return (
     <div className={"p-3"}>
       <h1 className={" text-2xl"}> Login</h1>
+
       <Link href="/">
         <h2 className={" text-sm text-gray-600"}>← Go Back Home</h2>
       </Link>
@@ -80,7 +86,7 @@ export default function Login() {
               <td className={" text-right"}></td>
               <td>
                 <button onClick={onSubmit} className={" p-3 m-2 bg-gray-200"}>
-                  Login
+                  {labelLogin}
                 </button>
               </td>
             </tr>

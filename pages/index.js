@@ -13,7 +13,7 @@ import { useEffect } from "react";
 //   }
 // );
 
-function DefaultSite() {
+function DefaultSite({ site }) {
   return (
     <>
       <Head>
@@ -41,6 +41,9 @@ function DefaultSite() {
               Lok Lok
             </a>
           </div>
+        </div>
+        <div className="px-3">
+          <div className="text-xs text-gray-500 ">Hosted on Domain: {site}</div>
         </div>
         <div className="p-3">
           <div className="lg:text-lg ">Inventions and Gifts from Heaven:</div>
@@ -361,7 +364,7 @@ export default function Home({ host, query }) {
 
   return (
     <>
-      <DefaultSite></DefaultSite>
+      <DefaultSite site={open}></DefaultSite>
       {/* <SortaFun></SortaFun> */}
       {/* <div>Landing Page</div> */}
       {/* <LandingPage></LandingPage> */}

@@ -10,6 +10,7 @@ import {
 } from "../AppEditorLogic/AppEditorLogic";
 import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 import copy from "copy-to-clipboard";
+import { Timeline } from "./Timeline";
 
 export function Overlays() {
   Hand.makeKeyReactive("overlay");
@@ -45,7 +46,21 @@ export function Overlays() {
       {Hand.overlay === "core" && <AOCore></AOCore>}
       {Hand.overlay === "edit-blocker" && <AOEditBlocker></AOEditBlocker>}
       {Hand.overlay === "edit-picker" && <AOEditPicker></AOEditPicker>}
+      {Hand.overlay === "timeline" && <TimelineBackups></TimelineBackups>}
       {/*  */}
+    </>
+  );
+}
+
+function TimelineBackups({}) {
+  return (
+    <>
+      <AO>
+        <div className="h-16 w-full  bg-yellow-300 flex items-center">
+          <div className="mx-4 text-2xl ">Main Core Tower</div>
+        </div>
+        <Timeline></Timeline>
+      </AO>
     </>
   );
 }
@@ -131,6 +146,7 @@ function CreatePicker() {
 }
 
 function CopyJSON() {
+  ProjectStore.makeKeyReactive("_id");
   let [st, setSt] = useState("Click to Copy JSON");
   let [textArea, setTA] = useState("");
   return (
@@ -177,8 +193,34 @@ function CopyJSON() {
   );
 }
 
-export function AOCore() {
+function ManageBackups() {
   ProjectStore.makeKeyReactive("_id");
+  return (
+    ProjectStore._id && (
+      <>
+        <div className="h-16 w-full mt-10 bg-indigo-500 flex text-white items-center">
+          <div className="mx-4 text-2xl ">Manage Timeline Backups</div>
+        </div>
+
+        <div className={"mx-4 mt-4 mb-4"}>
+          <div className="block w-full">
+            <button
+              className="p-3 my-3 bg-indigo-500 text-white rounded-xl shadow-lg hover:shadow-md"
+              onClick={() => {
+                //
+                Hand.overlay = "timeline";
+              }}
+            >
+              View Timeline Backups
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  );
+}
+
+export function AOCore() {
   return (
     <AO>
       <div className="h-16 w-full  bg-yellow-300 flex items-center">
@@ -188,6 +230,7 @@ export function AOCore() {
       <CreatePicker></CreatePicker>
 
       <CopyJSON></CopyJSON>
+      <ManageBackups></ManageBackups>
     </AO>
   );
 }

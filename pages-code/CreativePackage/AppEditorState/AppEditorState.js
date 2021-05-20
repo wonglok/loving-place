@@ -191,7 +191,7 @@ export const AutoSaver = makeSimpleShallowStore({
   showNeedsSave: "saved",
 });
 
-export const SnapsDB = (v) => obtainDB(v);
+export const LocalStoreDB = (v) => obtainDB(v);
 
 export const RenderTrigger = makeSimpleShallowStore({
   renderConnection: 0,
@@ -204,6 +204,10 @@ export const ProjectStore = makeSimpleShallowStore({
   ports: [],
   connections: [],
   pickers: [],
+});
+
+export const ProjectBackupStore = makeSimpleShallowStore({
+  snaps: [],
 });
 
 export const TempData = {
