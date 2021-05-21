@@ -58,10 +58,10 @@ let makeReceiverLogic = ({ project }) => {
         peer.once("connect", () => {
           console.log("connecrted!!! on encloud");
           // peer.send("wagahahahaha from encloud");
-          window.dispatchEvent(new CustomEvent("sync-to-TruthConsumer", {}));
+          window.dispatchEvent(new CustomEvent("sync-to-TruthReceiver", {}));
         });
 
-        window.addEventListener("sync-to-TruthConsumer", () => {
+        window.addEventListener("sync-to-TruthReceiver", () => {
           project.largeString = JSON.stringify(ProjectStore);
           console.log(peer.destroyed);
           if (!peer.destroyed && peer.send) {
