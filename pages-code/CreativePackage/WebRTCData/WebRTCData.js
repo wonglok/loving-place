@@ -56,7 +56,7 @@ let makeReceiverLogic = ({ project }) => {
         peer.signal(req.signal);
 
         peer.once("connect", () => {
-          console.log("connecrted!!! on encloud");
+          console.log("[P2P]: TruthProvider OK");
           window.dispatchEvent(new CustomEvent("sync-to-TruthReceiver", {}));
         });
 
