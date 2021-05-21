@@ -20,7 +20,7 @@ let makeReceiverLogic = ({ project }) => {
   });
   WebRTCStore.socket = socket;
 
-  let user = AuthState.user.get();
+  // let user = AuthState.user.get();
 
   socket.send({
     action: "join-room",
@@ -63,7 +63,7 @@ let makeReceiverLogic = ({ project }) => {
         window.addEventListener("sync-to-TruthReceiver", () => {
           project.largeString = JSON.stringify(ProjectStore);
           // console.log(peer.destroyed);
-          if (!peer.destroyed && peer.send) {
+          if (peer && !peer.destroyed && peer.send) {
             peer.send(JSON.stringify(project));
           }
         });
