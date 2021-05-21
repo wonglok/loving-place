@@ -552,14 +552,30 @@ function FloatPickerEdit({ info, picker }) {
   return (
     <div className="m-1 w-full">
       <TitleEdit picker={picker} info={info}></TitleEdit>
-      <div>
+      <div className="">
+        <input
+          value={val}
+          onChange={(ev) => {
+            info.value = ev.target.value;
+            setVal(ev.target.value);
+            window.dispatchEvent(
+              new CustomEvent("sync-to-TruthReceiver", { detail: {} })
+            );
+          }}
+          className={
+            " appearance-none rounded-none border-b border-dashed border-black mb-3 w-10/12"
+          }
+        ></input>
+      </div>
+
+      <div className="">
         <input
           type="range"
           min={-100}
           max={100}
-          step={0.1}
+          step={0.01}
           value={val}
-          onInput={(ev) => {
+          onChange={(ev) => {
             info.value = Number(ev.target.value);
             setVal(Number(ev.target.value));
             window.dispatchEvent(
@@ -577,21 +593,38 @@ function Vec4PickerEdit({ info, picker }) {
   let pickAtIdx = ({ idx }) => {
     let [val, setVal] = useState(info.value[idx]);
     return (
-      <input
-        type="range"
-        min={-100}
-        max={100}
-        step={0.1}
-        value={val}
-        onInput={(ev) => {
-          info.value[idx] = Number(ev.target.value);
-          setVal(Number(ev.target.value));
-          window.dispatchEvent(
-            new CustomEvent("sync-to-TruthReceiver", { detail: {} })
-          );
-        }}
-        className={" border-b border-dashed border-black mb-3 w-10/12"}
-      ></input>
+      <div>
+        <input
+          type="text"
+          min={-100}
+          max={100}
+          step={0.1}
+          value={val}
+          onChange={(ev) => {
+            info.value[idx] = Number(ev.target.value);
+            setVal(Number(ev.target.value));
+            window.dispatchEvent(
+              new CustomEvent("sync-to-TruthReceiver", { detail: {} })
+            );
+          }}
+          className={" border-b border-dashed border-black mb-3 w-10/12"}
+        ></input>
+        <input
+          type="range"
+          min={-100}
+          max={100}
+          step={0.1}
+          value={val}
+          onChange={(ev) => {
+            info.value[idx] = Number(ev.target.value);
+            setVal(Number(ev.target.value));
+            window.dispatchEvent(
+              new CustomEvent("sync-to-TruthReceiver", { detail: {} })
+            );
+          }}
+          className={" border-b border-dashed border-black mb-3 w-10/12"}
+        ></input>
+      </div>
     );
   };
   return (
