@@ -25,28 +25,29 @@ let makeReceiverLogic = ({ project }) => {
   socket.send({
     action: "join-room",
     roomID: projectID,
-    userID: `ENCloud`,
+    userID: `TruthProvider`,
   });
 
   socket.on("join-room", (resp) => {
     socket.send({
       action: "encloud-ready",
       roomID: projectID,
-      userID: "ENCloud",
+      userID: "TruthProvider",
     });
     socket.connID = resp.connectionID;
 
     socket.on("signal", (req) => {
-      if (req.connectionID && req.userID === "ARClient") {
+      if (req.connectionID && req.userID !== "TruthProvider") {
         let peer = new SimplePeer({
           initiator: false,
           trickle: false,
         });
+
         peer.on("signal", (v) => {
           socket.send({
             action: "signal",
             roomID: projectID,
-            userID: `ENCloud`,
+            userID: `TruthProvider`,
             signal: v,
             connectionID: req.connectionID,
           });
@@ -57,10 +58,10 @@ let makeReceiverLogic = ({ project }) => {
         peer.once("connect", () => {
           console.log("connecrted!!! on encloud");
           // peer.send("wagahahahaha from encloud");
-          window.dispatchEvent(new CustomEvent("sync-to-ARClient", {}));
+          window.dispatchEvent(new CustomEvent("sync-to-TruthConsumer", {}));
         });
 
-        window.addEventListener("sync-to-ARClient", () => {
+        window.addEventListener("sync-to-TruthConsumer", () => {
           project.largeString = JSON.stringify(ProjectStore);
           console.log(peer.destroyed);
           if (!peer.destroyed && peer.send) {

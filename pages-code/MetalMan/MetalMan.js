@@ -1,7 +1,7 @@
 import { useState } from "@hookstate/core";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
-import { AnimationMixer, Group, SkinnedMesh } from "three";
+import { AnimationMixer, Group } from "three";
 import { Object3D } from "three";
 import { Me } from "../AppState/AppState";
 

@@ -27,13 +27,13 @@ export default function LandingPage() {
     //   .then((e) => e.json())
     //   .then(console.log);
 
-    try {
-      fetch("http://localhost:3333/")
-        .then((e) => e.json())
-        .then(console.log, console.log);
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   fetch("http://localhost:3333/")
+    //     .then((e) => e.json())
+    //     .then(console.log, console.log);
+    // } catch (e) {
+    //   console.log(e);
+    // }
   }, []);
 
   return (

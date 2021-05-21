@@ -82,8 +82,8 @@ export const GameControl = () => {
     camera.near = 0.1;
     camera.updateProjectionMatrix();
 
-    const MapControls = require("three/examples/jsm/controls/OrbitControls")
-      .MapControls;
+    const MapControls =
+      require("three/examples/jsm/controls/OrbitControls").MapControls;
     let mapContrtols = new MapControls(camera, gl.domElement);
 
     mapContrtols.minDistance = minLimit;
