@@ -8,27 +8,28 @@ export const addBlocker = ({ point }) => {
     title: Hand.newModuleTitleName,
   };
 
-  let makePort = (type = "input") => {
+  let makePort = (type = "input", idx) => {
     return {
       _id: getID(),
       type,
+      idx,
       blockerID: newObj._id,
     };
   };
 
   ProjectStore.blockers.addItem(newObj);
 
-  ProjectStore.ports.addItem(makePort("input"));
-  ProjectStore.ports.addItem(makePort("input"));
-  ProjectStore.ports.addItem(makePort("input"));
-  ProjectStore.ports.addItem(makePort("input"));
-  ProjectStore.ports.addItem(makePort("input"));
+  ProjectStore.ports.addItem(makePort("input", 0));
+  ProjectStore.ports.addItem(makePort("input", 1));
+  ProjectStore.ports.addItem(makePort("input", 2));
+  ProjectStore.ports.addItem(makePort("input", 3));
+  ProjectStore.ports.addItem(makePort("input", 4));
 
-  ProjectStore.ports.addItem(makePort("output"));
-  ProjectStore.ports.addItem(makePort("output"));
-  ProjectStore.ports.addItem(makePort("output"));
-  ProjectStore.ports.addItem(makePort("output"));
-  ProjectStore.ports.addItem(makePort("output"));
+  ProjectStore.ports.addItem(makePort("output", 0));
+  ProjectStore.ports.addItem(makePort("output", 1));
+  ProjectStore.ports.addItem(makePort("output", 2));
+  ProjectStore.ports.addItem(makePort("output", 3));
+  ProjectStore.ports.addItem(makePort("output", 4));
 };
 
 export const getTextInput = (title = "text0") => {
