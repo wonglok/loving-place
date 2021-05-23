@@ -248,6 +248,8 @@ export function NodeExplorer({ project }) {
     };
     window.addEventListener("keydown", fnc);
 
+    window.addEventListener("onsave", saveProject);
+
     let tracker = JSON.stringify(ProjectStore);
     let autoSaveChecker = setInterval(() => {
       let latest = JSON.stringify(ProjectStore);
@@ -263,13 +265,14 @@ export function NodeExplorer({ project }) {
         //
         saveProject();
       }
-    }, 1000);
+    }, 5 * 1000);
 
     setReady(true);
     return () => {
       clearInterval(saveForDirty);
       clearInterval(autoSaveChecker);
       window.removeEventListener("keydown", fnc);
+      window.removeEventListener("onsave", saveProject);
     };
   };
 

@@ -28,6 +28,14 @@ let makeReceiverLogic = ({ project }) => {
     userID: `TruthProvider`,
   });
 
+  socket.on("reconnect", () => {
+    socket.send({
+      action: "join-room",
+      roomID: projectID,
+      userID: `TruthProvider`,
+    });
+  });
+
   socket.on("join-room", (resp) => {
     socket.send({
       action: "encloud-ready",

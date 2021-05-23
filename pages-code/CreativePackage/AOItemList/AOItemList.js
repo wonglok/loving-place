@@ -12,6 +12,10 @@ import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 import copy from "copy-to-clipboard";
 import { Timeline } from "./Timeline";
 
+import dynamic from "next/dynamic";
+
+// const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
+
 export function Overlays() {
   Hand.makeKeyReactive("overlay");
   Hand.makeKeyReactive("tooltip");
@@ -110,7 +114,7 @@ function CreateJS() {
   );
 }
 function CreatePicker() {
-  let [inputVal, setInput] = useState("myPicker");
+  let [inputVal, setInput] = useState("myStandardMaterial");
   Hand.newPickerTitleName = inputVal;
   return (
     <div className={"mx-4 mb-4"}>
@@ -547,6 +551,99 @@ function TextPickerEdit({ info, picker }) {
   );
 }
 
+function GLSLEditor({ info }) {
+  const ref = useRef();
+  useEffect(() => {
+    var ace = require("brace");
+    require("brace/mode/glsl");
+    require("brace/theme/monokai");
+
+    var editor = ace.edit(info._id, {
+      initialContent: info.value,
+    });
+    editor.setTheme("ace/theme/monokai");
+    editor.$blockScrolling = true;
+
+    var sess = new ace.EditSession(info.value);
+    editor.setSession(sess);
+    var UndoManager = require("brace").UndoManager;
+    editor.getSession().setUndoManager(new UndoManager());
+    editor.getSession().setMode("ace/mode/glsl");
+
+    editor.on("change", (evt) => {
+      info.value = editor.getValue();
+      window.dispatchEvent(
+        new CustomEvent("sync-to-TruthReceiver", { detail: {} })
+      );
+    });
+
+    var commands = [
+      {
+        name: "open-files",
+        bindKey: { win: "Ctrl-O", mac: "Command-O" },
+        exec: (editor) => {
+          // var val = editor.getValue()
+          // this.$emit('open')
+          console.log("open file");
+        },
+        readOnly: true, // false if this command should not apply in readOnly mode
+      },
+      {
+        name: "save",
+        bindKey: { win: "Ctrl-S", mac: "Command-S" },
+        exec: (editor) => {
+          // var val = editor.getValue()
+          // this.$emit('save', val)
+          console.log("onsave");
+          window.dispatchEvent(new CustomEvent("onsave", { detail: {} }));
+        },
+        readOnly: true, // false if this command should not apply in readOnly mode
+      },
+      {
+        name: "multicursor",
+        bindKey: { win: "Ctrl-D", mac: "Command-D" },
+        exec: (editor) => {
+          editor.selectMore(1);
+        },
+        // multiSelectAction: 'forEach',
+        scrollIntoView: "cursor",
+        readOnly: true, // false if this command should not apply in readOnly mode
+      },
+    ];
+    commands.forEach((command) => {
+      editor.commands.addCommand(command);
+    });
+    return () => {
+      //
+      editor.destroy();
+    };
+  }, []);
+  return <div className="h-64" id={info._id} ref={ref}></div>;
+}
+
+function CodePickerEdit({ info, picker }) {
+  let [val, setVal] = useState(info.value);
+  return (
+    <div className="m-1 w-full">
+      <TitleEdit picker={picker} info={info}></TitleEdit>
+      <div>
+        <GLSLEditor info={info}></GLSLEditor>
+        {/* <textarea
+          value={val}
+          onInput={(ev) => {
+            info.value = ev.target.value;
+            setVal(ev.target.value);
+            window.dispatchEvent(
+              new CustomEvent("sync-to-TruthReceiver", { detail: {} })
+            );
+          }}
+          className={" border p-3 border-dashed border-black w-10/12"}
+        ></textarea> */}
+      </div>
+    </div>
+  );
+}
+
 function FloatPickerEdit({ info, picker }) {
   let [val, setVal] = useState(info.value);
   return (
@@ -679,6 +776,14 @@ function AddNewPickers({ picker }) {
       </button>
       <button
         onClick={() => {
+          picker.pickers.addItem(getCodeInput("code0"));
+        }}
+        className="p-3 m-2 border rounded-lg bg-blue-100"
+      >
+        + GLSL Code
+      </button>
+      <button
+        onClick={() => {
           picker.pickers.addItem(getSliderVec4("vec4slider0"));
         }}
         className="p-3 m-2 border rounded-lg bg-blue-100"
@@ -695,6 +800,7 @@ function UserTunes({ picker }) {
   let hexList = pickers.filter((e) => e.type === "hex");
   let floatList = pickers.filter((e) => e.type === "float");
   let textList = pickers.filter((e) => e.type === "text");
+  let codeList = pickers.filter((e) => e.type === "code");
   let vec4List = pickers.filter((e) => e.type === "vec4");
 
   return (
@@ -742,6 +848,17 @@ function UserTunes({ picker }) {
               picker={picker}
               info={i}
             ></Vec4PickerEdit>
+          );
+        })}
+      </div>
+      <div className="">
+        {codeList.map((i) => {
+          return (
+            <CodePickerEdit
+              key={i._id}
+              picker={picker}
+              info={i}
+            ></CodePickerEdit>
           );
         })}
       </div>

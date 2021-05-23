@@ -54,7 +54,7 @@ export class LambdaClient extends EventEmitter {
     super();
     this.url = url;
     this.autoReconnectInterval = 15 * 1000;
-    this.open();
+    this.open({ isReconnect: false });
   }
 
   get ready() {
@@ -75,7 +75,7 @@ export class LambdaClient extends EventEmitter {
     this.close();
   }
 
-  open() {
+  open({ isReconnect = false }) {
     this.ws = new WebSocket(this.url);
     this.ws.__disposed = false;
 
@@ -83,7 +83,15 @@ export class LambdaClient extends EventEmitter {
       if (this.ws.__disposed) {
         return;
       }
-      console.log("WebSocket: opened");
+      console.log(
+        isReconnect
+          ? "WebSocket reconncted please rejoin room"
+          : "WebSocket: opened"
+      );
+
+      if (isReconnect) {
+        this.trigger("reconnect");
+      }
     });
 
     this.ws.addEventListener("message", (evt) => {
@@ -150,7 +158,7 @@ export class LambdaClient extends EventEmitter {
 
     setTimeout(() => {
       console.log("WebSocketClient: reconnecting...");
-      this.open();
+      this.open({ isReconnect: true });
     }, this.autoReconnectInterval);
   }
 
