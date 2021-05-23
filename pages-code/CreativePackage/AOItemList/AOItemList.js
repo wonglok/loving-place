@@ -495,7 +495,7 @@ function TitleEdit({ info, picker }) {
           setTitle(ev.target.value);
         }}
         className={
-          " appearance-none rounded-none border-b border-dashed border-black mb-3 w-36"
+          " appearance-none rounded-none border-b border-dashed border-black mb-3 w-10/12 lg:w-1/3"
         }
       ></input>
       <div
@@ -557,18 +557,22 @@ function GLSLEditor({ info }) {
     var ace = require("brace");
     require("brace/mode/glsl");
     require("brace/theme/monokai");
+    require("brace/ext/searchbox");
 
     var editor = ace.edit(info._id, {
       initialContent: info.value,
     });
     editor.setTheme("ace/theme/monokai");
+    editor.setOption("fontSize", "12px");
     editor.$blockScrolling = true;
 
+    var UndoManager = require("brace").UndoManager;
     var sess = new ace.EditSession(info.value);
     editor.setSession(sess);
-    var UndoManager = require("brace").UndoManager;
     editor.getSession().setUndoManager(new UndoManager());
     editor.getSession().setMode("ace/mode/glsl");
+    editor.getSession().setOptions({ tabSize: 2, useSoftTabs: true });
+    editor.getSession().setOption("useWorker", false);
 
     editor.on("change", (evt) => {
       info.value = editor.getValue();
