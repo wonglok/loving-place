@@ -29,7 +29,7 @@ export function HDREnv() {
       envMap.encoding = sRGBEncoding;
       scene.environment = envMap;
 
-      scene.background = new Color("#888");
+      // scene.background = new Color("#888");
     });
 
     return () => {
