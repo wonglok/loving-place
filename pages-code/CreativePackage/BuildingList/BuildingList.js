@@ -2,6 +2,7 @@ import { useGLTF, useTexture, Sphere, Box } from "@react-three/drei";
 import { useGraph, useThree } from "@react-three/fiber";
 
 import { memo, useMemo } from "react";
+import { sRGBEncoding } from "three";
 import {
   // EquirectangularReflectionMapping,
   PMREMGenerator,
@@ -36,6 +37,8 @@ export function useEnvMapFromEquirectangular(url = `/hdr/bubble.png`) {
     const pmremGenerator = new PMREMGenerator(gl);
     pmremGenerator.compileEquirectangularShader();
     let res = pmremGenerator.fromEquirectangular(texture).texture;
+    res.encoding = sRGBEncoding;
+
     Cache.set(url, res);
 
     return res;
@@ -65,15 +68,17 @@ export function useMatCapEnvMap(url) {
   return matcapEnvMap;
 }
 
-export const Building = "/hdr/bubble-center-large.jpg";
-export const SharedEnvURL = "/hdr/bubble-center-small.jpg";
+/// public
 
-const useEnvMap = (url) => {
-  return useEnvMapFromEquirectangular(url);
-};
+// export const Building = "/hdr/bubble-center-large.jpg";
+// export const Building = "/hdr/paul_lobe_haus_4k_compressed_2.jpeg";
+
+// const useEnvMap = (url) => {
+//   return useEnvMapFromEquirectangular(url);
+// };
 
 export function MainTower({ ...props }) {
-  let envMap = useEnvMap(Building);
+  // let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/main-tower.glb");
 
   let firstGeo = getFistGeo(glb.scene);
@@ -102,8 +107,8 @@ export function MainTower({ ...props }) {
         <meshStandardMaterial
           metalness={0.9}
           roughness={0.2}
-          envMap={envMap}
-          envMapIntensity={4}
+          // envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -111,7 +116,7 @@ export function MainTower({ ...props }) {
 }
 
 export function CodeBuilding({ ...props }) {
-  let envMap = useEnvMap(Building);
+  // let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/small-tower.glb");
 
   let firstGeo = getFistGeo(glb.scene);
@@ -137,6 +142,7 @@ export function CodeBuilding({ ...props }) {
           }
         ></shaderMaterial>
       </Box>
+
       <mesh
         scale={0.02}
         geometry={getFistGeo(glb.scene)}
@@ -145,8 +151,8 @@ export function CodeBuilding({ ...props }) {
         <meshStandardMaterial
           metalness={0.9}
           roughness={0.2}
-          envMap={envMap}
-          envMapIntensity={4}
+          // envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -154,7 +160,7 @@ export function CodeBuilding({ ...props }) {
 }
 
 export function PickerBuilding({ ...props }) {
-  let envMap = useEnvMap(Building);
+  // let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/picker-01.glb");
 
   let firstGeo = getFistGeo(glb.scene);
@@ -188,8 +194,8 @@ export function PickerBuilding({ ...props }) {
         <meshStandardMaterial
           metalness={0.9}
           roughness={0.2}
-          envMap={envMap}
-          envMapIntensity={4}
+          // envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -197,7 +203,7 @@ export function PickerBuilding({ ...props }) {
 }
 
 export function Antenna({ ...props }) {
-  let envMap = useEnvMap(Building);
+  // let envMap = useEnvMap(Building);
   let glb = useGLTF("/fixed-buildings/antenna-4.glb");
 
   return (
@@ -211,8 +217,8 @@ export function Antenna({ ...props }) {
         <meshStandardMaterial
           metalness={0.9}
           roughness={0.2}
-          envMap={envMap}
-          envMapIntensity={4}
+          // envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>
@@ -220,7 +226,7 @@ export function Antenna({ ...props }) {
 }
 
 export function EditBlock({ ...props }) {
-  let envMap = useEnvMap(Building);
+  // let envMap = useEnvMap(Building);
 
   let glb = useGLTF("/fixed-buildings/edit-building.glb");
 
@@ -235,8 +241,8 @@ export function EditBlock({ ...props }) {
         <meshStandardMaterial
           metalness={0.9}
           roughness={0.2}
-          envMap={envMap}
-          envMapIntensity={4}
+          // envMap={envMap}
+          envMapIntensity={3}
         ></meshStandardMaterial>
       </mesh>
     </group>

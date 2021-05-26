@@ -7,48 +7,48 @@ import { addBlocker, addPicker } from "../AppEditorLogic/AppEditorLogic";
 import { Hand } from "../AppEditorState/AppEditorState";
 import { SharedEnvURL, useMatCapEnvMap } from "../BuildingList/BuildingList";
 
-export function MatArmmor() {
-  let aoMap = useTexture(
-    "/substance/rough-metal/Sci-fi_Armor_001_ambientOcclusion.jpg"
-  );
-  let roughnessMap = useTexture(
-    "/substance/rough-metal/Sci-fi_Armor_001_roughness.jpg"
-  );
-  let displacementMap = useTexture(
-    "/substance/rough-metal/Sci-fi_Armor_001_height.png"
-  );
-  let baseMap = useTexture(
-    "/substance/rough-metal/Sci-fi_Armor_001_basecolor.jpg"
-  );
-  let normalMap = useTexture(
-    "/substance/rough-metal/Sci-fi_Armor_001_normal.jpg"
-  );
-  let envMap = useMatCapEnvMap(SharedEnvURL);
+// export function MatArmmor() {
+//   let aoMap = useTexture(
+//     "/substance/rough-metal/Sci-fi_Armor_001_ambientOcclusion.jpg"
+//   );
+//   let roughnessMap = useTexture(
+//     "/substance/rough-metal/Sci-fi_Armor_001_roughness.jpg"
+//   );
+//   let displacementMap = useTexture(
+//     "/substance/rough-metal/Sci-fi_Armor_001_height.png"
+//   );
+//   let baseMap = useTexture(
+//     "/substance/rough-metal/Sci-fi_Armor_001_basecolor.jpg"
+//   );
+//   let normalMap = useTexture(
+//     "/substance/rough-metal/Sci-fi_Armor_001_normal.jpg"
+//   );
+//   let envMap = useMatCapEnvMap(SharedEnvURL);
 
-  let makeRepeat = (mapTex) => {
-    mapTex.repeat.set(35, 35);
-    mapTex.wrapS = RepeatWrapping;
-    mapTex.wrapT = RepeatWrapping;
-  };
+//   let makeRepeat = (mapTex) => {
+//     mapTex.repeat.set(35, 35);
+//     mapTex.wrapS = RepeatWrapping;
+//     mapTex.wrapT = RepeatWrapping;
+//   };
 
-  makeRepeat(displacementMap);
-  makeRepeat(roughnessMap);
-  makeRepeat(baseMap);
-  makeRepeat(aoMap);
-  makeRepeat(normalMap);
+//   makeRepeat(displacementMap);
+//   makeRepeat(roughnessMap);
+//   makeRepeat(baseMap);
+//   makeRepeat(aoMap);
+//   makeRepeat(normalMap);
 
-  return (
-    <meshStandardMaterial
-      roughness={0.3}
-      metalness={0.9}
-      envMap={envMap}
-      envMapIntensity={5}
-      // aoMap={aoMap}
-      // aoMapIntensity={4}
-      normalMap={normalMap}
-    ></meshStandardMaterial>
-  );
-}
+//   return (
+//     <meshStandardMaterial
+//       roughness={0.3}
+//       metalness={0.9}
+//       envMap={envMap}
+//       envMapIntensity={5}
+//       // aoMap={aoMap}
+//       // aoMapIntensity={4}
+//       normalMap={normalMap}
+//     ></meshStandardMaterial>
+//   );
+// }
 
 export function EditorBed() {
   let { scene, gl } = useThree();

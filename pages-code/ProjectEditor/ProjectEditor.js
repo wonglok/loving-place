@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Project } from "../../pages-code/api/Project";
-import { AuthState } from "../api/realtime";
+// import { AuthState } from "../api/realtime";
 // import { Konva } from "./Konva";
 
 import { NodeExplorer } from "../../pages-code/CreativePackage";

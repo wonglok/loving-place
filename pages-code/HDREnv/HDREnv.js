@@ -1,12 +1,16 @@
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { PMREMGenerator, TextureLoader } from "three";
+import { sRGBEncoding } from "three";
+import { PMREMGenerator, TextureLoader, Color } from "three";
 import { ShaderCubeChrome } from "../ShaderCubeChrome/ShaderCubeChrome";
 
 export function HDREnv() {
   // let RGBELoader = require("three/examples/jsm/loaders/RGBELoader.js")
   //   .RGBELoader;
-  let url = `/hdr/adams_place_bridge_1k.png`;
+  // let url = `/hdr/adams_place_bridge_1k.png`;
+  // let url = `/hdr/paul_lobe_haus_4k_compressed_2.jpeg`;
+  let url = `/hdr/bubble-center-large.jpg`;
+  // let url = `/hdr/pexels-alex-andrews-816608.jpg`;
   let { scene, gl } = useThree();
   // let chroma = new ShaderCubeChrome({ res: 128, renderer: gl });
   // useEffect((state, dt) => {
@@ -22,12 +26,15 @@ export function HDREnv() {
     // loader.setDataType(UnsignedByteType);
     loader.load(url, (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+      envMap.encoding = sRGBEncoding;
       scene.environment = envMap;
+
+      scene.background = new Color("#888");
     });
 
     return () => {
       scene.environment = null;
-      scene.background = null;
+      // scene.background = null;
     };
   }, []);
 

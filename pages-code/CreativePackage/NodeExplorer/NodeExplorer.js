@@ -98,7 +98,10 @@ function Internal() {
   return (
     <group>
       <ambientLight color={"white"} intensity={0.5}></ambientLight>
-      <directionalLight position={[10, 10, 10]}></directionalLight>
+      <directionalLight
+        position={[10, 10, 10]}
+        intensity={0.5}
+      ></directionalLight>
       <HDREnv></HDREnv>
 
       {/* <LineDrop></LineDrop> */}
