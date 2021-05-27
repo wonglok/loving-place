@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { Project, ProjectAPI } from "../../pages-code/api/Project";
 import { StackedLayout } from "../../pages-code/Layouts/StackedLayout";
 import copy from "copy-to-clipboard";
-import sdk from "@stackblitz/sdk";
+// import sdk from "@stackblitz/sdk";
 
 const ProjectsState = createState([]);
 const PopupRemove = createState(false);
