@@ -233,7 +233,7 @@ if (process.env.NODE_ENV === "test") {
 
 // deubg
 // mode = "staging";
-
+export const EnvAll = envs;
 export const EnvConfig = envs[mode];
 
 const testRunBell = () => {

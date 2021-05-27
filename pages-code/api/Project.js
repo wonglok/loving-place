@@ -1,7 +1,7 @@
 //
 
 import axios from "axios";
-import { AuthState, EnvConfig } from "./realtime";
+import { AuthState, EnvAll, EnvConfig } from "./realtime";
 
 export const create = async ({ displayName, largeString = undefined }) => {
   let res = await axios({
@@ -156,6 +156,30 @@ export const getOneOfPublished = async ({ _id }) => {
   return res;
 };
 
+export const getTemplateCode = async ({ _id }) => {
+  let res = await axios({
+    method: "POST",
+    baseURL: EnvAll["production"].rest,
+    url: "/project?" + "action=get-one-of-published",
+    data: {
+      _id: _id,
+    },
+    headers: {
+      "access-control-allow-origin": window.location.origin,
+    },
+    withCredentials: true,
+  }).then(
+    (res) => res.data,
+    (e) => {
+      return Promise.reject({
+        message: e?.response?.data?.msg || "server error",
+      });
+    }
+  );
+
+  return res;
+};
+
 export const Project = {
   create,
   listMine,
@@ -163,6 +187,7 @@ export const Project = {
   removeMine,
   getOneOfMine,
   getOneOfPublished,
+  getTemplateCode,
 };
 
 export const ProjectAPI = Project;

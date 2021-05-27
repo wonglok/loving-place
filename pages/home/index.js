@@ -103,8 +103,9 @@ function RemoveItemPopup() {
       <div className="px-4 bg-gray-200 pb-4 whitespace-nowrap max-w-xs overflow-x-auto">
         <div className="text-base text-gray-900">
           <span className="text-xs text-red-600">
-            Plase enter the slug: "{config.value?.object?.slug}"
-            <br /> to confirm removal.
+            Plase enter the slug to confirm removal.
+            <br />"{config.value?.object?.slug}"
+            <br />
             <br />
           </span>
           <div>
@@ -177,16 +178,10 @@ export function HomePageInternal() {
 }
 
 function SimpleWebGLStarter() {
-  let temlate = {
-    replaceStr: "______REPLACE_ME_TOKEN_____",
-    largeString:
-      '{"_id":"______REPLACE_ME_TOKEN_____","blockers":[{"_id":"_8c0jvqe18jbxdrk5hy","position":[255.2089199661702,-0.0000012207030835043042,-89.75795344163646],"title":"demo.plane"},{"_id":"_736fru14yax62noee4","position":[-226.45059826399637,2.1731023348452482e-14,-97.86782865447015],"title":"demo.sweet"}],"ports":[{"_id":"_e74lbaby0gq7fhti02","type":"input","idx":0,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_b8n38umddo5d6e675c","type":"input","idx":1,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_jslx9xqxleh0gggoyl","type":"input","idx":2,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_03mubgjkc0hmjxxet6","type":"input","idx":3,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_zmyokvjucycivikg1y","type":"input","idx":4,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_3br5fqmtduyswqgg6a","type":"output","idx":0,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_nho42nyh20gzt4c0y8","type":"output","idx":1,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_603woen80646v57s6n","type":"output","idx":2,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_fsk9t4rh9lud9alj9m","type":"output","idx":3,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_boixinuhmcvjmvs6hn","type":"output","idx":4,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_yfo9id76ep6dal4ww6","type":"input","idx":0,"blockerID":"_736fru14yax62noee4"},{"_id":"_sb4ckrcjofxsgieo65","type":"input","idx":1,"blockerID":"_736fru14yax62noee4"},{"_id":"_e1fx84a1u2xw2pi8q8","type":"input","idx":2,"blockerID":"_736fru14yax62noee4"},{"_id":"_3c8j0cwjycmq47m5tx","type":"input","idx":3,"blockerID":"_736fru14yax62noee4"},{"_id":"_9bzg9zmo4ukvw6nm53","type":"input","idx":4,"blockerID":"_736fru14yax62noee4"},{"_id":"_syaygond09cxllndgf","type":"output","idx":0,"blockerID":"_736fru14yax62noee4"},{"_id":"_8wb3zo0d1lgezlw34i","type":"output","idx":1,"blockerID":"_736fru14yax62noee4"},{"_id":"_dlerzcn2qy16gpgw7v","type":"output","idx":2,"blockerID":"_736fru14yax62noee4"},{"_id":"_ze9t10t4ykzj15g17w","type":"output","idx":3,"blockerID":"_736fru14yax62noee4"},{"_id":"_ceodn9cvfstwyd5pv5","type":"output","idx":4,"blockerID":"_736fru14yax62noee4"}],"connections":[{"_id":"_1lef5teb3lybvf19hl","input":{"_id":"_e74lbaby0gq7fhti02","type":"input","idx":0,"blockerID":"_8c0jvqe18jbxdrk5hy"},"output":{"_id":"_syaygond09cxllndgf","type":"output","idx":0,"blockerID":"_736fru14yax62noee4"}}],"pickers":[]}',
-  };
-
   const refPreviewBox = useRef();
   const [status, setStatus] = useReactState("ready");
   const projects = useState(ProjectsState);
-  const [projectJSONString, setProjectJSON] = useReactState("");
+  // const [projectJSONString, setProjectJSON] = useReactState("");
 
   const addProject = async () => {
     try {
@@ -195,9 +190,34 @@ function SimpleWebGLStarter() {
         displayName: "nextjs-starter",
       });
 
+      setStatus("templating");
+
+      let template = await Project.getTemplateCode({
+        // production template
+        _id: "60a6ebc7d80d490008f8ab95",
+      }).catch((e) => {
+        console.log(e);
+
+        // fallback to cache
+        return {
+          published: true,
+          displayName: "encloud-template-nextjs",
+          _id: "60a6ebc7d80d490008f8ab95",
+          username: "wonglok831",
+          userID: "609b49ad59f39c00098c34ea",
+          slug: "encloud-template-nextjs",
+          created_at: "2021-05-20T23:07:51.465Z",
+          updated_at: "2021-05-27T02:31:42.702Z",
+          __v: 0,
+          largeString:
+            '{"_id":"60a6ebc7d80d490008f8ab95","blockers":[{"_id":"_3t5xs1ff71m297xsba","position":[225.1904773223522,-0.000001220703197191142,4.078623450698803],"title":"demo.plane"},{"_id":"_129m8jqpaz8v1r3lzw","position":[574.0255800058212,-9.610988275081548e-16,4.328404321431947],"title":"demo.sweet"},{"_id":"_xyco7tly0675hmz5ip","position":[927.3608198868295,-0.000001220703140347723,-3.229549711242844],"title":"noodle.main"}],"ports":[{"_id":"_mhmyeendbd4o8fa1ro","type":"input","idx":0,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_q2ycc50q1ucs4f9o9q","type":"input","idx":1,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_ozd23z5qresgggrz3r","type":"input","idx":2,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_avsez3ymam81g7h25w","type":"input","idx":3,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_5xghxiw252kuiye7fb","type":"input","idx":4,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_24whgtq7il2nxm984b","type":"output","idx":0,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_ljixqp7nj3kny8dgbz","type":"output","idx":1,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_u16smodxl4ckgmmluh","type":"output","idx":2,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_soamjj1qrfkdbtr7tn","type":"output","idx":3,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_4nh7b4sx43zoxubs8a","type":"output","idx":4,"blockerID":"_3t5xs1ff71m297xsba"},{"_id":"_muiwdmf8t4zhvouafp","type":"input","idx":0,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_ew5otaq3oo0j4mozdf","type":"input","idx":1,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_isle7qkkuq3ux6lp9n","type":"input","idx":2,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_ckr15blt1i0579yh1o","type":"input","idx":3,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_9ibtts3ofwstsr9yf5","type":"input","idx":4,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_w1l0flt2vqsotdsuh4","type":"output","idx":0,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_8kprxvylyob2ycxqhl","type":"output","idx":1,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_vz6ot3rnzjzr0moma1","type":"output","idx":2,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_uvj35cypedomsec1cm","type":"output","idx":3,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_p5bc3xn2x0zbsxrcpp","type":"output","idx":4,"blockerID":"_129m8jqpaz8v1r3lzw"},{"_id":"_tee3f0ojsnpf3awgys","type":"input","idx":0,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_ul30rkwx88tm7pkoqd","type":"input","idx":1,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_fb1ztds2al12o0hyy7","type":"input","idx":2,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_k5n3zaeunzzzumng39","type":"input","idx":3,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_hrr93z755r7j9xjgpv","type":"input","idx":4,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_j2os2vew2ttoi8ah99","type":"output","idx":0,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_knhqk6z0wjcle42pet","type":"output","idx":1,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_4dfpqtho79575t6e8c","type":"output","idx":2,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_0uucr4ky6q87323uzt","type":"output","idx":3,"blockerID":"_xyco7tly0675hmz5ip"},{"_id":"_8rfa2mzo0faiewmwhd","type":"output","idx":4,"blockerID":"_xyco7tly0675hmz5ip"}],"connections":[{"_id":"_xbz9uc42vf7idzqo7o","input":{"_id":"_muiwdmf8t4zhvouafp","type":"input","idx":0,"blockerID":"_129m8jqpaz8v1r3lzw"},"output":{"_id":"_24whgtq7il2nxm984b","type":"output","idx":0,"blockerID":"_3t5xs1ff71m297xsba"}}],"pickers":[]}',
+        };
+      });
+
       setStatus("preparing");
-      let newLargeString = temlate.largeString.replace(
-        temlate.replaceStr,
+
+      let newLargeString = template.largeString.replace(
+        template._id,
         newProject._id
       );
 
@@ -210,7 +230,7 @@ function SimpleWebGLStarter() {
         return e;
       });
 
-      setProjectJSON(JSON.stringify(newProject));
+      // setProjectJSON(JSON.stringify(newProject));
 
       setStatus("finished");
 
@@ -251,6 +271,12 @@ function SimpleWebGLStarter() {
           Creating....
         </div>
       )}
+      {status === "templating" && (
+        <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-yellow-500 inline-block">
+          Templating....
+        </div>
+      )}
+
       {status === "preparing" && (
         <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-orange-500 inline-block">
           Preparing....
