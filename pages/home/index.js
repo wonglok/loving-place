@@ -1,10 +1,11 @@
 import { createState, useState } from "@hookstate/core";
-import { useEffect, useState as useReactState } from "react";
+import { useEffect, useRef, useState as useReactState } from "react";
 import * as RT from "../../pages-code/api/realtime";
 import { useRouter } from "next/router";
-import { Project } from "../../pages-code/api/Project";
+import { Project, ProjectAPI } from "../../pages-code/api/Project";
 import { StackedLayout } from "../../pages-code/Layouts/StackedLayout";
 import copy from "copy-to-clipboard";
+import sdk from "@stackblitz/sdk";
 
 const ProjectsState = createState([]);
 const PopupRemove = createState(false);
@@ -161,7 +162,13 @@ export function HomePageInternal() {
   return (
     <StackedLayout title={"Home"}>
       <div className="">
-        <CreateProject></CreateProject>
+        <h1 className="text-4xl mb-5">Create new Project</h1>
+
+        <CreateEmptyProject></CreateEmptyProject>
+        <h1 className="text-4xl mb-5">Create Project from Templates</h1>
+
+        <TemplateSection></TemplateSection>
+
         <ProjectsInTable></ProjectsInTable>
         <RemoveItemPopup></RemoveItemPopup>
       </div>
@@ -169,7 +176,132 @@ export function HomePageInternal() {
   );
 }
 
-export function CreateProject() {
+function SimpleWebGLStarter() {
+  let temlate = {
+    replaceStr: "______REPLACE_ME_TOKEN_____",
+    largeString:
+      '{"_id":"______REPLACE_ME_TOKEN_____","blockers":[{"_id":"_8c0jvqe18jbxdrk5hy","position":[255.2089199661702,-0.0000012207030835043042,-89.75795344163646],"title":"demo.plane"},{"_id":"_736fru14yax62noee4","position":[-226.45059826399637,2.1731023348452482e-14,-97.86782865447015],"title":"demo.sweet"}],"ports":[{"_id":"_e74lbaby0gq7fhti02","type":"input","idx":0,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_b8n38umddo5d6e675c","type":"input","idx":1,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_jslx9xqxleh0gggoyl","type":"input","idx":2,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_03mubgjkc0hmjxxet6","type":"input","idx":3,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_zmyokvjucycivikg1y","type":"input","idx":4,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_3br5fqmtduyswqgg6a","type":"output","idx":0,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_nho42nyh20gzt4c0y8","type":"output","idx":1,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_603woen80646v57s6n","type":"output","idx":2,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_fsk9t4rh9lud9alj9m","type":"output","idx":3,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_boixinuhmcvjmvs6hn","type":"output","idx":4,"blockerID":"_8c0jvqe18jbxdrk5hy"},{"_id":"_yfo9id76ep6dal4ww6","type":"input","idx":0,"blockerID":"_736fru14yax62noee4"},{"_id":"_sb4ckrcjofxsgieo65","type":"input","idx":1,"blockerID":"_736fru14yax62noee4"},{"_id":"_e1fx84a1u2xw2pi8q8","type":"input","idx":2,"blockerID":"_736fru14yax62noee4"},{"_id":"_3c8j0cwjycmq47m5tx","type":"input","idx":3,"blockerID":"_736fru14yax62noee4"},{"_id":"_9bzg9zmo4ukvw6nm53","type":"input","idx":4,"blockerID":"_736fru14yax62noee4"},{"_id":"_syaygond09cxllndgf","type":"output","idx":0,"blockerID":"_736fru14yax62noee4"},{"_id":"_8wb3zo0d1lgezlw34i","type":"output","idx":1,"blockerID":"_736fru14yax62noee4"},{"_id":"_dlerzcn2qy16gpgw7v","type":"output","idx":2,"blockerID":"_736fru14yax62noee4"},{"_id":"_ze9t10t4ykzj15g17w","type":"output","idx":3,"blockerID":"_736fru14yax62noee4"},{"_id":"_ceodn9cvfstwyd5pv5","type":"output","idx":4,"blockerID":"_736fru14yax62noee4"}],"connections":[{"_id":"_1lef5teb3lybvf19hl","input":{"_id":"_e74lbaby0gq7fhti02","type":"input","idx":0,"blockerID":"_8c0jvqe18jbxdrk5hy"},"output":{"_id":"_syaygond09cxllndgf","type":"output","idx":0,"blockerID":"_736fru14yax62noee4"}}],"pickers":[]}',
+  };
+
+  const refPreviewBox = useRef();
+  const [status, setStatus] = useReactState("ready");
+  const projects = useState(ProjectsState);
+  const [projectJSONString, setProjectJSON] = useReactState("");
+
+  const addProject = async () => {
+    try {
+      setStatus("creating");
+      let newProject = await Project.create({
+        displayName: "nextjs-starter",
+      });
+
+      setStatus("preparing");
+      let newLargeString = temlate.largeString.replace(
+        temlate.replaceStr,
+        newProject._id
+      );
+
+      newProject.largeString = newLargeString;
+
+      await ProjectAPI.updateMine({ object: newProject });
+
+      projects.set((e) => {
+        e.unshift(newProject);
+        return e;
+      });
+
+      setProjectJSON(JSON.stringify(newProject));
+
+      setStatus("finished");
+
+      // let vm = await sdk.embedProjectId(
+      //   refPreviewBox.current,
+      //   "encloud-stackblitz-nextjs"
+      // );
+      // vm.applyFsDiff({
+      //   destroy: ["pages-data/project.json"],
+      //   create: {
+      //     "pages-data/project.json": projectJSONString,
+      //   },
+      // });
+    } catch (e) {
+      setStatus("error");
+
+      setTimeout(() => {
+        setStatus("ready");
+      }, 3000);
+      console.log(e);
+    }
+  };
+
+  //
+
+  return (
+    <div>
+      {status === "ready" && (
+        <div
+          onClick={addProject}
+          className=" rounded-lg my-3 mr-3 p-3 text-white bg-blue-500 inline-block cursor-pointer"
+        >
+          NextJS + ThreeJS Starter
+        </div>
+      )}
+      {status === "creating" && (
+        <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-yellow-500 inline-block">
+          Creating....
+        </div>
+      )}
+      {status === "preparing" && (
+        <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-orange-500 inline-block">
+          Preparing....
+        </div>
+      )}
+      {status === "finished" && (
+        <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-green-500 inline-block">
+          Done! Please check out the items below.
+        </div>
+      )}
+      {status === "error" && (
+        <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-red-500 inline-block">
+          Error
+        </div>
+      )}
+
+      <div className="" ref={refPreviewBox}></div>
+    </div>
+  );
+}
+
+export function TemplateSection() {
+  return (
+    <div className="">
+      <div className="mb-5">
+        <SimpleWebGLStarter></SimpleWebGLStarter>
+      </div>
+      <div className="mb-5">
+        <DownloadCode></DownloadCode>
+      </div>
+    </div>
+  );
+}
+
+function DownloadCode() {
+  return (
+    <div>
+      <div className="text-4xl ">Download Project Code Starter Pack</div>
+      <a
+        href="https://github.com/wonglok/encloud-template-nextjs"
+        target="_blank"
+      >
+        <div className=" rounded-lg my-3 mr-3 p-3 text-white bg-green-500 inline-block cursor-pointer">
+          Download from Github
+        </div>
+      </a>
+    </div>
+  );
+}
+
+export function CreateEmptyProject() {
   const projects = useState(ProjectsState);
   const title = useState("My Project Title");
   const errMsg = useState("");
@@ -209,7 +341,7 @@ export function CreateProject() {
           addProject();
         }}
       >
-        Add Project
+        Add Empty Project
       </button>
       <div className={"py-2 px-4 text-red-500"}>{errMsg.get()}</div>
     </div>
@@ -442,7 +574,7 @@ function ProjectsInTable() {
 
   return (
     <div className="">
-      <h1 className="text-3xl font-bold">My Projects</h1>
+      <h1 className="text-3xl mb-5">My Projects</h1>
       {/*  */}
       <div className="mb-3 py-2 flex items-center overflow-x-auto">
         {/*  */}

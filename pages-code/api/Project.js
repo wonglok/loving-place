@@ -3,13 +3,14 @@
 import axios from "axios";
 import { AuthState, EnvConfig } from "./realtime";
 
-export const create = async ({ displayName }) => {
+export const create = async ({ displayName, largeString = undefined }) => {
   let res = await axios({
     method: "POST",
     baseURL: EnvConfig.rest,
     url: "/project?action=create",
     data: {
       displayName,
+      largeString,
     },
     headers: {
       "x-token": AuthState.jwt.value,

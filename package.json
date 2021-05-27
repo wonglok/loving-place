@@ -15,6 +15,7 @@
     "@react-three/fiber": "^6.0.9",
     "@react-three/flex": "^0.5.2",
     "@react-three/postprocessing": "^2.0.3",
+    "@stackblitz/sdk": "^1.5.2",
     "animejs": "^3.2.1",
     "antd": "^4.15.2",
     "autoprefixer": "^10.2.5",
