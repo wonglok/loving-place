@@ -423,8 +423,8 @@ function TableRecord({ project }) {
   };
 
   let onEdit = ({ object }) => {
-    // router.push(`/project-editor/${object._id}`);
-    window.location.assign(`/project-editor/${object._id}`);
+    router.push(`/project-editor/${object._id}`);
+    // window.location.assign(`/project-editor/${object._id}`);
   };
   let onCopyJSON = ({ object }) => {
     Project.getOneOfMine({ _id: object._id }).then((data) => {
