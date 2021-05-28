@@ -8,11 +8,12 @@ import {
   getSliderVec4,
   getTextInput,
 } from "../AppEditorLogic/AppEditorLogic";
-import { Hand, ProjectStore } from "../AppEditorState/AppEditorState";
+import { getID, Hand, ProjectStore } from "../AppEditorState/AppEditorState";
 import copy from "copy-to-clipboard";
 import { Timeline } from "./Timeline";
 
 import dynamic from "next/dynamic";
+import { WebRTCStore } from "../WebRTCData/WebRTCData";
 
 // const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
 
@@ -78,12 +79,32 @@ function Tooltip({ children }) {
 }
 
 function CreateJS() {
+  WebRTCStore.makeKeyReactive("enBatteries");
+
   let [inputVal, setInput] = useState("myCodeModule");
   Hand.newModuleTitleName = inputVal;
   return (
     <div className={"mx-4 mb-4"}>
       <div className=" flex">
         <div className="block w-full">
+          {WebRTCStore.enBatteries ? (
+            <div className="my-4">
+              <div className=" text-2xl mb-4">CodeBlock Batteries Hinted</div>
+              {WebRTCStore.enBatteries.map((e, i) => {
+                return (
+                  <div
+                    className="mb-2 underline cursor-pointer"
+                    onClick={() => {
+                      setInput(e.title);
+                    }}
+                    key={e.title + i}
+                  >
+                    {e.title}
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
           <input
             autoFocus={true}
             type="text"
